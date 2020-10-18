@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import socketioSetup from '../../helpers/socketioSetup';
 
 import styles from '../../styles/ChatWithExperts.module.css';
 import MessageList from './messageList';
@@ -13,6 +14,15 @@ const ChatWithExperts = () => {
             return !prevState;
         });
     };
+
+    
+
+    console.log("Rendering");
+
+    // let io = socketioSetup({
+    //     id: "12345",
+    //     name: "Nikhil"
+    // });
 
     let button = (
         <div className={styles.chatwithexpertsbutton} onClick={handleChatButtonClick}>
@@ -45,4 +55,4 @@ const ChatWithExperts = () => {
     )
 };
 
-export default ChatWithExperts;
+export default React.memo(ChatWithExperts);
