@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import Sample from '../components/sample_button';
 import { incClicks } from '../store/actions/sampleAction';
 
+import ChatWithExperts from '../components/chat_with_experts';
+
 interface props {
 	clicks: number,
 	incClick: Function
@@ -14,19 +16,19 @@ const Home = (props: props) => {
 	return (
 		<div className={styles.container}>
 			<Head>
-				<title>Virtual Incubator</title>
+				<title>SE Web App</title>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
 			<main className={styles.main}>
 				<h1 className={styles.title}>
-					Welcome to <span className={styles.brand}>Virtual Incubator</span>
+					Welcome to <span className={styles.brand}>SE Web App</span>
 				</h1>
 
 				<div className={styles.grid}>
 					<a href="#" className={styles.card}>
 						<h3>Register &rarr;</h3>
-						<p>Register to use virtual incubator!</p>
+						<p>Register to use SE Web App!</p>
 					</a>
 
 					<a href="#" className={styles.card}>
@@ -39,7 +41,7 @@ const Home = (props: props) => {
 						className={styles.card}
 					>
 						<h3>Showcase &rarr;</h3>
-						<p>Checkout startups using virtual incubator</p>
+						<p>Checkout startups using SE Web App</p>
 					</a>
 
 					<a
@@ -48,7 +50,7 @@ const Home = (props: props) => {
 					>
 						<h3>About Us &rarr;</h3>
 						<p>
-							Checkout the team and goals behind virtual incubator
+							Checkout the team and goals behind SE Web App
             			</p>
 					</a>
 
@@ -63,6 +65,8 @@ const Home = (props: props) => {
 					</div>
 
 				</div>
+
+				<ChatWithExperts/>
 			</main>
 		</div>
 	)
