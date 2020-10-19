@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import Sample from '../components/sample_button';
 import { incClicks } from '../store/actions/sampleAction';
 
-import ChatWithExperts from '../components/chat_with_experts';
-
 interface props {
 	clicks: number,
 	incClick: Function
@@ -65,8 +63,6 @@ const Home = (props: props) => {
 					</div>
 
 				</div>
-
-				<ChatWithExperts/>
 			</main>
 		</div>
 	)

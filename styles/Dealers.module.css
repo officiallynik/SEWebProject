@@ -1,0 +1,11 @@
+.dealers {
+    padding-top: 45px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.dealersmain {
+    flex-grow: 1;
+    display: flex;
+}

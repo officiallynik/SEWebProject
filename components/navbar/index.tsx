@@ -26,8 +26,6 @@ const NavBar = (props) => {
                     handleMenuClick={() => handleMenuClick()} 
                 />
             </nav>
-            
-            {props.children}
         </React.Fragment>
     );
 };
