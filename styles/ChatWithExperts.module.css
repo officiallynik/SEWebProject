@@ -35,11 +35,6 @@
     opacity: 1;
     z-index: 1;
 }
-@media (max-width: 460px) {
-    .chatwithexpertsbutton {
-        visibility: hidden;
-    }
-}
 
 .chatscreen {
     width: 400px;

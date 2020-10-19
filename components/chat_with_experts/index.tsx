@@ -6,6 +6,8 @@ import MessageList from './messageList';
 import TextComposer from './textComposer';
 import TitleBar from './titleBar';
 
+import useWindowSize from '../../helpers/getSize';
+
 const ChatWithExperts = () => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -15,7 +17,7 @@ const ChatWithExperts = () => {
         });
     };
 
-    
+    const screenSize = useWindowSize();
 
     console.log("Rendering");
 
@@ -49,7 +51,7 @@ const ChatWithExperts = () => {
 
     return(
         <>
-            {button}
+            {(isOpen && screenSize.width < 460)? null: button}
             {chatScreen}
         </>
     )
