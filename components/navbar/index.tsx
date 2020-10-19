@@ -4,13 +4,26 @@ import MaximizedNavBar from './maximised';
 import MinimizedNavBar from './minimized';
 
 const NavBar = (props) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleMenuClick = (arg: boolean|null = null) => {
+        if(arg != null) {
+            setIsOpen(arg);
+            return;
+        }
+
+        setIsOpen((prevState) => {
+            return !prevState;
+        });
+    }
+
     return (
         <React.Fragment>
             <nav className={styles.navbar}>
                 <MaximizedNavBar />
                 <MinimizedNavBar 
-                    isOpen={false}
-                    handleOnClose={() => {}} 
+                    isOpen={isOpen}
+                    handleMenuClick={() => handleMenuClick()} 
                 />
             </nav>
             

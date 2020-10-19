@@ -24,11 +24,22 @@
     background-size: 32px 32px;
     background-repeat: no-repeat;
     background-position: center;
+    opacity: 0.8;
+    cursor: pointer;
+}
+.navwrapper
+.brand:hover {
+    opacity: 1;
 }
 
 .navwrapper
 .navoption {
     cursor: pointer;
+    opacity: 0.8;
+}
+.navwrapper
+.navoption:hover {
+    opacity: 1;
 }
 
 .maximizednav {
@@ -61,4 +72,21 @@
    .navbar {
        display: flex;
    }
+
+   .minimizednav
+   .navmenubtn {
+       opacity: 0.8;
+       width: 30px;
+       height: 30px;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+   }
+
+   .minimizednav
+   .navmenubtn:hover {
+       opacity: 1;
+       background-color: rgba(0, 0, 0, 0.2);
+   }
+
 }
