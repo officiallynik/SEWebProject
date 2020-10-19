@@ -1,4 +1,5 @@
 import { Divider, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -11,9 +12,21 @@ interface props {
     handleMenuClick: Function
 }
 
+const drawerMakeStyles = makeStyles({
+    paper: {
+        backgroundColor: "#f2cf43",
+        backgroundImage: "linear-gradient(315deg, #f2cf43 0%, #19a186 74%)"
+    },
+    root: {
+        width: "230px"
+    }
+});
+
 const MinimizedNavBar = (props: props) => {
 
     const screenSize = useWindowSize();
+
+    const drawerStyles = drawerMakeStyles();
 
     useEffect(() => {
         if(props.isOpen){
@@ -33,8 +46,12 @@ const MinimizedNavBar = (props: props) => {
                 <div className={styles.brand}></div>
                 <div>ACC</div>
             </div>
-            <Drawer anchor="left" open={props.isOpen} onClose={() => props.handleMenuClick()}>
-                <List>
+            <Drawer anchor="left" 
+                open={props.isOpen} 
+                onClose={() => props.handleMenuClick()} 
+                classes={{paper: drawerStyles.paper}}
+            >
+                <List classes={{root: drawerStyles.root}}>
                     <ListItem button>
                         <ListItemText primary="Find Dealer" />
                     </ListItem>
@@ -59,4 +76,4 @@ const MinimizedNavBar = (props: props) => {
     );
 };
 
-export default MinimizedNavBar;
+export default React.memo(MinimizedNavBar);
