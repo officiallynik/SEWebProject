@@ -8,4 +8,48 @@
 .dealersmain {
     flex-grow: 1;
     display: flex;
+    flex-direction: row;
+    overflow: auto;
+}
+
+.topbar {
+    height: 55px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: #d4f8d4;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.topbar
+.searchbar {
+    width: 40%;
+}
+
+.sidebar {
+    background-color: #d4f8d4;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+}
+.sidebar
+.sidebartop {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-weight: 600;
+}
+.sidebar
+.sidebartop
+.clearfilter {
+    color: #0070f3;
+    cursor: pointer;
+}
+
+
+.mainscreen {
+    width: 100%;
+    background-color: #f0f2f5;
 }
