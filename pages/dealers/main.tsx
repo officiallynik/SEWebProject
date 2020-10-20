@@ -4,7 +4,7 @@ import styles from '../../styles/Dealers.module.css';
 const DealerMain = (props) => {
     return (
         <div className={styles.mainscreen}>
-            Main SCREEN
+            Main Screen
         </div>
     );
 };
