@@ -7,13 +7,14 @@
 }
 @media (max-width:760px){
     .sidebar {
-        position: absolute;
-        right: -100%;
-        animation: slide 0.2s forwards;
+        transform: translateX(-100%);
+        animation: slide 300ms forwards;
     }
+
     @keyframes slide {
-        100% { right: 0; position: relative;}
+        100%{ transform: translateX(0); }
     }
+    
 }
 
 .sidebaroptions {
@@ -35,7 +36,6 @@
         user-select: none;
         opacity: 0.8;
         font-weight: bold;
-        padding: 2px 3px;
     }
     
     .sidebaroptions

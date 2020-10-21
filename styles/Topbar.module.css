@@ -5,3 +5,18 @@
     border-bottom: 1px solid rgba(0,0,0,0.3);
     padding: 10px 30px;
 }
+
+.topbar
+.opensidebar {
+    float: right;
+    color: #0070f3;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.8;
+    user-select: none;
+}
+
+.topbar
+.opensidebar:hover {
+    opacity: 1;
+}

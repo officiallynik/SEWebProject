@@ -10,7 +10,7 @@ import useWindowSize from '../../helpers/getSize';
 const ThreeLayout = (props) => {
     const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
-    const handleSideBarClose = useCallback(() => {
+    const handleSideBarBtn = useCallback(() => {
         setIsSideBarOpen((prevState) => {
             return (!prevState);
         });
@@ -39,7 +39,7 @@ const ThreeLayout = (props) => {
 
     const withOutSideBar = (
         <div className={styles.threelayout}>
-            <TopBar>
+            <TopBar handleSideBarOpen={handleSideBarBtn}>
                 {props.topbar}
             </TopBar>
             <div className={styles.twolayout}>
@@ -56,7 +56,7 @@ const ThreeLayout = (props) => {
         <div className={styles.threelayout}>
             <div className={styles.twolayout}>
                 <div className={styles.sidebar}>
-                    <SideBar handleSideBarClose={handleSideBarClose}>
+                    <SideBar handleSideBarClose={handleSideBarBtn}>
                         {props.sidebar}
                     </SideBar>
                 </div>
