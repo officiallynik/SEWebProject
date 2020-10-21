@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import styles from '../../styles/Threelayout.module.css';
 import MainSection from '../mainsection';
@@ -10,6 +10,11 @@ import useWindowSize from '../../helpers/getSize';
 const ThreeLayout = (props) => {
     const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
+    const handleSideBarClose = useCallback(() => {
+        setIsSideBarOpen((prevState) => {
+            return (!prevState);
+        });
+    }, []);
 
     const fullScreen = (
         <div className={styles.threelayout}>
@@ -51,13 +56,18 @@ const ThreeLayout = (props) => {
         <div className={styles.threelayout}>
             <div className={styles.twolayout}>
                 <div className={styles.sidebar}>
-                    <SideBar>
+                    <SideBar handleSideBarClose={handleSideBarClose}>
                         {props.sidebar}
                     </SideBar>
                 </div>
             </div>
         </div>
     );
+
+    useEffect(() => {
+        console.log("closing")
+        setIsSideBarOpen(false);
+    }, [useWindowSize().width > 760 && isSideBarOpen])
 
     return (
         useWindowSize().width > 760?
@@ -67,4 +77,4 @@ const ThreeLayout = (props) => {
     );
 };
 
-export default ThreeLayout;
+export default React.memo(ThreeLayout);

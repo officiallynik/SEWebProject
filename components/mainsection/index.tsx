@@ -10,4 +10,4 @@ const MainSection = (props) => {
     );
 };
 
-export default MainSection;
+export default React.memo(MainSection);
