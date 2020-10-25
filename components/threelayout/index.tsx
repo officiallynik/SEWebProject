@@ -39,7 +39,7 @@ const ThreeLayout = (props) => {
 
     const withOutSideBar = (
         <div className={styles.threelayout}>
-            <TopBar handleSideBarOpen={handleSideBarBtn}>
+            <TopBar handleSideBarOpen={handleSideBarBtn} sidebarname={props.sidebarname}>
                 {props.topbar}
             </TopBar>
             <div className={styles.twolayout}>

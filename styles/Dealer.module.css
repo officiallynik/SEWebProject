@@ -23,3 +23,29 @@
         width: calc(100% - 20px);
     }
 }
+
+.topbar {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.topbar
+.title {
+    font-weight: 600;
+    font-size: 22px;
+    text-align: center;
+    color: #233329;
+}
+@media (max-width: 760px){
+    .topbar{
+        padding: 0 10px;
+    }
+    .topbar
+    .title {
+        position: absolute;
+        visibility: hidden;
+    }
+}
