@@ -1,0 +1,25 @@
+.croptypeopts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
+.priceopts {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 50% 50%;
+    padding-left: 16px;
+}
+
+.applybtn {
+    position: fixed;
+    bottom: 10px;
+    width: calc(372px - 20px);
+}
+@media(max-width: 760px) {
+    .applybtn {
+        position: fixed;
+        bottom: 10px;
+        width: calc(100% - 20px);
+    }
+}

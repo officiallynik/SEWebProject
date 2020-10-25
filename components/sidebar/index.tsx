@@ -6,10 +6,14 @@ const SideBar = (props) => {
     return (
         <div className={styles.sidebar}>
             <div className={styles.sidebaroptions}>
-                <div></div>
+                <div 
+                    className={styles.sidebaropt}
+                >
+                    {props.sidebarOpt}
+                </div>
                 <div className={styles.closebtn}
                     onClick={props.handleSideBarClose}
-                >Close</div>
+                >{props.sidebarClose}</div>
             </div>
             {props.children}
         </div>

@@ -20,6 +20,7 @@
 .sidebaroptions {
     display: flex;
     justify-content: space-between;
+    position: sticky;
 }
 
 .sidebaroptions
@@ -36,6 +37,7 @@
         user-select: none;
         opacity: 0.8;
         font-weight: bold;
+        padding: 0 16px 0 0;
     }
     
     .sidebaroptions
@@ -43,3 +45,18 @@
         opacity: 1;
     }
 } 
+
+.sidebaroptions
+.sidebaropt {
+    color: #0070f3;
+    cursor: pointer;
+    user-select: none;
+    opacity: 0.8;
+    font-weight: bold;
+    padding: 0 0 0 16px;
+}
+    
+.sidebaroptions
+.sidebaropt:hover {
+    opacity: 1;
+}

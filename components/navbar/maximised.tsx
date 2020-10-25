@@ -22,9 +22,6 @@ const MaximizedNavBar = () => {
                             <div className={styles.navoption}>
                                 E-Shop
                             </div>
-                            <div className={styles.navoption}>
-                                Account
-                            </div>
                         </div>
                 </Container>
         </div>
