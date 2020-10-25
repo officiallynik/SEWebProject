@@ -20,7 +20,7 @@
 .sidebaroptions {
     display: flex;
     justify-content: space-between;
-    position: sticky;
+    padding-top: 10px;
 }
 
 .sidebaroptions
