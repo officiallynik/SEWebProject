@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     height: 200
   },
   text: {
-    fontFamily: "Monserrat",
+    fontFamily: "Montserrat",
     fontWeight:"bold",
     fontSize: 20,
     paddingBottom: 6
