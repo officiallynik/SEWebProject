@@ -41,11 +41,11 @@ const Dashboard = () => {
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     return (
-        <div className={classes.root}>
+        <div style={{display: "flex", backgroundColor: "#dcdcdc"}}>
             <CssBaseline />
-            <main className={classes.content}>
-                <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
+            <main style={{flexGrow: 1, height: "100vh", overflow: "auto"}}>
+                <div style={{height: "60px"}} />
+                <Container maxWidth="lg" style={{padding: "20px"}}>
                     <Grid container spacing={3}>
                         {/* Chart */}
                         <Grid item xs={12} md={8} lg={9}>
@@ -61,7 +61,7 @@ const Dashboard = () => {
                         </Grid>
                         {/* Recent Orders */}
                         <Grid item xs={12}>
-                            <Paper className={classes.paper}>
+                            <Paper style={{padding:"10px", display:"flex", overflow: "auto", flexDirection: "column"}} >
                                 <Orders />
                             </Paper>
                         </Grid>

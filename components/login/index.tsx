@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -27,6 +27,9 @@ function Copyright() {
 
 const SignIn = (props) => {
 
+    const [phoneNumber, setPhoneNumber] = useState<null|number>(null);
+    const [password, setPassword] = useState<null|string>(null);
+
     return (
         <Container component="main" maxWidth="xs" style={{padding: "0 30px"}}>
             <CssBaseline />
@@ -43,11 +46,15 @@ const SignIn = (props) => {
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
+                        id="phone"
+                        label="Phone Number"
+                        name="phone"
+                        autoComplete="phone"
                         autoFocus
+                        type="tel"
+                        onChange={(e) => {
+                            setPhoneNumber(+e.target.value);
+                        }}
                     />
                     <TextField
                         variant="outlined"
@@ -59,13 +66,15 @@ const SignIn = (props) => {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
                     />
                     <Button
-                        type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"

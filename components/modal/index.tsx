@@ -86,7 +86,7 @@ const CustomModal = (props) => {
 							className={styles.closebtn}
 							onClick={handleClose}
 						>
-							<HighlightOff />
+							<HighlightOff style={{width: "30px", height: "30px"}} />
 						</div>
 						{props.children}
 					</div>

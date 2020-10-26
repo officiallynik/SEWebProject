@@ -55,6 +55,15 @@ const SignUp = (props) => {
 
     const [userType, setUserType] = useState("farmer");
 
+    const [phoneNumber, setPhoneNumber] = useState<null|Number>(null);
+    const [fullName, setFullName] = useState<null|String>(null);
+    const [age, setAge] = useState<null|Number>(null);
+    const [landSize, setLandSize] = useState<null|Number>(null);
+    const [pincode, setPiincode] = useState<null|Number>(null);
+    const [location, setLocation] = useState<null|string>(null);
+    const [password, setPassword] = useState<null|string>(null);
+    const [dealerType, setDealerType] = useState<null|string>(null);
+
     const handleUserTypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setUserType(event.target.value as string);
     };
@@ -283,7 +292,7 @@ const SignUp = (props) => {
 
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" style={{padding: "0 30px"}}>
             <CssBaseline />
             <div style={{
                 display: 'flex',
@@ -297,7 +306,7 @@ const SignUp = (props) => {
                     <div style={{ marginRight: "7px" }}>
                         Sign up as
                     </div>
-                    <FormControl style={{}}>
+                    <FormControl>
                         <NativeSelect
                             id="demo-customized-select-native"
                             value={userType.toLowerCase()}
