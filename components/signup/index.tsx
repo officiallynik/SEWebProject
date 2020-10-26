@@ -51,7 +51,7 @@ const BootstrapInput = withStyles((theme: Theme) =>
     }),
 )(InputBase);
 
-const SignUp = () => {
+const SignUp = (props) => {
 
     const [userType, setUserType] = useState("farmer");
 
@@ -158,7 +158,7 @@ const SignUp = () => {
                     </Button>
             <Grid container justify="flex-end">
                 <Grid item>
-                    <Link href="#" variant="body2">
+                    <Link href="#" variant="body2" onClick={props.handleSignInOpen}>
                         Already have an account? Sign in
                             </Link>
                 </Grid>
@@ -293,14 +293,14 @@ const SignUp = () => {
                 <Avatar style={{ margin: "5px", color: "white", backgroundColor: "#3BB78F" }}>
                     <LockOutlinedIcon />
                 </Avatar>
-                <Typography component="h1" variant="h5" style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <Typography component="h1" variant="h5" style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "10px" }}>
                     <div style={{ marginRight: "7px" }}>
                         Sign up as
                     </div>
                     <FormControl style={{}}>
                         <NativeSelect
                             id="demo-customized-select-native"
-                            value={userType}
+                            value={userType.toLowerCase()}
                             onChange={handleUserTypeChange}
                             input={<BootstrapInput />}
                         >

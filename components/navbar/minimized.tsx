@@ -1,15 +1,19 @@
 import { Divider, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import styles from '../../styles/Navbar.module.css';
 
 import useWindowSize from '../../helpers/getSize';
+import AuthComponent from './auth';
+
+import { notAuthenticated, typeFarmer, typeDealer, typeExpert } from '../../helpers/navOpts';
 
 interface props {
     isOpen: boolean,
-    handleMenuClick: Function
+    handleMenuClick: Function,
+    authenticated: string
 }
 
 const drawerMakeStyles = makeStyles({
@@ -23,6 +27,23 @@ const drawerMakeStyles = makeStyles({
 });
 
 const MinimizedNavBar = (props: props) => {
+    const [navOpts, setNavOpts] = useState(notAuthenticated);
+
+    useEffect(() => {
+        switch(props.authenticated) {
+            case "farmer":
+                 setNavOpts(typeFarmer);
+                return;
+            case "dealer":
+                 setNavOpts(typeDealer);
+                return;
+            case "expert":
+                 setNavOpts(typeExpert);
+                return;
+            default:
+                 setNavOpts(notAuthenticated);
+        }
+    }, [props.authenticated]);
 
     const screenSize = useWindowSize();
 
@@ -44,7 +65,7 @@ const MinimizedNavBar = (props: props) => {
                     <MenuIcon />
                 </div>
                 <div className={styles.brand}></div>
-                <div>ACC</div>
+                <AuthComponent />
             </div>
             <Drawer anchor="left" 
                 open={props.isOpen} 
@@ -52,24 +73,15 @@ const MinimizedNavBar = (props: props) => {
                 classes={{paper: drawerStyles.paper}}
             >
                 <List classes={{root: drawerStyles.root}}>
-                    <ListItem button>
-                        <ListItemText primary="Find Dealer" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemText primary="Find Crops" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemText primary="Loan/Insurance" />
-                    </ListItem>
-                </List>
-                <Divider />
-                <List>
-                    <ListItem button>
-                        <ListItemText primary="E-Shop" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemText primary="Account" />
-                    </ListItem>
+                
+                    {
+                        navOpts.map(navOpt => (
+                            <ListItem button key={navOpt.name}>
+                                <ListItemText primary={navOpt.name} />
+                            </ListItem>
+                        ))
+                    }
+
                 </List>
             </Drawer> 
         </div>

@@ -25,10 +25,10 @@ function Copyright() {
     );
 }
 
-const SignIn = () => {
+const SignIn = (props) => {
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" style={{padding: "0 30px"}}>
             <CssBaseline />
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "25px"}} >
                 <Avatar style={{margin: "5px", color: "white", backgroundColor: "#3BB78F"}}>
@@ -74,13 +74,8 @@ const SignIn = () => {
                         Sign In
                     </Button>
                     <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
-              </Link>
-                        </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href="#" variant="body2" onClick={props.handleSignUpOpen}>
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
