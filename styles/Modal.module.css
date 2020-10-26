@@ -1,0 +1,16 @@
+@media (max-width: 760px) {
+    .modal {
+        height: 100vh;
+        width: 100vw;
+        background-color: white;
+    }
+}
+
+.modal
+.closebtn {
+    float: right;
+}
+.modal
+.closebtn:hover {
+    cursor: pointer;
+}
