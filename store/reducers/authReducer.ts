@@ -3,7 +3,7 @@ import { updateObject } from './helper';
 
 const initialState = {
     token: null,
-    userId: null,
+    name: null,
     error: null,
     loading: false,
     userType: null,
@@ -16,8 +16,8 @@ const authStart = ( state, action ) => {
 
 const authSuccess = (state, action) => {
     return updateObject( state, { 
-        token: action.idToken,
-        userId: action.userId,
+        token: action.token,
+        name: action.name,
         userType: action.userType,
         error: null,
         loading: false
