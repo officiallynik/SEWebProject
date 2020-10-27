@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <NavBar />
       <Component {...pageProps} />
       <ChatWithExperts />
-      <Notify msg="Notification snackbar" type="default" />
+      <Notify />
     </Provider>
   );
 }

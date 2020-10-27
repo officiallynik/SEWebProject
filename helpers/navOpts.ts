@@ -1,83 +1,67 @@
 export const notAuthenticated = [
     {
         name: "Find Crops",
-        onClick: "/dealers"
-    },
-    {
-        name: "Find Dealers",
-        onClick: "/farmers"
+        path: "/dealers"
     },
     {
         name: "Blogs / FAQs",
-        onClick: "/blogs"
-    }
+        path: "/blogs"
+    },
     {
-        name: "Login",
-        onClick: "auth"
+        name: "E-Shop",
+        path: "/eshops"
     }
 ];
 
 export const typeFarmer = [
     {
-        name: "Find Dealers",
-        onClick: "/farmers"
-    },
-    {
-        name: "Agri Shops",
-        onClick: "/agrishops"
+        name: "Dashboard",
+        path: "/dashboard/farmers"
     },
     {
         name: "Blogs / FAQs",
-        onClick: "/blogs"
+        path: "/blogs"
     },
     {
-        name: "Dashboard",
-        onClick: "/dashboard"
-    }
+        name: "Loan / Insurance",
+        path: "/loans-insurance"
+    },
     {
-        name: "Profile",
-        onClick: "/profile"
-    }
+        name: "E-Shop",
+        path: "/eshops"
+    },
 ];
 
 export const typeDealer = [
     {
         name: "Find Crops",
-        onClick: "/dealers"
+        path: "/dealers"
     },
     {
         name: "Blogs / FAQs",
-        onClick: "/blogs"
+        path: "/blogs"
     },
     {
         name: "Dashboard",
-        onClick: "/dashboard"
-    },
-    {
-        name: "Profile",
-        onClick: "/profile"
+        path: "/dashboard/dealers"
     },
 ];
 
 export const typeExpert = [
     {
         name: "Find Crops",
-        onClick: "/dealers"
-    },
-    {
-        name: "Find Dealers",
-        onClick: "/farmers"
+        path: "/dealers"
     },
     {
         name: "Blogs / FAQs",
-        onClick: "/blogs"
+        path: "/blogs"
+    },
+    {
+        name: "E-Shop",
+        path: "/eshops"
     },
     {
         name: "Dashboard",
-        onClick: "/dashboard"
+        path: "/dashboard/experts"
     },
-    {
-        name: "Profile",
-        onClick: "/profile"
-    }
 ]

@@ -1,11 +1,7 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import { connect } from 'react-redux';
-import Modal from '@material-ui/core/Modal';
 import { useState } from 'react';
-import LoginForm from '../components/login/loginForm';
-import SignupForm from '../components/signup/signupForm';
-
 import Sample from '../components/sample_button';
 import { incClicks } from '../store/actions/sampleAction';
 
@@ -50,28 +46,10 @@ const Home = (props: props) => {
 						<p>Register to use SE Web App!</p>
 					</a>
 
-					<Modal
-						open={signupopen}
-						onClose={handleSignupClose}
-						aria-labelledby="simple-modal-title"
-						aria-describedby="simple-modal-description"
-					>
-						<SignupForm />
-					</Modal>
-
 					<a href="#" onClick={handleLoginOpen} className={styles.card}>
 						<h3>Login &rarr;</h3>
 						<p>Already signed up, login to continue</p>
 					</a>
-
-					<Modal
-						open={loginopen}
-						onClose={handleLoginClose}
-						aria-labelledby="simple-modal-title"
-						aria-describedby="simple-modal-description"
-					>
-						<LoginForm />
-					</Modal>
 
 					<a
 						href="#"
