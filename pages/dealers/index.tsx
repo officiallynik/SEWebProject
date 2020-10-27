@@ -5,6 +5,7 @@ import ThreeLayout from '../../components/threelayout';
 import SearchIcon from '@material-ui/icons/Search';
 
 import styles from '../../styles/Dealer.module.css';
+import CustomModal from '../../components/modal';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -149,6 +150,11 @@ const Farmers = () => {
     const mainsection = (
         <>
             {/* <CropCard />           */}
+            <CustomModal>
+                <div>
+                    Hello World
+                </div>
+            </CustomModal>
         </>
     );
     
@@ -158,7 +164,7 @@ const Farmers = () => {
             sidebar={sidebar}
             sidebarOpt="Clear Filters"
             sidebarClose="Close Filters"
-            sidebarname="filters"
+            sidebarname="Filters"
             mainsection={mainsection}
         />
     );
