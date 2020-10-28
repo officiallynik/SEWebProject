@@ -6,6 +6,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Button } from "@material-ui/core";
 import CardHeader from '@material-ui/core/CardHeader';
+import Avatar from '@material-ui/core/Avatar';
+import { red } from '@material-ui/core/colors';
 
 const contentStyle = {
   maxWidth: "700px",
@@ -25,7 +27,7 @@ const useStyles = makeStyles({
     height: 130,
   },
   cardContent:{
-    textAlign:'center',
+    //textAlign:'center',
    // paddingBottom:20
   },
   text: {
@@ -63,7 +65,7 @@ const useStyles = makeStyles({
    header:{
       display: 'flex',
       padding: '6px',
-      alignItems: 'center',
+      textAlign:'start'
 
    },
    cardbid:{
@@ -91,7 +93,10 @@ const useStyles = makeStyles({
        borderRadius:40,
        
        
-   }
+   },
+   avatar: {
+    backgroundColor: red[500],
+  },
 });
 
 export default function CropCard() {
@@ -100,6 +105,11 @@ export default function CropCard() {
   return (
     <Card className={classes.card} variant="outlined">
       <CardHeader className={classes.header}
+       avatar={
+        <Avatar aria-label="recipe" className={classes.avatar}>
+          
+        </Avatar>
+      }
         title="Farmer's name"
         subheader="September 14, 2016"
       />
