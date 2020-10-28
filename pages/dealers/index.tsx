@@ -1,5 +1,5 @@
 import { Button, Checkbox, createStyles, fade, FormControlLabel, InputBase, makeStyles, TextField, Theme } from '@material-ui/core';
-import React from 'react';
+import React, { useState } from 'react';
 import CustomAccordion from '../../components/accordion';
 import ThreeLayout from '../../components/threelayout';
 import SearchIcon from '@material-ui/icons/Search';
@@ -9,8 +9,7 @@ import CustomModal from '../../components/modal';
 import Axios from '../../helpers/axios';
 import CropCard from '../../components/cropcardDealer';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles({
     search: {
       position: 'relative',
       borderRadius: theme.shape.borderRadius,
@@ -55,7 +54,18 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Dealers = () => {
 
+    const initialFilters = {
+        crop_type: null,
+        crop_variety: null,
+        price_min: null,
+        price_max: null,
+        quantity_min: null,
+        quantity_max: null,
+        location: null
+    }
+
     const classes = useStyles();
+    const [filters, setFilters] = useState(initialFilters);
     
     const topbar = (
         <div className={styles.topbar}>
@@ -83,7 +93,17 @@ const Dealers = () => {
     const sidebar = (
         <div>
             <CustomAccordion heading="Location">
-                <TextField id="outlined-basic" label="Search by pincode" variant="outlined" fullWidth />
+                <TextField id="outlined-basic" label="Search by pincode" variant="outlined" fullWidth 
+                    value={location} onChange={(e) =>
+                        setFilters((prevState) => {
+                            return {
+                                ...prevState,
+                                location: e.currentTarget.value
+                            }
+                        })
+                    }
+                    type="number"
+                />
             </CustomAccordion>
             <CustomAccordion heading="Crop Type">
                 <div className={styles.croptypeopts}>
@@ -163,6 +183,7 @@ const Dealers = () => {
             topbar={topbar}
             sidebar={sidebar}
             sidebarOpt="Clear Filters"
+            handleSideBarOpt={() => setFilters(initialFilters)}
             sidebarClose="Close Filters"
             sidebarname="Filters"
             mainsection={mainsection}
@@ -176,7 +197,10 @@ Dealers.getInitialProps = async (ctx) => {
         return { data: res.data, err: null };
     }
     catch(err) {
-        return { error: { status: err.response.status, msg: err.response.statusText }, data: null };
+        return { 
+            error: { status: err.response.status, msg: err.response.statusText }, 
+            data: null 
+        };
     }
 }
 
