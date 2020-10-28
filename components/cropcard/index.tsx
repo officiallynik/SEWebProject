@@ -7,7 +7,8 @@ import Typography from "@material-ui/core/Typography";
 import { Button } from "@material-ui/core";
 import Popup from "reactjs-popup";
 import TextField from '@material-ui/core/TextField'
-import CardBid from './cardbid'
+import CardBid from '../cropcard/card'
+import CardHeader from '@material-ui/core/CardHeader';
 
 const contentStyle = {
   maxWidth: "700px",
@@ -18,26 +19,38 @@ const contentStyle = {
 
 const useStyles = makeStyles({
   card: {
-    maxWidth: 345,
-    textAlign: "center",
+    maxWidth: 250,
+    //textAlign: "center",
     backgroundColor: "#E6FBE9"
   },
   cropPhoto: {
-    width: 345,
-    height: 200
+    width: '100%',
+    height: 130,
+  },
+  cardContent:{
+    textAlign:'center',
+   // paddingBottom:20
   },
   text: {
     fontFamily: "Monserrat",
     fontWeight:"bold",
-    fontSize: 20,
-    paddingBottom: 6
+    fontSize: 18,
+    textAlign:'center'
+  },
+  textInfo: {
+    fontFamily: "Monserrat",
+    
+    fontSize: 12,
+    paddingBottom: 6,
+    textAlign:'center'
   },
   placeBid: {
     fontFamily: "Montserrat",
-    fontSize: 15,
+    fontSize: 12,
     paddingLeft: 20,
     paddingRight: 20,
-    borderRadius: 20
+    borderRadius: 20,
+    
   },
   warper:{
     width:'100%',
@@ -50,10 +63,10 @@ const useStyles = makeStyles({
     content:{
         width:'100%'
     },
-   header:{
-       fontSize:40,
-       fontFamily:'Lucida Console", Courier, monospace',
-       textAlign:'center'
+    cardHead:{
+      display: 'flex',
+      padding: '6px',
+      alignItems: 'center',
 
    },
    cardbid:{
@@ -71,13 +84,15 @@ const useStyles = makeStyles({
         marginTop:'33%',
         width:'80%',
         backgroundColor:'#ffffff',
-        borderRadius:3
+        borderRadius:3,
+        
         
    },
    actionButton:{
        marginTop:30,
        width:'80%',
-       borderRadius:40
+       borderRadius:40,
+       
        
    }
 });
@@ -87,30 +102,33 @@ export default function CropCard() {
 
   return (
     <Card className={classes.card} variant="outlined">
+      <CardHeader className={classes.cardHead}
+        title="Farmer's name"
+        subheader="September 14, 2016"
+      />
       <CardMedia>
         <img
           className={classes.cropPhoto}
-          src="https://media.nationalgeographic.org/assets/photos/120/983/091a0e2f-b93d-481b-9a60-db520c87ec33.jpg"
+          src="https://www.syngenta.co.in/sites/g/files/zhg496/f/2016/08/26/13_rice_800x507_640x406.jpg"
           alt="loading"
         ></img>
       </CardMedia>
-      <CardContent>
-        <Typography variant="h4" className={classes.text}>
-          Crop Name
+      <CardContent className={classes.cardContent}>
+        <Typography variant="h6" className={classes.text}>
+          Crop Name 
         </Typography>
-        <Typography variant="h5" className={classes.text}>
-          Farmer Contact
+        <Typography variant="h6" className={classes.textInfo}>
+          Rs.1100/q | Estimated Qty: 30 q 
         </Typography>
-        
         <Popup
             trigger={<Button
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.placeBid}
-            >
+              >
               Place bid
             </Button>
-    }
+        }
             modal
             contentStyle={contentStyle}
         >
