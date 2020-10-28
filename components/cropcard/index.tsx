@@ -9,7 +9,8 @@ import Popup from "reactjs-popup";
 import TextField from '@material-ui/core/TextField'
 import CardBid from '../cropcard/card'
 import CardHeader from '@material-ui/core/CardHeader';
-
+import Avatar from '@material-ui/core/Avatar';
+import { red } from '@material-ui/core/colors';
 const contentStyle = {
   maxWidth: "700px",
   width: "90%",
@@ -94,7 +95,10 @@ const useStyles = makeStyles({
        borderRadius:40,
        
        
-   }
+   },
+   avatar: {
+    backgroundColor: red[500],
+  },
 });
 
 export default function CropCard() {
@@ -103,6 +107,11 @@ export default function CropCard() {
   return (
     <Card className={classes.card} variant="outlined">
       <CardHeader className={classes.cardHead}
+        avatar={
+          <Avatar aria-label="recipe" className={classes.avatar}>
+            
+          </Avatar>
+        }
         title="Farmer's name"
         subheader="September 14, 2016"
       />

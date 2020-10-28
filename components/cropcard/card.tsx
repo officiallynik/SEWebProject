@@ -6,6 +6,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Button } from "@material-ui/core";
 import CardHeader from '@material-ui/core/CardHeader';
+import Avatar from '@material-ui/core/Avatar';
+import { red } from '@material-ui/core/colors';
 
 const contentStyle = {
   maxWidth: "700px",
@@ -25,7 +27,7 @@ const useStyles = makeStyles({
     height: 130,
   },
   cardContent:{
-    textAlign:'center',
+    //textAlign:'center',
    // paddingBottom:20
   },
   text: {
@@ -63,7 +65,7 @@ const useStyles = makeStyles({
    header:{
       display: 'flex',
       padding: '6px',
-      alignItems: 'center',
+      textAlign:'start'
 
    },
    cardbid:{
@@ -91,32 +93,39 @@ const useStyles = makeStyles({
        borderRadius:40,
        
        
-   }
+   },
+   avatar: {
+    backgroundColor: red[500],
+  },
 });
 
-export default function CropCard({ crop_data }) {
+export default function CropCard() {
   const classes = useStyles();
-  const { title, date, imageSrc, cropName, est, price} = crop_data
-  const priceTag = `Rs.${price}/q  Estimated Qty: ${est} q `
+
   return (
     <Card className={classes.card} variant="outlined">
       <CardHeader className={classes.header}
-        title={title}
-        subheader={date}
+       avatar={
+        <Avatar aria-label="recipe" className={classes.avatar}>
+          
+        </Avatar>
+      }
+        title="Farmer's name"
+        subheader="September 14, 2016"
       />
       <CardMedia>
         <img
           className={classes.cropPhoto}
-          src={imageSrc}
+          src="https://www.syngenta.co.in/sites/g/files/zhg496/f/2016/08/26/13_rice_800x507_640x406.jpg"
           alt="loading"
         ></img>
       </CardMedia>
       <CardContent className={classes.cardContent}>
         <Typography variant="h6" className={classes.text}>
-          {cropName}
+          Crop Name 
         </Typography>
         <Typography variant="h6" className={classes.textInfo}>
-        {priceTag}
+          Rs.1100/q | Estimated Qty: 30 q 
         </Typography>
         <Button
               variant="contained"
