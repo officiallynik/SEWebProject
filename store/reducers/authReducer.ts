@@ -16,9 +16,9 @@ const authStart = ( state, action ) => {
 
 const authSuccess = (state, action) => {
     return updateObject( state, { 
-        token: action.token,
-        name: action.name,
-        userType: action.userType,
+        token: action.payload.token,
+        name: action.payload.user.name,
+        userType: action.payload.user.userType,
         error: null,
         loading: false
      } );
@@ -39,16 +39,21 @@ const setAuthRedirectPath = (state, action) => {
     return updateObject(state, { authRedirectPath: action.path })
 }
 
-const reducer = ( state = initialState, action ) => {
+const clearErrors = (state, action) => {
+    return updateObject(state, { error: null })
+}
+
+const authReducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.AUTH_START: return authStart(state, action);
         case actionTypes.AUTH_SUCCESS: return authSuccess(state, action);
         case actionTypes.AUTH_FAIL: return authFail(state, action);
         case actionTypes.AUTH_LOGOUT: return authLogout(state, action);
+        case actionTypes.AUTH_CLEAR_ERROR: return clearErrors(state, action);
         case actionTypes.SET_AUTH_REDIRECT_PATH: return setAuthRedirectPath(state, action);
         default:
             return state;
     }
 };
 
-export default reducer;
+export default authReducer;

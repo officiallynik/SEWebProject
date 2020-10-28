@@ -6,6 +6,8 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import styles from '../../styles/Dealer.module.css';
 import CustomModal from '../../components/modal';
+import Axios from '../../helpers/axios';
+import CropCard from '../../components/cropcardDealer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Farmers = () => {
+const Dealers = () => {
 
     const classes = useStyles();
     
@@ -150,11 +152,9 @@ const Farmers = () => {
     const mainsection = (
         <>
             {/* <CropCard />           */}
-            <CustomModal>
-                <div>
-                    Hello World
-                </div>
-            </CustomModal>
+            <div>
+                <CropCard />
+            </div>
         </>
     );
     
@@ -170,4 +170,14 @@ const Farmers = () => {
     );
 };
 
-export default Farmers;
+Dealers.getInitialProps = async (ctx) => {
+    try{
+        const res = await Axios.get("/crop/filter");
+        return { data: res.data, err: null };
+    }
+    catch(err) {
+        return { error: { status: err.response.status, msg: err.response.statusText }, data: null };
+    }
+}
+
+export default Dealers;
