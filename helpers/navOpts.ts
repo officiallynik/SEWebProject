@@ -19,6 +19,10 @@ export const typeFarmer = [
         path: "/dashboard/farmers"
     },
     {
+        name: "Sell Crops",
+        path: "/sell-crop"
+    },
+    {
         name: "Blogs / FAQs",
         path: "/blogs"
     },

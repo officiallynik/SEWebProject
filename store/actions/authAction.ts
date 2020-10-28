@@ -8,13 +8,14 @@ export const authStart = () => {
     };
 };
 
-export const authSuccess = (token, name, userType) => {
+export const authSuccess = (token, name, _id, userType) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
         payload: {
             token,
             name,
-            userType
+            userType,
+            _id
         }
     };
 };
@@ -50,10 +51,11 @@ export const authLogin = (phone, password, isRemember) => {
                     localStorage.setItem('token', response.data.token);
                     localStorage.setItem('name', response.data.user.name);
                     localStorage.setItem('userType', response.data.userType);
+                    localStorage.setItem('_id', response.data.user._id);
                 }
 
                 console.log("login res: ", response);
-                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.userType));
+                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, response.data.userType));
             })
             .catch(err => {
                 console.log("login err: ", err);
@@ -82,10 +84,11 @@ export const authSignUp = (userType, reqBody) => {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('name', response.data.user.name);
                 localStorage.setItem('userType', userType);
+                localStorage.setItem('_id', response.data.user._id);
 
                 // console.log(response);
 
-                dispatch(authSuccess(response.data.token, response.data.user.name, userType));
+                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, userType));
             })
             .catch(err => {
                 // console.log(err);
@@ -118,7 +121,8 @@ export const authCheckState = () => {
         } else {
             const name = localStorage.getItem('name');
             const userType = localStorage.getItem('userType');
-            dispatch(authSuccess(token, name, userType));
+            const _id = localStorage.getItem('_id');
+            dispatch(authSuccess(token, name, _id, userType));
         }
     };
 };

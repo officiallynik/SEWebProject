@@ -4,14 +4,14 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import { useSpring, animated } from 'react-spring/web.cjs';
 import styles from '../../styles/Modal.module.css';
-import { Close, HighlightOff } from '@material-ui/icons';
+import { HighlightOff } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		modal: {
 			display: 'flex',
 			alignItems: 'center',
-			justifyContent: 'center',
+			justifyContent: 'center'
 		},
 		paper: {
 			backgroundColor: theme.palette.background.paper,

@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import styles from '../../styles/Navbar.module.css';
 import Container from '@material-ui/core/Container';
 import AuthComponent from '../Auth/auth';
+import AddCrop from '../addcrop';
 
 import { notAuthenticated, typeFarmer, typeDealer, typeExpert } from '../../helpers/navOpts';
+import { connect } from 'react-redux';
 
 const MaximizedNavBar = (props) => {
     const [navOpts, setNavOpts] = useState(notAuthenticated);
 
     useEffect(() => {
-        switch(props.authenticated) {
+        switch(props.userType) {
             case "farmer":
                  setNavOpts(typeFarmer);
                 return;
@@ -22,7 +24,7 @@ const MaximizedNavBar = (props) => {
             default:
                  setNavOpts(notAuthenticated);
         }
-    }, [props.authenticated]);
+    }, [props.userType]);
 
     return (
         <div className={styles.maximizednav}>
@@ -32,6 +34,11 @@ const MaximizedNavBar = (props) => {
                             
                             {
                                 navOpts.map((navOpt) => {
+                                    if(navOpt.path == "/sell-crop"){
+                                        return <AddCrop modalBtn={
+                                            (<div className={styles.navoption}>{navOpt.name}</div>)
+                                        } />
+                                    }
                                     return (
                                         <div className={styles.navoption} key={navOpt.name}>
                                             {navOpt.name}
@@ -51,4 +58,10 @@ const MaximizedNavBar = (props) => {
     );
 };
 
-export default React.memo(MaximizedNavBar);
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        userType: authReducer.userType
+    }
+};
+
+export default React.memo(connect(mapStateToProps)(MaximizedNavBar));

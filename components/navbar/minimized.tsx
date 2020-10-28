@@ -7,13 +7,15 @@ import styles from '../../styles/Navbar.module.css';
 
 import useWindowSize from '../../helpers/getSize';
 import AuthComponent from '../Auth/auth';
+import AddCrop from '../addcrop';
 
 import { notAuthenticated, typeFarmer, typeDealer, typeExpert } from '../../helpers/navOpts';
+import { connect } from 'react-redux';
 
 interface props {
     isOpen: boolean,
     handleMenuClick: Function,
-    authenticated: string
+    userType: string
 }
 
 const drawerMakeStyles = makeStyles({
@@ -30,7 +32,7 @@ const MinimizedNavBar = (props: props) => {
     const [navOpts, setNavOpts] = useState(notAuthenticated);
 
     useEffect(() => {
-        switch(props.authenticated) {
+        switch(props.userType) {
             case "farmer":
                  setNavOpts(typeFarmer);
                 return;
@@ -43,7 +45,7 @@ const MinimizedNavBar = (props: props) => {
             default:
                  setNavOpts(notAuthenticated);
         }
-    }, [props.authenticated]);
+    }, [props.userType]);
 
     const screenSize = useWindowSize();
 
@@ -75,11 +77,22 @@ const MinimizedNavBar = (props: props) => {
                 <List classes={{root: drawerStyles.root}}>
                 
                     {
-                        navOpts.map(navOpt => (
-                            <ListItem button key={navOpt.name}>
-                                <ListItemText primary={navOpt.name} />
-                            </ListItem>
-                        ))
+                        navOpts.map(navOpt => {
+                            if(navOpt.path == "/sell-crop"){
+                                return (
+                                    <AddCrop modalBtn={
+                                        (<ListItem button key={navOpt.name}>
+                                            <ListItemText primary={navOpt.name} />
+                                        </ListItem>)
+                                    } />
+                                )
+                            }
+                            return (
+                                <ListItem button key={navOpt.name}>
+                                    <ListItemText primary={navOpt.name} />
+                                </ListItem>
+                            )
+                        })
                     }
 
                 </List>
@@ -88,4 +101,10 @@ const MinimizedNavBar = (props: props) => {
     );
 };
 
-export default React.memo(MinimizedNavBar);
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        userType: authReducer.userType
+    }
+};
+
+export default React.memo(connect(mapStateToProps)(MinimizedNavBar));

@@ -4,6 +4,7 @@ import { updateObject } from './helper';
 const initialState = {
     token: null,
     name: null,
+    _id: null,
     error: null,
     loading: false,
     userType: null,
@@ -18,6 +19,7 @@ const authSuccess = (state, action) => {
     return updateObject( state, { 
         token: action.payload.token,
         name: action.payload.name,
+        _id: action.payload._id,
         userType: action.payload.userType,
         error: null,
         loading: false
