@@ -6,7 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import styles from '../../styles/Navbar.module.css';
 
 import useWindowSize from '../../helpers/getSize';
-import AuthComponent from './auth';
+import AuthComponent from '../Auth/auth';
 
 import { notAuthenticated, typeFarmer, typeDealer, typeExpert } from '../../helpers/navOpts';
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/Navbar.module.css';
 import Container from '@material-ui/core/Container';
-import AuthComponent from './auth';
+import AuthComponent from '../Auth/auth';
 
 import { notAuthenticated, typeFarmer, typeDealer, typeExpert } from '../../helpers/navOpts';
 

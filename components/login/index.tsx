@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,6 +11,7 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import Axios from '../../helpers/axios';
 
 function Copyright() {
     return (
@@ -29,6 +30,19 @@ const SignIn = (props) => {
 
     const [phoneNumber, setPhoneNumber] = useState<null|number>(null);
     const [password, setPassword] = useState<null|string>(null);
+    const [remember, setRemember] = useState(false);
+
+    useEffect(() => {
+        return () => {
+            setPhoneNumber(null);
+            setPassword(null);
+            setRemember(null);
+        }
+    }, []);
+
+    const handleFormSubmit = () => {
+        
+    }
 
     return (
         <Container component="main" maxWidth="xs" style={{padding: "0 30px"}}>
@@ -73,6 +87,11 @@ const SignIn = (props) => {
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
+                        onClick={() => {
+                            setRemember((prevState) => {
+                                return !prevState;
+                            })
+                        }}
                     />
                     <Button
                         fullWidth
