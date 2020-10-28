@@ -47,6 +47,7 @@ const SignIn = (props) => {
 
     const handleSignIn = (event) => {
         event.preventDefault();
+        console.log(phoneNumber, password, remember);
         props.dispatchLogin(phoneNumber, password, remember);
     }
 
@@ -119,13 +120,17 @@ const SignIn = (props) => {
                     />
                     <FormControlLabel
                         disabled={props.loading}
-                        control={<Checkbox value="remember" color="primary" />}
+                        control={
+                            <Checkbox value="remember" color="primary" 
+                                onClick={(e) => {
+                                    
+                                    setRemember((prevState) => {
+                                        return !prevState;
+                                    })
+                                }}
+                            />
+                        }
                         label="Remember me"
-                        onClick={() => {
-                            setRemember((prevState) => {
-                                return !prevState;
-                            })
-                        }}
                     />
                     <Button
                         disabled={props.loading}

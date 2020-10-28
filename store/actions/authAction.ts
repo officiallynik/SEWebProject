@@ -8,12 +8,13 @@ export const authStart = () => {
     };
 };
 
-export const authSuccess = (token, user) => {
+export const authSuccess = (token, name, userType) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
         payload: {
             token,
-            user
+            name,
+            userType
         }
     };
 };
@@ -41,20 +42,23 @@ export const authLogin = (phone, password, isRemember) => {
             phone: phone,
             password: password
         };
-        // let url = '/login'; 
-        // Axios.post(url, authData)
-        //     .then(response => {
-        //         if(isRemember){
-        //             localStorage.setItem('token', response.data.token);
-        //             localStorage.setItem('name', response.data.user.name);
-        //             localStorage.setItem('userType', response.data.user.userType);
-        //         }
+        console.log(authData)
+        let url = '/login'; 
+        Axios.post(url, authData)
+            .then(response => {
+                if(isRemember){
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('name', response.data.user.name);
+                    localStorage.setItem('userType', response.data.userType);
+                }
 
-        //         dispatch(authSuccess(response.data.token, response.data.user));
-        //     })
-        //     .catch(err => {
-        //         dispatch(authFail(err.response.data.error));
-        //     });
+                console.log("login res: ", response);
+                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.userType));
+            })
+            .catch(err => {
+                console.log("login err: ", err);
+                dispatch(authFail("Wrong Credentials"));
+            });
 
         // setTimeout(() => {
         //     dispatch(authSuccess("sdghfjksdhfjkhsdklj", {
@@ -62,9 +66,9 @@ export const authLogin = (phone, password, isRemember) => {
         //         userType: "farmer"
         //     }))
         // }, 3000)
-        setTimeout(() => {
-            dispatch(authFail("wrong credentials"))
-        }, 3000)
+        // setTimeout(() => {
+        //     dispatch(authFail("wrong credentials"))
+        // }, 3000)
     };
 };
 
@@ -73,23 +77,23 @@ export const authSignUp = (userType, reqBody) => {
         dispatch(authStart());
         
         let url = `/${userType}/signup`; 
-        // Axios.post(url, reqBody)
-        //     .then(response => {
-        //         localStorage.setItem('token', response.data.token);
-        //         localStorage.setItem('name', response.data.user.name);
-        //         localStorage.setItem('userType', userType);
+        Axios.post(url, reqBody)
+            .then(response => {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('name', response.data.user.name);
+                localStorage.setItem('userType', userType);
 
-        //         console.log(response);
+                // console.log(response);
 
-        //         dispatch(authSuccess(response.data.token, response.data.user));
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //         dispatch(authFail(err.response));
-        //     });
-        setTimeout(() => {
-            dispatch(authFail("wrong credentials"))
-        }, 3000)
+                dispatch(authSuccess(response.data.token, response.data.user.name, userType));
+            })
+            .catch(err => {
+                // console.log(err);
+                dispatch(authFail("failed signing up"));
+            });
+        // setTimeout(() => {
+        //     dispatch(authFail("wrong credentials"))
+        // }, 3000)
     };
 };
 
@@ -103,5 +107,18 @@ export const setAuthRedirectPath = (path) => {
     return {
         type: actionTypes.SET_AUTH_REDIRECT_PATH,
         path: path
+    };
+};
+
+export const authCheckState = () => {
+    return dispatch => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            dispatch(logout());
+        } else {
+            const name = localStorage.getItem('name');
+            const userType = localStorage.getItem('userType');
+            dispatch(authSuccess(token, name, userType));
+        }
     };
 };
