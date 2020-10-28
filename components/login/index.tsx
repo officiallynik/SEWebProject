@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
-import { authLogin } from '../../store/actions/authAction';
+import { authLogin, authClearErrors } from '../../store/actions/authAction';
 import { connect } from 'react-redux';
 import { Alert } from '@material-ui/lab';
 import { CircularProgress } from '@material-ui/core';
@@ -41,6 +41,7 @@ const SignIn = (props) => {
             setPhoneNumber(null);
             setPassword(null);
             setRemember(null);
+            props.clearErrors();
         }
     }, []);
 
@@ -162,7 +163,8 @@ const mapStateToProps = ({ authReducer }) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        dispatchLogin: (phone: number, password: string, remember: boolean) => dispatch(authLogin(phone, password, remember))
+        dispatchLogin: (phone: number, password: string, remember: boolean) => dispatch(authLogin(phone, password, remember)),
+        clearErrors: () => dispatch(authClearErrors())
     }
 }
 

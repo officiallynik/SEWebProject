@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { CircularProgress, createStyles, FormControl, InputBase, InputLabel, MenuItem, NativeSelect, Select, Theme, withStyles } from '@material-ui/core';
 
-import { authSignUp } from '../../store/actions/authAction';
+import { authSignUp, authClearErrors } from '../../store/actions/authAction';
 import { connect } from 'react-redux';
 import { Alert } from '@material-ui/lab';
 
@@ -85,6 +85,12 @@ const SignUp = (props) => {
             dealertype: dealerType
         });
     }
+
+    useEffect(() => {
+        return () => {
+            props.clearErrors();
+        }
+    }, []);
 
     let signUpForm = (
         <form style={{ width: '100%', marginTop: "5px" }}>
@@ -192,7 +198,7 @@ const SignUp = (props) => {
                 </Button>
                 <Grid container justify="flex-end">
                     <Grid item style={!props.loading? {}:{display: "none"}}>
-                        <Link href="#" variant="body2">
+                        <Link href="#" variant="body2" onClick={props.handleSignInOpen}>
                             Already have an account? Sign in
                         </Link>
                     </Grid>
@@ -312,7 +318,7 @@ const SignUp = (props) => {
                 </Button>
                 <Grid container justify="flex-end">
                     <Grid item style={!props.loading? {}:{display: "none"}}>
-                        <Link href="#" variant="body2">
+                        <Link href="#" variant="body2" onClick={props.handleSignInOpen}>
                             Already have an account? Sign in
                         </Link>
                     </Grid>
@@ -394,7 +400,8 @@ const mapStateToProps = ({ authReducer }) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        dispatchSignUp: (userType: string, reqBody:any) => dispatch(authSignUp(userType, reqBody))
+        dispatchSignUp: (userType: string, reqBody:any) => dispatch(authSignUp(userType, reqBody)),
+        clearErrors: () => dispatch(authClearErrors())
     }
 }
 
