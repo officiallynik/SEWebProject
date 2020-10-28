@@ -11,13 +11,17 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import Axios from '../../helpers/axios';
+
+import { authLogin } from '../../store/actions/authAction';
+import { connect } from 'react-redux';
+import { Alert } from '@material-ui/lab';
+import { CircularProgress } from '@material-ui/core';
 
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
+            <Link color="inherit" href="#">
                 Farmers Portal
       </Link>{' '}
             {new Date().getFullYear()}
@@ -40,22 +44,49 @@ const SignIn = (props) => {
         }
     }, []);
 
-    const handleFormSubmit = () => {
-        
+    const handleSignIn = (event) => {
+        event.preventDefault();
+        props.dispatchLogin(phoneNumber, password, remember);
+    }
+
+    let signInIcon = (
+        <Avatar style={{ margin: "5px", color: "white", backgroundColor: "#3BB78F" }}>
+            <LockOutlinedIcon />
+        </Avatar>
+    );
+
+    if(props.loading){
+            signInIcon = (
+                <Avatar style={{ margin: "5px" }}>
+                    <CircularProgress/>
+                </Avatar>
+            );
+    }
+    else if(!props.loading && props.token){
+        signInIcon = <Alert severity="success" style={{margin: "10px 0"}}>Login Successfull</Alert>
+    }
+    else if(!props.loading && props.error){
+        signInIcon = <Alert severity="error" style={{margin: "10px 0"}}>{props.error}</Alert>
+    }
+    else{
+        signInIcon = (
+            <Avatar style={{ margin: "5px", color: "white", backgroundColor: "#3BB78F" }}>
+                <LockOutlinedIcon />
+            </Avatar>
+        );
     }
 
     return (
         <Container component="main" maxWidth="xs" style={{padding: "0 30px"}}>
             <CssBaseline />
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "25px"}} >
-                <Avatar style={{margin: "5px", color: "white", backgroundColor: "#3BB78F"}}>
-                    <LockOutlinedIcon />
-                </Avatar>
+                {signInIcon}
                 <Typography component="h1" variant="h5">
                     Sign In
                 </Typography>
                 <form style={{width: '100%', marginTop: "5px"}} noValidate>
                     <TextField
+                        disabled={props.loading}
                         variant="outlined"
                         margin="normal"
                         required
@@ -71,6 +102,7 @@ const SignIn = (props) => {
                         }}
                     />
                     <TextField
+                        disabled={props.loading}
                         variant="outlined"
                         margin="normal"
                         required
@@ -85,6 +117,7 @@ const SignIn = (props) => {
                         }}
                     />
                     <FormControlLabel
+                        disabled={props.loading}
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
                         onClick={() => {
@@ -94,15 +127,17 @@ const SignIn = (props) => {
                         }}
                     />
                     <Button
+                        disabled={props.loading}
                         fullWidth
                         variant="contained"
                         color="primary"
                         style={{margin: "15px 0 10px"}}
+                        onClick={handleSignIn}
                     >
                         Sign In
                     </Button>
                     <Grid container>
-                        <Grid item>
+                        <Grid item style={!props.loading? {}:{display: "none"}}>
                             <Link href="#" variant="body2" onClick={props.handleSignUpOpen}>
                                 {"Don't have an account? Sign Up"}
                             </Link>
@@ -117,4 +152,18 @@ const SignIn = (props) => {
     );
 }
 
-export default SignIn;
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        loading: authReducer.loading,
+        error: authReducer.error,
+        token: authReducer.token
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatchLogin: (phone: number, password: string, remember: boolean) => dispatch(authLogin(phone, password, remember))
+    }
+}
+
+export default React.memo(connect(mapStateToProps, mapDispatchToProps)(SignIn));

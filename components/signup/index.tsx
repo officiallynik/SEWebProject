@@ -335,7 +335,7 @@ const SignUp = (props) => {
             );
     }
     else if(!props.loading && props.token){
-        signUpIcon = <Alert severity="success" style={{margin: "10px 0"}}>Login Successfull</Alert>
+        signUpIcon = <Alert severity="success" style={{margin: "10px 0"}}>SignUp Successfull</Alert>
     }
     else if(!props.loading && props.error){
         signUpIcon = <Alert severity="error" style={{margin: "10px 0"}}>{props.error}</Alert>
