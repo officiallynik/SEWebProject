@@ -94,28 +94,29 @@ const useStyles = makeStyles({
    }
 });
 
-export default function CropCard() {
+export default function CropCard({ crop_data }) {
   const classes = useStyles();
-
+  const { title, date, imageSrc, cropName, est, price} = crop_data
+  const priceTag = `Rs.${price}/q  Estimated Qty: ${est} q `
   return (
     <Card className={classes.card} variant="outlined">
       <CardHeader className={classes.header}
-        title="Farmer's name"
-        subheader="September 14, 2016"
+        title={title}
+        subheader={date}
       />
       <CardMedia>
         <img
           className={classes.cropPhoto}
-          src="https://www.syngenta.co.in/sites/g/files/zhg496/f/2016/08/26/13_rice_800x507_640x406.jpg"
+          src={imageSrc}
           alt="loading"
         ></img>
       </CardMedia>
       <CardContent className={classes.cardContent}>
         <Typography variant="h6" className={classes.text}>
-          Crop Name 
+          {cropName}
         </Typography>
         <Typography variant="h6" className={classes.textInfo}>
-          Rs.1100/q | Estimated Qty: 30 q 
+        {priceTag}
         </Typography>
         <Button
               variant="contained"
