@@ -14,7 +14,7 @@ const AddCrop = (props) => {
         >
             <div style={{ backgroundColor: "white", borderRadius: "10px" }}>
                 {
-                    <StepForm token={props.token} />
+                    <StepForm token={props.token} setLoading={setLoading} loading={loading} />
                 }
             </div>
         </CustomModal>

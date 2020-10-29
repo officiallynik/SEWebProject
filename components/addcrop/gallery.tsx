@@ -3,7 +3,7 @@ import React from 'react';
 const UploadImages = (props) => {
 
     const handleFileUpload = (e) => {
-        props.setGallery((prevState) => {
+        props.setGallery(() => {
             return e.target.files
         });
     }
@@ -15,6 +15,7 @@ const UploadImages = (props) => {
             justifyContent: "center"
         }}>
             <input
+                disabled={props.loading}
                 type='file'
                 accept="image/*"
                 className='custom-file-input'

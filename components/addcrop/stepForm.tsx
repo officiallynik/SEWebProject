@@ -11,6 +11,7 @@ import DetailsForm from './detailsform';
 import UploadThumbnail from './thumbnail';
 import UploadImages from './gallery';
 import Axios from '../../helpers/axios';
+import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -60,18 +61,21 @@ const StepForm = (props) => {
         variety: null
     }
 
-    const [thumbail, setThumbnail] = useState<File | null>(null);
+    const [thumbnail, setThumbnail] = useState<File | null>(null);
     const [gallery, setGallery] = useState<FileList | null>(null);
     const [cropDetails, setCropDetails] = useState(initialCropDetails);
+
+    let [statusHeader, setStatusHeader] = useState(null);
+    let [statusMsg, setStatusMsg] = useState(null);
 
     const getStepContent = (step) => {
         switch (step) {
             case 0:
                 return <DetailsForm cropDetails={cropDetails} setCropDetails={setCropDetails} />;
             case 1:
-                return <UploadThumbnail thumbnail={thumbail} setThumbnail={setThumbnail} />;
+                return <UploadThumbnail thumbnail={thumbnail} setThumbnail={setThumbnail} />;
             case 2:
-                return <UploadImages gallery={gallery} setGallery={setGallery} />;
+                return <UploadImages gallery={gallery} setGallery={setGallery} loading={props.loading} />;
             default:
                 throw new Error('Unknown step');
         }
@@ -86,21 +90,48 @@ const StepForm = (props) => {
     };
 
     const handlePlaceSellOrder = () => {
-        const reqBody = {
-            ...cropDetails,
-            thumbnail: thumbail
+        props.setLoading(true);
+
+        let reqBody = new FormData();
+        for(let key in cropDetails){
+            console.log(key, cropDetails[key]);
+            reqBody.append(key, cropDetails[key]);
         }
-        console.log(reqBody);
+        reqBody.append("thumbnail", thumbnail);
+        
+        !!gallery && 
+        Array.from(gallery).map((file: any) => {
+            reqBody.append("gallery", file);
+        });
+
+        console.log(reqBody, props.token);
         Axios.post('/crops/sell', reqBody, {
             headers: {
-                'Authorization': `Bearer ${props.token}`
+                'Authorization': `Bearer ${props.token}`,
+                "Content-Type": "multipart/form-data"
             }
         })
         .then(res => {
             console.log(res)
+            
+            if(res.status === 200){
+                setStatusHeader("Sucessfully added crop to listing :)");
+                setStatusMsg("You can manage your listings and view bids in the farmers dashboard.");
+            }
+            else{
+                setStatusHeader("Failed to add crop to listing :(");
+                setStatusMsg("Please try again later.");
+            }
         })
         .catch(err => {
-            console.log(err)
+            console.log(err);
+            
+            setStatusHeader("Failed to add crop to listing :(");
+            setStatusMsg("Please provide all the required details.");
+        })
+        .finally(() => {
+            props.setLoading(false);
+            setActiveStep(activeStep + 1);
         })
     }
 
@@ -110,7 +141,9 @@ const StepForm = (props) => {
             <main className={classes.layout}>
                 <Paper className={classes.paper}>
                     <Typography component="h1" variant="h4" align="center">
-                        Add Crop to Sell
+                        {
+                            !props.loading? "Add Crop to Sell" : <CircularProgress />
+                        }
                     </Typography>
                     <Stepper activeStep={activeStep} className={classes.stepper}>
                         {steps.map((label) => (
@@ -120,11 +153,22 @@ const StepForm = (props) => {
                         ))}
                     </Stepper>
                     <React.Fragment>
+                        {activeStep === steps.length ? (
+                        <React.Fragment>
+                            <Typography variant="h5" gutterBottom>
+                                {statusHeader}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                                {statusMsg}
+                                Thank you.
+                            </Typography>
+                        </React.Fragment>
+                        ) : (
                         <React.Fragment>
                             {getStepContent(activeStep)}
                             <div className={classes.buttons}>
                                 {activeStep !== 0 && (
-                                    <Button onClick={handleBack} className={classes.button}>
+                                    <Button onClick={handleBack} className={classes.button} disabled={props.loading}>
                                         Back
                                     </Button>
                                 )}
@@ -133,11 +177,12 @@ const StepForm = (props) => {
                                     color="primary"
                                     onClick={activeStep === steps.length - 1 ? handlePlaceSellOrder : handleNext}
                                     className={classes.button}
+                                    disabled={props.loading}
                                 >
                                     {activeStep === steps.length - 1 ? 'Sell Crop' : 'Next'}
                                 </Button>
                             </div>
-                        </React.Fragment>
+                        </React.Fragment> )}
                     </React.Fragment>
                 </Paper>
             </main>

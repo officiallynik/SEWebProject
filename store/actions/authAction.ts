@@ -43,7 +43,7 @@ export const authLogin = (phone, password, isRemember) => {
             phone: phone,
             password: password
         };
-        console.log(authData)
+        // console.log(authData)
         let url = '/login'; 
         Axios.post(url, authData)
             .then(response => {

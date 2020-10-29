@@ -5,11 +5,11 @@ import TextField from '@material-ui/core/TextField';
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 
 const DetailsForm = (props) => {
-	const handleFieldChange = (e, field) => {
+	const handleFieldChange = (field, val) => {
 		props.setCropDetails((prevState) => {
 			return {
 				...prevState,
-				[field]: e.target.value
+				[field]: val
 			}
 		})
 	} 
@@ -28,7 +28,7 @@ const DetailsForm = (props) => {
 						name="cropName"
 						label="Crop Name"
 						fullWidth
-						onChange={(e) => handleFieldChange(e, "name")}
+						onChange={(e) => handleFieldChange("name", e.target.value)}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={6}>
@@ -40,7 +40,7 @@ const DetailsForm = (props) => {
 						label="Expected Price (Rs.) per Kg"
 						type="number"
 						fullWidth
-						onChange={(e) => handleFieldChange(e, "MSP")}
+						onChange={(e) => handleFieldChange("MSP", e.target.value)}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={6}>
@@ -51,7 +51,7 @@ const DetailsForm = (props) => {
 						name="quantity"
 						label="Estimated Quantity (Kgs)"
 						fullWidth
-						onChange={(e) => handleFieldChange(e, "quantity")}
+						onChange={(e) => handleFieldChange("quantity", e.target.value)}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={6}>
@@ -85,7 +85,7 @@ const DetailsForm = (props) => {
 						name="variety"
 						label="Variety"
 						fullWidth
-						onChange={(e) => handleFieldChange(e, "variety")}
+						onChange={(e) => handleFieldChange("variety", e.target.value)}
 					/>
 				</Grid>
 			</Grid>
