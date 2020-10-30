@@ -81,10 +81,12 @@ const MinimizedNavBar = (props: props) => {
                             if(navOpt.path == "/sell-crop"){
                                 return (
                                     <AddCrop modalBtn={
-                                        (<ListItem button key={navOpt.name}>
+                                        (<ListItem button>
                                             <ListItemText primary={navOpt.name} />
                                         </ListItem>)
-                                    } />
+                                    } 
+                                        key={navOpt.name}
+                                    />
                                 )
                             }
                             return (

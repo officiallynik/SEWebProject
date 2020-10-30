@@ -37,7 +37,9 @@ const MaximizedNavBar = (props) => {
                                     if(navOpt.path == "/sell-crop"){
                                         return <AddCrop modalBtn={
                                             (<div className={styles.navoption}>{navOpt.name}</div>)
-                                        } />
+                                        } 
+                                            key={navOpt.name}    
+                                        />
                                     }
                                     return (
                                         <div className={styles.navoption} key={navOpt.name}>
