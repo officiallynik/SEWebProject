@@ -19,8 +19,6 @@ const ChatWithExperts = () => {
 
     const screenSize = useWindowSize();
 
-    console.log("Rendering");
-
     // let io = socketioSetup({
     //     id: "12345",
     //     name: "Nikhil"

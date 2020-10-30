@@ -100,6 +100,42 @@ export const authSignUp = (userType, reqBody) => {
     };
 };
 
+export const authUpdateProfile = (userType, reqBody, token) => {
+    return dispatch => {
+        dispatch(authStart());
+        
+        let url = `/${userType}/update`; 
+        console.log(userType, reqBody, token);
+        Axios.patch(url, reqBody, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                console.log(response.data);
+                localStorage.setItem('name', response.data.name);
+                localStorage.setItem('_id', response.data._id);
+
+
+                dispatch(authSuccess(token, response.data.name, response.data._id, userType));
+            })
+            .catch(err => {
+                console.log(err);
+                dispatch(authFail("failed to update, try again"));
+            });
+        // setTimeout(() => {
+        //     dispatch(authFail("wrong credentials"))
+        // }, 3000)
+        // setTimeout(() => {
+        //     dispatch(authSuccess("sdghfjksdhfjkhsdklj",
+        //         "Nikhil",
+        //         "sfdjhfsdjkhfjksd",
+        //         "farmer"
+        //     ))
+        // }, 3000)
+    };
+};
+
 export const authClearErrors = () => {
     return {
         type: actionTypes.AUTH_CLEAR_ERROR

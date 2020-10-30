@@ -1,4 +1,4 @@
-import { Button, colors, Drawer, Icon } from '@material-ui/core';
+import { Button, Drawer, Icon } from '@material-ui/core';
 import { List, DoneAll, Favorite, AccountCircle } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/dashboard/card';
@@ -8,10 +8,14 @@ import CardIcon from '../../components/dashboard/cardicon';
 import CustomTabs from '../../components/dashboard/tabs';
 import CustomLinearProgress from '../../components/linearprogress';
 import CollapsibleTable from '../../components/listtable';
+import CustomModal from '../../components/modal';
+import useWindowSize from '../../helpers/getSize';
+import UpdateProfile from '../../components/signup/updateprofile';
 
 import styles from '../../styles/Farmer.module.css';
+import { connect } from 'react-redux';
 
-const Farmers = () => {
+const Farmers = (props) => {
 
     let dashboard = <CustomLinearProgress />;
 
@@ -32,7 +36,21 @@ const Farmers = () => {
         }, 3000);
     }, []);
 
+    const [isDone, setIsDone] = useState([false, false]);
 
+    useEffect(() => {
+        if(props.loading){
+            setIsDone([true, false]);
+        }
+        if(!props.loading && isDone[0]){
+            setIsDone([true, true]);
+        }
+    }, [props.loading])
+
+    useEffect(() => {
+        setUserProfileSidebar(false);
+    }, [useWindowSize().width >= 860]);
+    
     const userProfile = (
         <div>
             <Card profile>
@@ -41,9 +59,19 @@ const Farmers = () => {
                     <h3>Alec Thompson</h3>
                     <p>560105</p>
                     <p>Bangalore, Karnataka</p>
-                    <Button variant="outlined" color="primary">
-                        Edit Profile
-                    </Button>
+                    <CustomModal modalBtn={(
+                            <Button variant="outlined" color="primary" onClick={() => setIsDone([false, false])}>
+                                Edit Profile
+                            </Button>
+                        )}
+                        isLoading={props.loading}
+                        token={isDone[1] && !props.error}
+                        exp={1000}
+                    >
+                        <div style={{background: "white", borderRadius: "10px"}}>
+                            <UpdateProfile />
+                        </div>
+                    </CustomModal>
                 </CardBody>
             </Card>
             <Card>
@@ -109,13 +137,11 @@ const Farmers = () => {
                     <Button onClick={handleDisplayProfileSidebar}>
                         <AccountCircle />
                     </Button>
-                    <div>
-                        <Drawer anchor="right" open={userProfileSidebar} onBackdropClick={() => setUserProfileSidebar(false)}>
-                            <div style={{ padding: "0 10px", background: "#bcbcbc", height: "100%" }}>
-                                {userProfile}
-                            </div>
-                        </Drawer>
-                    </div>
+                    <Drawer anchor="right" open={userProfileSidebar} onBackdropClick={() => setUserProfileSidebar(false)}>
+                        <div style={{ padding: "0 10px", background: "#bcbcbc", height: "100%" }}>
+                            {userProfile}
+                        </div>
+                    </Drawer>
                 </div>
             </div>
         )
@@ -124,4 +150,11 @@ const Farmers = () => {
     return dashboard;
 };
 
-export default Farmers;
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        loading: authReducer.loading,
+        error: authReducer.error
+    }
+}
+
+export default connect(mapStateToProps)(Farmers);
