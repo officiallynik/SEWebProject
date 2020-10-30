@@ -1,5 +1,5 @@
-import { Button, Drawer, Icon } from '@material-ui/core';
-import { List, DoneAll, Favorite, AccountCircle } from '@material-ui/icons';
+import { Button, Drawer, Icon, LinearProgress } from '@material-ui/core';
+import { List, DoneAll, Favorite, AccountCircle, Refresh } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/dashboard/card';
 import CardBody from '../../components/dashboard/cardbody';
@@ -14,29 +14,64 @@ import UpdateProfile from '../../components/signup/updateprofile';
 
 import styles from '../../styles/Farmer.module.css';
 import { connect } from 'react-redux';
+import Axios from '../../helpers/axios';
 
 const Farmers = (props) => {
 
     let dashboard = <CustomLinearProgress />;
-
-    const [loadDone, setLoadDone] = useState(false);
-
-    const [userProfileSidebar, setUserProfileSidebar] = useState(false);
-
     const farmerFields = ["Crop Name", "Price", "Quantity", "Date", "Total Bids"];
 
+    
+    const [loadDone, setLoadDone] = useState(false);
+    const [userProfileSidebar, setUserProfileSidebar] = useState(false);
+    const [myListing, setMyListing] = useState(null);
+    const [isDone, setIsDone] = useState([false, false]);
+    const [firstTime, setFirstTime] = useState(true);
+    const [refresh, setRefresh] = useState(true);
+
     const handleDisplayProfileSidebar = () => {
-        console.log("Clicked");
+        // console.log("Clicked");
         setUserProfileSidebar(true);
     }
 
-    useEffect(() => {
-        setTimeout(() => {
+    const fetchMyListings = () => {
+        // console.log(props.token);
+        Axios.get("/crops/view/all", {
+            headers: {
+                "Authorization": `Bearer ${props.token}`
+            }
+        })
+        .then(res => {
+            console.log(res.data);
+            const data = res.data.map(item => {
+                return {
+                    name: item.name,
+                    price: item.MSP,
+                    quantity: item.quantity,
+                    bids: item.biddings.length,
+                    date: new Date().toDateString(),
+                    _id: item._id
+                }
+            })
+            setMyListing(data);
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        .finally(() => {
             setLoadDone(true);
-        }, 3000);
-    }, []);
+            setRefresh(false);
+        })
+    }
 
-    const [isDone, setIsDone] = useState([false, false]);
+    useEffect(() => {
+        if(props.token && refresh){
+            console.log("fetching ", props.token);
+            setMyListing(null);
+            fetchMyListings();
+        }
+    }, [props.token, refresh]);
 
     useEffect(() => {
         if(props.loading){
@@ -108,23 +143,36 @@ const Farmers = (props) => {
             <div className={styles.wrapper}>
                 <div className={styles.dashboard}>
                     <CustomTabs
-                        title="Dashboard:"
+                        title="Dashboard"
                         headerColor="primary"
                         tabs={[
                             {
                                 tabName: "My listings",
                                 tabIcon: List,
                                 tabContent: (
+                                    !myListing? <LinearProgress /> : 
                                     <CollapsibleTable 
                                         headers={farmerFields}
+                                        data={myListing}
+                                        refresh={() => setRefresh(true)}
+                                        firstTime={firstTime}
+                                        setFirstTime={() => setFirstTime(false)}
                                     />
-                                )
+                                ),
+                                onclick: (() => console.log("clicked"))
                             },
                             {
                                 tabName: "Completed Orders",
                                 tabIcon: DoneAll,
                                 tabContent: (
-                                    <CustomLinearProgress />
+                                    !myListing? <LinearProgress /> : 
+                                    <CollapsibleTable 
+                                        headers={farmerFields}
+                                        data={myListing}
+                                        refresh={() => setRefresh(true)}
+                                        firstTime={firstTime}
+                                        setFirstTime={() => setFirstTime(false)}
+                                    />
                                 )
                             }
                         ]}
@@ -153,7 +201,8 @@ const Farmers = (props) => {
 const mapStateToProps = ({ authReducer }) => {
     return {
         loading: authReducer.loading,
-        error: authReducer.error
+        error: authReducer.error,
+        token: authReducer.token
     }
 }
 
