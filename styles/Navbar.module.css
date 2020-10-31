@@ -1,7 +1,8 @@
 .navbar {
     background-color: #63a91f;
     background-image: linear-gradient(314deg, #63a91f 0%, #1a512e 74%);
-    position: fixed;
+    position: sticky;
+    top: 0;
     width: 100%;
     height: 45px;
     color: white;

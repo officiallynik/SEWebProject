@@ -15,6 +15,7 @@ import UpdateProfile from '../../components/signup/updateprofile';
 import styles from '../../styles/Farmer.module.css';
 import { connect } from 'react-redux';
 import Axios from '../../helpers/axios';
+import { myListings } from '../../helpers/dummyData';
 
 const Farmers = (props) => {
 
@@ -35,34 +36,36 @@ const Farmers = (props) => {
     }
 
     const fetchMyListings = () => {
-        // console.log(props.token);
-        Axios.get("/crops/view/all", {
-            headers: {
-                "Authorization": `Bearer ${props.token}`
-            }
-        })
-        .then(res => {
-            console.log(res.data);
-            const data = res.data.map(item => {
-                return {
-                    name: item.name,
-                    price: item.MSP,
-                    quantity: item.quantity,
-                    bids: item.biddings.length,
-                    date: new Date().toDateString(),
-                    _id: item._id
-                }
-            })
-            setMyListing(data);
-            console.log(data);
-        })
-        .catch(err => {
-            console.log(err);
-        })
-        .finally(() => {
-            setLoadDone(true);
-            setRefresh(false);
-        })
+        // Axios.get("/crops/view/all", {
+        //     headers: {
+        //         "Authorization": `Bearer ${props.token}`
+        //     }
+        // })
+        // .then(res => {
+        //     console.log(res.data);
+        //     const data = res.data.map(item => {
+        //         return {
+        //             name: item.name,
+        //             price: item.MSP,
+        //             quantity: item.quantity,
+        //             bids: item.biddings.length,
+        //             date: new Date().toDateString(),
+        //             _id: item._id
+        //         }
+        //     })
+        //     setMyListing(data);
+        //     console.log(data);
+        // })
+        // .catch(err => {
+        //     console.log(err);
+        // })
+        // .finally(() => {
+        //     setLoadDone(true);
+        //     setRefresh(false);
+        // })
+        setMyListing(myListings);
+        setLoadDone(true);
+        setRefresh(false);
     }
 
     useEffect(() => {

@@ -7,7 +7,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { Launch, SettingsApplications, SettingsApplicationsOutlined } from '@material-ui/icons';
+import { Launch } from '@material-ui/icons';
+import CustomModal from '../modal';
+import FarmerView from '../viewcrop/farmerView';
 
 const useRowStyles = makeStyles({
     root: {
@@ -19,7 +21,6 @@ const useRowStyles = makeStyles({
 
 function Row(props: { row }) {
     const { row } = props;
-    const [open, setOpen] = React.useState(false);
     const classes = useRowStyles();
 
     return (
@@ -31,9 +32,19 @@ function Row(props: { row }) {
                 <TableCell align="left">{row.date}</TableCell>
                 <TableCell align="left">{row.bids}</TableCell>
                 <TableCell>
-                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                        <Launch />
-                    </IconButton>
+                    <CustomModal 
+                        modalBtn={
+                            (
+                                <IconButton aria-label="expand row" size="small">
+                                    <Launch />
+                                </IconButton>
+                            )
+                        }
+                    >
+                        <div style={{background: "white", borderRadius: "10px"}}>
+                            <FarmerView />
+                        </div>
+                    </CustomModal>
                 </TableCell>
             </TableRow>
         </React.Fragment>
