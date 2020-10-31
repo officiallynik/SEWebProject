@@ -1,5 +1,5 @@
-import { Button, Checkbox, createStyles, fade, FormControlLabel, InputBase, makeStyles, TextField, Theme } from '@material-ui/core';
-import React, { useState } from 'react';
+import { Button, Checkbox, createStyles, fade, FormControlLabel, InputBase, LinearProgress, makeStyles, TextField, Theme } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import CustomAccordion from '../../components/accordion';
 import ThreeLayout from '../../components/threelayout';
 import SearchIcon from '@material-ui/icons/Search';
@@ -55,17 +55,28 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const Dealers = () => {
 
     const initialFilters = {
+        location: null,
         crop_type: null,
         crop_variety: null,
         price_min: null,
         price_max: null,
         quantity_min: null,
         quantity_max: null,
-        location: null
     }
 
     const classes = useStyles();
     const [filters, setFilters] = useState(initialFilters);
+    const [cropsData, setCropsData] = useState(null);
+    const [isDone, setIsDone] = useState(false);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsDone(true);
+            setCropsData({
+                "name": "Rice",
+            })
+        }, 3000);
+    }, []);
     
     const topbar = (
         <div className={styles.topbar}>
@@ -94,7 +105,7 @@ const Dealers = () => {
         <div>
             <CustomAccordion heading="Location">
                 <TextField id="outlined-basic" label="Search by pincode" variant="outlined" fullWidth 
-                    value={location} onChange={(e) =>
+                    value={filters.location} onChange={(e) =>
                         setFilters((prevState) => {
                             return {
                                 ...prevState,
@@ -171,14 +182,15 @@ const Dealers = () => {
 
     const mainsection = (
         <>
-            {/* <CropCard />           */}
-            <div>
+            {
+                !cropsData? <LinearProgress />:
                 <CropCard />
-            </div>
+            }
         </>
     );
     
     return (
+        !isDone? <LinearProgress /> :
         <ThreeLayout 
             topbar={topbar}
             sidebar={sidebar}
@@ -190,18 +202,5 @@ const Dealers = () => {
         />
     );
 };
-
-Dealers.getInitialProps = async (ctx) => {
-    try{
-        const res = await Axios.get("/crop/filter");
-        return { data: res.data, err: null };
-    }
-    catch(err) {
-        return { 
-            error: { status: err.response.status, msg: err.response.statusText }, 
-            data: null 
-        };
-    }
-}
 
 export default Dealers;
