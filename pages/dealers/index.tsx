@@ -9,7 +9,9 @@ import CustomModal from '../../components/modal';
 import Axios from '../../helpers/axios';
 import CropCard from '../../components/cropcard';
 import GridView from '../../components/grid/GridView';
-import { faHandLizard } from '@fortawesome/free-regular-svg-icons';
+
+import Error from 'next/error';
+import { Https } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     search: {
@@ -58,7 +60,7 @@ const Dealers = () => {
 
     const initialFilters = {
         pincode: null,
-        crop_type: "all",
+        crop_type: null,
         crop_variety: null,
         price_min: null,
         price_max: null,
@@ -70,6 +72,8 @@ const Dealers = () => {
     const [filters, setFilters] = useState(initialFilters);
     const [cropsData, setCropsData] = useState(null);
     const [isDone, setIsDone] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [errorCode, setErrorCode] = useState(null);
 
     // useEffect(() => {
     //     setTimeout(() => {
@@ -88,36 +92,46 @@ const Dealers = () => {
     }
 
     const fetchCrops = (type="filter") => {
-        Axios.get(`/crops/${type}`, {
-            params:{
-                ...filters
-            }
-        })
-        .then(res => {
-            console.log(res.data);
-            // const data = res.data.map(item => {
-            //     return {
-            //         name: item.name,
-            //         price: item.MSP,
-            //         quantity: item.quantity,
-            //         bids: item.biddings.length,
-            //         date: new Date().toDateString(),
-            //         _id: item._id
-            //     }
-            // })
-            // setMyListing(data);
-            // console.log(data);
-        })
-        .catch(err => {
-            console.log(err);
-        })
-        .finally(() => {
-            setIsDone(true);
-            // setRefresh(false);
-        })
+        setErrorCode(null);
+        setCropsData(null);
+        let params: any = { ...filters };
+        if(type === "search"){
+            params = { term: searchTerm }
+        }
+        // Axios.get(`/crops/${type}`, {
+        //     params: params
+        // })
+        // .then(res => {
+        //     console.log(res.data);
+        //     // const data = res.data.map(item => {
+        //     //     return {
+        //     //         name: item.name,
+        //     //         price: item.MSP,
+        //     //         quantity: item.quantity,
+        //     //         bids: item.biddings.length,
+        //     //         date: new Date().toDateString(),
+        //     //         _id: item._id
+        //     //     }
+        //     // })
+        //     // setMyListing(data);
+        //     // console.log(data);
+        // })
+        // .catch(err => {
+        //     // console.log(err);
+        //     errorCode(400);
+        // })
+        // .finally(() => {
+        //     setIsDone(true);
+        //     // setRefresh(false);
+        // })
         // setMyListing(myListings);
         // setLoadDone(true);
         // setRefresh(false);
+        setTimeout(() => {
+            setIsDone(true);
+            // setErrorCode(400);
+            setCropsData("data")
+        }, 3000)
     }
 
     useEffect(() => {
@@ -135,12 +149,18 @@ const Dealers = () => {
                     <SearchIcon />
                     </div>
                     <InputBase
-                    placeholder="Search…"
-                    classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
+                        placeholder="Search…"
+                        classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
+                        }}
+                        inputProps={{ 'aria-label': 'search' }}
+                        onKeyPress={(e) => {
+                            if(e.key === "Enter"){
+                                fetchCrops("search")
+                            }
+                        }}
+                        onChange={(e) =>setSearchTerm(e.target.value)}
                     />
                 </div>
             </div>
@@ -170,7 +190,9 @@ const Dealers = () => {
                                     <Checkbox
                                         name="checkedB"
                                         color="primary"
-                                        checked={cropType.toLowerCase() === filters.crop_type}
+                                        checked={cropType.toLowerCase() === filters.crop_type || 
+                                            (cropType.toLowerCase() === "all" && filters.crop_type === null)
+                                        }
                                     />
                                     }
                                     label={cropType}
@@ -178,7 +200,7 @@ const Dealers = () => {
                                         setFilters((prevState) => {
                                             return {
                                                 ...prevState,
-                                                crop_type: cropType.toLowerCase()
+                                                crop_type: cropType.toLowerCase() === "all"? null: cropType.toLowerCase()
                                             }
                                         })
                                     }}
@@ -252,7 +274,7 @@ const Dealers = () => {
                     />
                 </div>
             </CustomAccordion>
-            {/* <div style={{height: "50px"}}></div> */}
+            <div style={{height: "50px"}}></div>
 
             <div className={styles.applybtn}>
                 <Button variant="contained" fullWidth style={{backgroundColor: "#5cb85c", color: "white"}}
@@ -269,7 +291,7 @@ const Dealers = () => {
     const mainsection = (
         <>
             {
-                !cropsData? <LinearProgress />:
+                !cropsData? (!errorCode? <LinearProgress /> : <Error statusCode={errorCode} />) :
                 <div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
                     <GridView /> 
                 </div>
