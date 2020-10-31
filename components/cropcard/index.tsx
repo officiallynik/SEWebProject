@@ -15,7 +15,6 @@ import BidActions from '../cropcard/bidaction'
 
 const useStyles = makeStyles({
   card: {
-    maxWidth: 250,
     //textAlign: "center",
     backgroundColor: "#E6FBE9"
   },
@@ -82,7 +81,7 @@ const useStyles = makeStyles({
  
 });
 
-export default function CropCard() {
+export default function CropCard(props) {
   const classes = useStyles();
 
   const [modalState,setModalState] = useState(false);

@@ -1,4 +1,4 @@
-import { Button, Checkbox, createStyles, fade, FormControlLabel, InputBase, LinearProgress, makeStyles, TextField, Theme } from '@material-ui/core';
+import { Button, Checkbox, createStyles, fade, FormControlLabel, Grid, InputBase, LinearProgress, makeStyles, TextField, Theme } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import CustomAccordion from '../../components/accordion';
 import ThreeLayout from '../../components/threelayout';
@@ -8,6 +8,7 @@ import styles from '../../styles/Dealer.module.css';
 import CustomModal from '../../components/modal';
 import Axios from '../../helpers/axios';
 import CropCard from '../../components/cropcard';
+import GridView from '../../components/grid/GridView';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     search: {
@@ -184,7 +185,9 @@ const Dealers = () => {
         <>
             {
                 !cropsData? <LinearProgress />:
-                <CropCard />
+                <div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                    <GridView /> 
+                </div>
             }
         </>
     );
@@ -200,6 +203,7 @@ const Dealers = () => {
             sidebarname="Filters"
             mainsection={mainsection}
         />
+        // <GridView />
     );
 };
 

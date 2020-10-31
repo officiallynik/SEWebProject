@@ -17,7 +17,7 @@
 }
 
 .sidebar {
-    width: 372px;
+    min-width: 372px;
 }
 @media (max-width: 760px) {
     .sidebar {
@@ -27,4 +27,6 @@
 
 .mainsection {
     flex-grow: 1;
+    overflow: auto;
+    background-color: #e7e7e7;
 }
