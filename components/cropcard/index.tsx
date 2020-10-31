@@ -14,142 +14,144 @@ import AllBids from '../cropcard/viewbidscard'
 import BidActions from '../cropcard/bidaction'
 
 const useStyles = makeStyles({
-  card: {
-    //textAlign: "center",
-    backgroundColor: "#E6FBE9"
-  },
-  cropPhoto: {
-    width: '100%',
-    height: 130,
-  },
-  cardContent:{
-    textAlign:'center',
-   // paddingBottom:20
-  },
-  text: {
-    fontFamily: "Monserrat",
-    fontWeight:"bold",
-    fontSize: 18,
-    textAlign:'center'
-  },
-  textInfo: {
-    fontFamily: "Monserrat",
-    fontSize: 12,
-    paddingBottom: 6,
-    textAlign:'center'
-  },
-  placeBid: {
-    fontFamily: "Montserrat",
-    fontSize: 12,
-    paddingLeft: 20,
-    paddingRight: 20,
-    borderRadius: 20,
-    
-  },
-    cardHead:{
-      display: 'flex',
-      padding: '6px',
-      alignItems: 'center',
+	card: {
+		// maxWidth: 250,
+		//textAlign: "center",
+		backgroundColor: "white"
+	},
+	cropPhoto: {
+		width: '100%',
+		height: 130,
+	},
+	cardContent: {
+		textAlign: 'center',
+		// paddingBottom:'0px'
+	},
+	text: {
+		fontFamily: "Monserrat",
+		fontWeight: "bold",
+		fontSize: 18,
+		textAlign: 'center'
+	},
+	textInfo: {
+		fontFamily: "Monserrat",
+		fontSize: 12,
+		paddingBottom: 6,
+		textAlign: 'center'
+	},
+	placeBid: {
+		fontFamily: "Montserrat",
+		fontSize: 12,
+		paddingLeft: 20,
+		paddingRight: 20,
+		borderRadius: 20,
+	},
+	cardHead: {
+		display: 'flex',
+		padding: '6px',
+		alignItems: 'center',
+	},
+	avatar: {
+		backgroundColor: red[500],
+	},
+	modal: {
+		backgroundColor: "#E6FBE9",
+		maxWidth: 600,
+		width: '95%',
+		borderRadius: 20,
+		//height:'60%',
+		margin: 'auto',
+		marginTop: '5%',
+	},
+	test: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
 
-   },
-  avatar: {
-    backgroundColor: red[500],
-  },
-  modal:{
-    backgroundColor:"#E6FBE9",
-    maxWidth:600,
-    width:'95%',
-    borderRadius:20,
-    //height:'60%',
-    margin:'auto',
-    marginTop:'5%',
-    
-    
-  },
-  test:{
-    display:'flex',
-    justifyContent:'center',
-    alignItems:'center',
-  },
-
-  modalCards:{
-      marginTop:'4%',
-      marginLeft:'3%',
-      marginRight:'3%',
-  },
- 
- 
+	modalCards: {
+		marginTop: '4%',
+		marginLeft: '3%',
+		marginRight: '3%',
+	},
 });
 
 export default function CropCard(props) {
-  const classes = useStyles();
+	const classes = useStyles();
 
-  const [modalState,setModalState] = useState(false);
+	const [modalState, setModalState] = useState(false);
 
-  const openModal = () => {
-  setModalState(true);
-  };
+	const openModal = () => {
+		setModalState(true);
+	};
 
-  const closeModal = () => {
-      setModalState(false);
-  };
-
-  
-
-  return (
-    <div>
-    
-    <Card className={classes.card} variant="outlined">
-      <CardHeader className={classes.cardHead}
-        avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
-            
-          </Avatar>
-        }
-        title="Farmer's name"
-        subheader="September 14, 2016"
-      />
-      <CardMedia>
-        <img
-          className={classes.cropPhoto}
-          src="https://www.syngenta.co.in/sites/g/files/zhg496/f/2016/08/26/13_rice_800x507_640x406.jpg"
-          alt="loading"
-        ></img>
-      </CardMedia>
-      <CardContent className={classes.cardContent}>
-        <Typography variant="h6" className={classes.text}>
-          Crop Name 
-        </Typography>
-        <Typography variant="h6" className={classes.textInfo}>
-          Rs.1100/q | Estimated Qty: 30 q 
-        </Typography>
-        <Button
-              variant="contained"
-              color="secondary"
-              className={classes.placeBid}
-               onClick={openModal}
-              >
-              Place bid
-        </Button>
-
-       
-       
-      </CardContent>
-    </Card>
-
-    <Modal isOpen={modalState} onRequestClose={closeModal} className={classes.modal}>
-          
-          <div className={classes.test}>
-            <div className={classes.modalCards}><DetailCropCard /></div>
-            <div className={classes.modalCards}><AllBids/></div>
-          </div>
-         
-
-          <div ><BidActions/></div>
-
-    </Modal>  
+	const closeModal = () => {
+		setModalState(false);
+	};
 
 
-    </div>
-  );
+
+	return (
+		<div>
+
+			<Card className={classes.card} variant="outlined">
+				<CardHeader className={classes.cardHead}
+					avatar={
+						<Avatar aria-label="recipe" className={classes.avatar}>
+
+						</Avatar>
+					}
+					title="Farmer's name"
+					subheader="September 14, 2016"
+				/>
+				<CardMedia>
+					<img
+						className={classes.cropPhoto}
+						src="https://www.syngenta.co.in/sites/g/files/zhg496/f/2016/08/26/13_rice_800x507_640x406.jpg"
+						alt="loading"
+					></img>
+				</CardMedia>
+				<CardContent className={classes.cardContent}>
+					<div style={{display: "flex", justifyContent:"space-between"}}>
+						<Typography variant="h6" className={classes.text}>
+							Crop Name
+          				</Typography>
+						<Typography variant="h6" className={classes.text}>
+							Rs.1100/q
+          				</Typography>
+					</div>
+					<div style={{display: "flex", }}>
+						<Typography variant="h6" className={classes.text}>
+								Quantity: 5 Q
+						</Typography>
+					</div>
+
+					<div style={{display: "flex", width: "100%", justifyContent:"flex-end"}}>
+						<Button
+							variant="contained"
+							color="secondary"
+							className={classes.placeBid}
+							onClick={openModal}
+						>
+							Details
+						</Button>
+					</div>
+				</CardContent>
+			</Card>
+
+			<Modal isOpen={modalState} onRequestClose={closeModal} className={classes.modal}>
+
+				<div className={classes.test}>
+					<div className={classes.modalCards}><DetailCropCard /></div>
+					<div className={classes.modalCards}><AllBids /></div>
+				</div>
+
+
+				<div ><BidActions /></div>
+
+			</Modal>
+
+
+		</div>
+	);
 }

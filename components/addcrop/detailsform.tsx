@@ -37,7 +37,7 @@ const DetailsForm = (props) => {
 						required
 						id="msp"
 						name="msp"
-						label="Expected Price (Rs.) per Kg"
+						label="Expected Price (Rs.) per Q"
 						type="number"
 						fullWidth
 						onChange={(e) => handleFieldChange("MSP", e.target.value)}
@@ -49,7 +49,7 @@ const DetailsForm = (props) => {
 						required
 						id="quantity"
 						name="quantity"
-						label="Estimated Quantity (Kgs)"
+						label="Estimated Quantity (Quintal)"
 						fullWidth
 						onChange={(e) => handleFieldChange("quantity", e.target.value)}
 					/>
