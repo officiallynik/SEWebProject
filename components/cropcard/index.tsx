@@ -1,22 +1,17 @@
-import React from "react";
+import React, { useState } from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Button } from "@material-ui/core";
-import Popup from "reactjs-popup";
-import TextField from '@material-ui/core/TextField'
-import CardBid from '../cropcard/card'
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import { red } from '@material-ui/core/colors';
-const contentStyle = {
-  maxWidth: "700px",
-  width: "90%",
-  backgroundColor:'#000000',
-  borderRadius:10
-};
+import Modal from 'react-modal';
+import DetailCropCard from '../cropcard/detailcropcard'
+import AllBids from '../cropcard/viewbidscard'
+import BidActions from '../cropcard/bidaction'
 
 const useStyles = makeStyles({
   card: {
@@ -40,7 +35,6 @@ const useStyles = makeStyles({
   },
   textInfo: {
     fontFamily: "Monserrat",
-    
     fontSize: 12,
     paddingBottom: 6,
     textAlign:'center'
@@ -53,58 +47,59 @@ const useStyles = makeStyles({
     borderRadius: 20,
     
   },
-  warper:{
-    width:'100%',
-    padding:'20px 5%',
-    display:'flex',
-    justifyContent:'space-around',
-    flexWrap:'wrap',
-    border:'1px #cfcece dashed',
-   },
-    content:{
-        width:'100%'
-    },
     cardHead:{
       display: 'flex',
       padding: '6px',
       alignItems: 'center',
 
    },
-   cardbid:{
-       width:'100%',
-       
-   },
-   actions:{
-        float:'left',
-        width:'50%',
-        boxSizing:'border-box',
-        padding:10,
-        textAlign:'center'
-   },
-   actionTextField:{
-        marginTop:'33%',
-        width:'80%',
-        backgroundColor:'#ffffff',
-        borderRadius:3,
-        
-        
-   },
-   actionButton:{
-       marginTop:30,
-       width:'80%',
-       borderRadius:40,
-       
-       
-   },
-   avatar: {
+  avatar: {
     backgroundColor: red[500],
   },
+  modal:{
+    backgroundColor:"#E6FBE9",
+    maxWidth:600,
+    width:'95%',
+    borderRadius:20,
+    //height:'60%',
+    margin:'auto',
+    marginTop:'5%',
+    
+    
+  },
+  test:{
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
+  },
+
+  modalCards:{
+      marginTop:'4%',
+      marginLeft:'3%',
+      marginRight:'3%',
+  },
+ 
+ 
 });
 
 export default function CropCard() {
   const classes = useStyles();
 
+  const [modalState,setModalState] = useState(false);
+
+  const openModal = () => {
+  setModalState(true);
+  };
+
+  const closeModal = () => {
+      setModalState(false);
+  };
+
+  
+
   return (
+    <div>
+    
     <Card className={classes.card} variant="outlined">
       <CardHeader className={classes.cardHead}
         avatar={
@@ -129,50 +124,33 @@ export default function CropCard() {
         <Typography variant="h6" className={classes.textInfo}>
           Rs.1100/q | Estimated Qty: 30 q 
         </Typography>
-        <Popup
-            trigger={<Button
+        <Button
               variant="contained"
               color="secondary"
               className={classes.placeBid}
+               onClick={openModal}
               >
               Place bid
-            </Button>
-        }
-            modal
-            contentStyle={contentStyle}
-        >
-            {close => (
-            <div>
-            
-                {/* <div className={classes.header}> BID </div> */}
+        </Button>
 
-                <div className={classes.content}>
-                    <div className={[classes.actions,classes.cardbid].join(' ')}>
-                        <CardBid/>
-                    </div>
-                    <div className={classes.actions}>
-                        <TextField
-                                className={classes.actionTextField}
-                                variant="filled"
-                                color="secondary"
-                                label="Enter bid price per quintal"
-                                
-                            />
-                        <Button
-                            className={classes.actionButton}
-                            variant="contained"
-                            color="secondary"
-                            >
-                            Place bid
-                        </Button>
-                    </div>
-                
-                </div>
-               
-            </div>
-            )}
-            </Popup>
+       
+       
       </CardContent>
     </Card>
+
+    <Modal isOpen={modalState} onRequestClose={closeModal} className={classes.modal}>
+          
+          <div className={classes.test}>
+            <div className={classes.modalCards}><DetailCropCard /></div>
+            <div className={classes.modalCards}><AllBids/></div>
+          </div>
+         
+
+          <div ><BidActions/></div>
+
+    </Modal>  
+
+
+    </div>
   );
 }
