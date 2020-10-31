@@ -6,6 +6,7 @@ import AddCrop from '../addcrop';
 
 import { notAuthenticated, typeFarmer, typeDealer, typeExpert } from '../../helpers/navOpts';
 import { connect } from 'react-redux';
+import Router from 'next/router';
 
 const MaximizedNavBar = (props) => {
     const [navOpts, setNavOpts] = useState(notAuthenticated);
@@ -30,7 +31,11 @@ const MaximizedNavBar = (props) => {
         <div className={styles.maximizednav}>
             <Container maxWidth="md">
                         <div className={styles.navwrapper}>
-                            <div className={styles.brand} />
+                            <div className={styles.brand} 
+                                onClick={() => {
+                                    Router.push("/");
+                                }}
+                            />
                             
                             {
                                 navOpts.map((navOpt) => {
@@ -42,7 +47,11 @@ const MaximizedNavBar = (props) => {
                                         />
                                     }
                                     return (
-                                        <div className={styles.navoption} key={navOpt.name}>
+                                        <div className={styles.navoption} key={navOpt.name} 
+                                            onClick={() => {
+                                                Router.push(navOpt.path);
+                                            }}
+                                        >
                                             {navOpt.name}
                                         </div>
                                     );

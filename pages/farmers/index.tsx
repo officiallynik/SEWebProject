@@ -1,5 +1,5 @@
 import { Button, Drawer, Icon, LinearProgress } from '@material-ui/core';
-import { List, DoneAll, Favorite, AccountCircle, Refresh } from '@material-ui/icons';
+import { List, DoneAll, Favorite, AccountCircle } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/dashboard/card';
 import CardBody from '../../components/dashboard/cardbody';
@@ -16,6 +16,8 @@ import styles from '../../styles/Farmer.module.css';
 import { connect } from 'react-redux';
 import Axios from '../../helpers/axios';
 import { myListings } from '../../helpers/dummyData';
+import { notifyAction } from '../../store/actions/notifyAction';
+import Router from 'next/router';
 
 const Farmers = (props) => {
 
@@ -69,12 +71,16 @@ const Farmers = (props) => {
     }
 
     useEffect(() => {
+        if(props.userType !== "farmer"){
+            Router.push("/");
+            props.dispatchRedirection("Access Denied", 3, "error")
+        }
         if(props.token && refresh){
             console.log("fetching ", props.token);
             setMyListing(null);
             fetchMyListings();
         }
-    }, [props.token, refresh]);
+    }, [props.token, refresh, props.userType]);
 
     useEffect(() => {
         if(props.loading){
@@ -205,8 +211,15 @@ const mapStateToProps = ({ authReducer }) => {
     return {
         loading: authReducer.loading,
         error: authReducer.error,
-        token: authReducer.token
+        token: authReducer.token,
+        userType: authReducer.userType
     }
 }
 
-export default connect(mapStateToProps)(Farmers);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatchRedirection: (msg: string, exp: number, notifyType: string) => dispatch(notifyAction(msg, exp, notifyType)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Farmers);

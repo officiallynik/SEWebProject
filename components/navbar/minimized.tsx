@@ -11,6 +11,7 @@ import AddCrop from '../addcrop';
 
 import { notAuthenticated, typeFarmer, typeDealer, typeExpert } from '../../helpers/navOpts';
 import { connect } from 'react-redux';
+import Router from 'next/router';
 
 interface props {
     isOpen: boolean,
@@ -66,7 +67,11 @@ const MinimizedNavBar = (props: props) => {
                 >
                     <MenuIcon />
                 </div>
-                <div className={styles.brand}></div>
+                <div className={styles.brand}
+                    onClick={() => {
+                        Router.push("/");
+                    }}
+                ></div>
                 <AuthComponent />
             </div>
             <Drawer anchor="left" 
@@ -90,7 +95,11 @@ const MinimizedNavBar = (props: props) => {
                                 )
                             }
                             return (
-                                <ListItem button key={navOpt.name}>
+                                <ListItem button key={navOpt.name}
+                                    onClick={() => {
+                                        Router.push(navOpt.path);
+                                    }}
+                                >
                                     <ListItemText primary={navOpt.name} />
                                 </ListItem>
                             )
