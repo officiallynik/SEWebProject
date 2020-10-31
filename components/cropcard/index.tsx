@@ -45,6 +45,7 @@ const useStyles = makeStyles({
     paddingLeft: 20,
     paddingRight: 20,
     borderRadius: 20,
+    fontWeight:'bold'
     
   },
     cardHead:{
@@ -130,7 +131,7 @@ export default function CropCard() {
               className={classes.placeBid}
                onClick={openModal}
               >
-              Place bid
+              View Details
         </Button>
 
        
