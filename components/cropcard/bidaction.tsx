@@ -9,7 +9,7 @@ const useStyles = makeStyles({
     txtPlaceBid:{
         marginTop:20,
         width:'50%',
-        
+        backgroundColor:'#ffffff'
     },
 
     btnPlaceBid:{
@@ -33,7 +33,7 @@ const BidActions = () => {
         <div className={classes.bidActions}>
             <div>
                 <TextField
-                    variant="outlined"
+                    variant="filled"
                     label="Enter your bid here..."
                     color="secondary"
 

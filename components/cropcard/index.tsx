@@ -57,14 +57,14 @@ const useStyles = makeStyles({
     backgroundColor: red[500],
   },
   modal:{
-    backgroundColor:"#E6FBE9",
+    backgroundColor:"#000000",
     maxWidth:600,
     width:'95%',
     borderRadius:20,
     //height:'60%',
     margin:'auto',
     marginTop:'5%',
-    
+    border:'none'
     
   },
   test:{

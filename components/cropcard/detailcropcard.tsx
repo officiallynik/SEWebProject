@@ -11,8 +11,8 @@ import { red } from '@material-ui/core/colors';
 
 const useStyles = makeStyles({
     card: {
-        //width: 250,
-        backgroundColor: "#90B896",
+    
+        backgroundColor: "#ffffff",
         maxWidth:250,
          width:'100%',
     },
