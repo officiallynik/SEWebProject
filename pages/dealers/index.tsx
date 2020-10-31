@@ -7,7 +7,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import styles from '../../styles/Dealer.module.css';
 import CustomModal from '../../components/modal';
 import Axios from '../../helpers/axios';
-import CropCard from '../../components/cropcardDealer';
+import CropCard from '../../components/cropcard';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     search: {
