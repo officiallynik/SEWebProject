@@ -41,9 +41,12 @@ const ChatWithExperts = () => {
 
     let chatScreen = isOpen? (
         <div className={`${styles.chatscreen} ${isOpen? styles.show: null}`}>
-            <TitleBar />
+            {/* <TitleBar />
             <MessageList />
-            <TextComposer />
+            <TextComposer /> */}
+            <div style={{background: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                Coming Soon
+            </div>
         </div>
     ) : null;
 

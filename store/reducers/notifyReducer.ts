@@ -15,7 +15,7 @@ const notifyStart = (state, action) => {
     return updateObject(state, {
         isNotify: true,
         msg: action.payload.msg,
-        notifyType: action.payload.notifyType
+        notifyType: action.payload.type
     });
 };
 

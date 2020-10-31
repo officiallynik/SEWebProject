@@ -1,11 +1,11 @@
 import * as actionTypes from '../actionTypes';
 
-export const notifyStart = (msg: string) => {
+export const notifyStart = (msg: string, notifyType) => {
     return {
         type: actionTypes.NOTIFY_START,
         payload: {
             msg,
-            type: "danger"
+            type: notifyType
         }
     }
 };
@@ -16,9 +16,9 @@ export const notifyStop = () => {
     }
 };
 
-export const notifyAction = (msg: string, expirationTime: number) => {
+export const notifyAction = (msg: string, expirationTime: number, notifyType: string) => {
     return dispatch => {
-        dispatch(notifyStart(msg));
+        dispatch(notifyStart(msg, notifyType));
         setTimeout(() => {
             dispatch(notifyStop());
         }, 1000*expirationTime);
