@@ -9,6 +9,7 @@ import CustomModal from '../../components/modal';
 import Axios from '../../helpers/axios';
 import CropCard from '../../components/cropcard';
 import GridView from '../../components/grid/GridView';
+import { faHandLizard } from '@fortawesome/free-regular-svg-icons';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     search: {
@@ -56,8 +57,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 const Dealers = () => {
 
     const initialFilters = {
-        location: null,
-        crop_type: null,
+        pincode: null,
+        crop_type: "all",
         crop_variety: null,
         price_min: null,
         price_max: null,
@@ -70,13 +71,57 @@ const Dealers = () => {
     const [cropsData, setCropsData] = useState(null);
     const [isDone, setIsDone] = useState(false);
 
-    useEffect(() => {
-        setTimeout(() => {
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         setIsDone(true);
+    //         setCropsData({
+    //             "name": "Rice",
+    //         })
+    //     }, 3000);
+    // }, []);
+
+    const handleFilterChange = (val, field) => {
+        setFilters((prevState) => ({
+            ...prevState,
+            [field]: val === 0 || val === ''? null: val
+        }))
+    }
+
+    const fetchCrops = (type="filter") => {
+        Axios.get(`/crops/${type}`, {
+            params:{
+                ...filters
+            }
+        })
+        .then(res => {
+            console.log(res.data);
+            // const data = res.data.map(item => {
+            //     return {
+            //         name: item.name,
+            //         price: item.MSP,
+            //         quantity: item.quantity,
+            //         bids: item.biddings.length,
+            //         date: new Date().toDateString(),
+            //         _id: item._id
+            //     }
+            // })
+            // setMyListing(data);
+            // console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        .finally(() => {
             setIsDone(true);
-            setCropsData({
-                "name": "Rice",
-            })
-        }, 3000);
+            // setRefresh(false);
+        })
+        // setMyListing(myListings);
+        // setLoadDone(true);
+        // setRefresh(false);
+    }
+
+    useEffect(() => {
+        fetchCrops();
     }, []);
     
     const topbar = (
@@ -106,14 +151,10 @@ const Dealers = () => {
         <div>
             <CustomAccordion heading="Location">
                 <TextField id="outlined-basic" label="Search by pincode" variant="outlined" fullWidth 
-                    value={filters.location} onChange={(e) =>
-                        setFilters((prevState) => {
-                            return {
-                                ...prevState,
-                                location: e.currentTarget.value
-                            }
-                        })
-                    }
+                    value={!filters.pincode? '': filters.pincode} 
+                    onChange={(e) => {
+                        handleFilterChange(+e.target.value, "pincode");
+                    }}
                     type="number"
                 />
             </CustomAccordion>
@@ -123,14 +164,24 @@ const Dealers = () => {
                         ["All", "Kharif", "Rabi", "Vegetable", "Herbal", "Fruit/Flower"].map((cropType: string) => {
                             return (
                                 <FormControlLabel
+                                    value={10}
                                     key={cropType}
                                     control={
                                     <Checkbox
                                         name="checkedB"
                                         color="primary"
+                                        checked={cropType.toLowerCase() === filters.crop_type}
                                     />
                                     }
                                     label={cropType}
+                                    onChange={() => {
+                                        setFilters((prevState) => {
+                                            return {
+                                                ...prevState,
+                                                crop_type: cropType.toLowerCase()
+                                            }
+                                        })
+                                    }}
                                 />
                             );
                         })
@@ -139,7 +190,7 @@ const Dealers = () => {
                 </div>
             </CustomAccordion>
             <CustomAccordion heading="Crop Variety">
-                <div className={styles.croptypeopts}>
+                {/* <div className={styles.croptypeopts}>
                     {
                         ["All", "Kharif", "Rabi", "Vegetable", "Herbal", "Fruit/Flower"].map((cropType: string) => {
                             return (
@@ -157,24 +208,58 @@ const Dealers = () => {
                         })
                     }
                     
-                </div>
+                </div> */}
+                <TextField id="outlined-basic" label="Crop Variety" variant="outlined" fullWidth 
+                    value={!filters.crop_variety? '': filters.crop_variety}
+                    onChange={(e) => {
+                        handleFilterChange(e.target.value, "crop_variety");
+                    }}
+                />
             </CustomAccordion>
             <CustomAccordion heading="Quantity">
                 <div className={styles.priceopts}>
-                    <TextField id="outlined-basic" label="Min. (Kgs)" variant="outlined" style={{width: "90%"}} />
-                    <TextField id="outlined-basic" label="Max. (Kgs)" variant="outlined" style={{width: "90%"}} />
+                    <TextField id="outlined-basic" label="Min. (Q)" variant="outlined" style={{width: "90%"}} 
+                        value={!filters.quantity_min? '': filters.quantity_min} 
+                        onChange={(e) => {
+                            handleFilterChange(+e.target.value, "quantity_min");
+                        }}
+                        type="number"
+                    />
+                    <TextField id="outlined-basic" label="Max. (Q)" variant="outlined" style={{width: "90%"}} 
+                        value={!filters.quantity_max? '': filters.quantity_max} 
+                        onChange={(e) => {
+                            handleFilterChange(+e.target.value, "quantity_max");
+                        }}
+                        type="number"
+                    />
                 </div>
             </CustomAccordion>
             <CustomAccordion heading="Price per Quintal">
                 <div className={styles.priceopts}>
-                    <TextField id="outlined-basic" label="Min. Price" variant="outlined" style={{width: "90%"}} />
-                    <TextField id="outlined-basic" label="Max. Price" variant="outlined" style={{width: "90%"}} />
+                    <TextField id="outlined-basic" label="Min. Price" variant="outlined" style={{width: "90%"}} 
+                        value={!filters.price_min? '': filters.price_min} 
+                        onChange={(e) => {
+                            handleFilterChange(+e.target.value, "price_min");
+                        }}
+                        type="number"
+                    />
+                    <TextField id="outlined-basic" label="Max. Price" variant="outlined" style={{width: "90%"}} 
+                        value={!filters.price_max? '': filters.price_max} 
+                        onChange={(e) => {
+                            handleFilterChange(+e.target.value, "price_max");
+                        }}
+                        type="number"
+                    />
                 </div>
             </CustomAccordion>
-            <div style={{height: "50px"}}></div>
+            {/* <div style={{height: "50px"}}></div> */}
 
             <div className={styles.applybtn}>
-                <Button variant="contained" fullWidth style={{backgroundColor: "#5cb85c", color: "white"}}>
+                <Button variant="contained" fullWidth style={{backgroundColor: "#5cb85c", color: "white"}}
+                    onClick={() => {
+                        fetchCrops();
+                    }}
+                >
                     Apply Changes
                 </Button>
             </div>
