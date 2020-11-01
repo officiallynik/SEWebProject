@@ -5,6 +5,7 @@ import MinimizedNavBar from './minimized';
 
 import { authCheckState } from '../../store/actions/authAction';
 import { connect } from 'react-redux';
+import CustomLinearProgress from '../linearprogress';
 
 const NavBar = (props) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -27,27 +28,30 @@ const NavBar = (props) => {
     return (
         <React.Fragment>
             <nav className={styles.navbar}>
-                <MaximizedNavBar/>
+                <MaximizedNavBar />
                 <MinimizedNavBar 
                     isOpen={isOpen}
                     handleMenuClick={() => handleMenuClick()} 
                 />
             </nav>
+            {
+                props.loading? <CustomLinearProgress />: null
+            }
         </React.Fragment>
     );
 };
 
-// const mapStateToProps = state => {
-// 	return {
-// 		isAuthenticated: state.auth.token !== null
-// 	};
-// };
+const mapStateToProps = ({ authReducer }) => {
+	return {
+		loading: authReducer.loading,
+	};
+};
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onTryAutoSignup: () => dispatch(authCheckState())
+		onTryAutoSignup: () => dispatch(authCheckState()),
 	};
 };
 
 
-export default React.memo(connect(null, mapDispatchToProps)(NavBar));
+export default React.memo(connect(mapStateToProps, mapDispatchToProps)(NavBar));

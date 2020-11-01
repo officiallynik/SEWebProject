@@ -7,6 +7,7 @@
     height: 45px;
     color: white;
     z-index: 10;
+    user-select: none;
 }
 
 .navwrapper {

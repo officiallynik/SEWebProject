@@ -31,6 +31,7 @@ export const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('name');
     localStorage.removeItem('userType');
+    localStorage.removeItem('_id');
     return {
         type: actionTypes.AUTH_LOGOUT
     };
@@ -45,29 +46,30 @@ export const authLogin = (phone, password, isRemember) => {
         };
         // console.log(authData)
         let url = '/login'; 
-        Axios.post(url, authData)
-            .then(response => {
-                if(isRemember){
-                    localStorage.setItem('token', response.data.token);
-                    localStorage.setItem('name', response.data.user.name);
-                    localStorage.setItem('userType', response.data.userType);
-                    localStorage.setItem('_id', response.data.user._id);
-                }
+        // Axios.post(url, authData)
+        //     .then(response => {
+        //         if(isRemember){
+        //             localStorage.setItem('token', response.data.token);
+        //             localStorage.setItem('name', response.data.user.name);
+        //             localStorage.setItem('userType', response.data.userType);
+        //             localStorage.setItem('_id', response.data.user._id);
+        //         }
 
-                console.log("login res: ", response);
-                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, response.data.userType));
-            })
-            .catch(err => {
-                console.log("login err: ", err);
-                dispatch(authFail("Wrong Credentials"));
-            });
+        //         console.log("login res: ", response);
+        //         dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, response.data.userType));
+        //     })
+        //     .catch(err => {
+        //         console.log("login err: ", err);
+        //         dispatch(authFail("Wrong Credentials"));
+        //     });
 
-        // setTimeout(() => {
-        //     dispatch(authSuccess("sdghfjksdhfjkhsdklj", {
-        //         name: "Nikhil",
-        //         userType: "farmer"
-        //     }))
-        // }, 3000)
+        setTimeout(() => {
+            dispatch(authSuccess("sdghfjksdhfjkhsdklj",
+                "Nikhil",
+                "dfkshgdfjklgkjdh",
+                "farmer"
+            ))
+        }, 3000)
         // setTimeout(() => {
         //     dispatch(authFail("wrong credentials"))
         // }, 3000)
@@ -135,6 +137,26 @@ export const authUpdateProfile = (userType, reqBody, token) => {
         // }, 3000)
     };
 };
+
+export const authLogout = (userType, token) => {
+    return dispatch => {
+        dispatch(authStart());
+        // Axios.post(`/${userType}/logout`, {}, {
+        //     headers: {
+        //         "Authorization": `Bearer ${token}`
+        //     }
+        // })
+        // .then(res => {
+        //     dispatch(logout());
+        // })
+        // .catch(err => {
+        //     dispatch(authFail("error signing out, try again"))
+        // })
+        setTimeout(() => {
+            dispatch(logout());
+        }, 3000)
+    }
+}
 
 export const authClearErrors = () => {
     return {
