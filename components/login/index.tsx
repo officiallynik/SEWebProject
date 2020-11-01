@@ -16,6 +16,7 @@ import { authLogin, authClearErrors } from '../../store/actions/authAction';
 import { connect } from 'react-redux';
 import { Alert } from '@material-ui/lab';
 import { CircularProgress } from '@material-ui/core';
+import Router from 'next/router';
 
 function Copyright() {
     return (
@@ -65,7 +66,8 @@ const SignIn = (props) => {
             );
     }
     else if(!props.loading && props.token){
-        signInIcon = <Alert severity="success" style={{margin: "10px 0"}}>Login Successfull</Alert>
+        signInIcon = <Alert severity="success" style={{margin: "10px 0"}}>Login Successfull</Alert>;
+        Router.push(props.redirectPath);
     }
     else if(!props.loading && props.error){
         signInIcon = <Alert severity="error" style={{margin: "10px 0"}}>{props.error}</Alert>
@@ -162,7 +164,8 @@ const mapStateToProps = ({ authReducer }) => {
     return {
         loading: authReducer.loading,
         error: authReducer.error,
-        token: authReducer.token
+        token: authReducer.token,
+        redirectPath: authReducer.authRedirectPath,
     }
 }
 

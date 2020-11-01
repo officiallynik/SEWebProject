@@ -98,40 +98,40 @@ const Dealers = () => {
         if(type === "search"){
             params = { term: searchTerm }
         }
-        // Axios.get(`/crops/${type}`, {
-        //     params: params
-        // })
-        // .then(res => {
-        //     console.log(res.data);
-        //     // const data = res.data.map(item => {
-        //     //     return {
-        //     //         name: item.name,
-        //     //         price: item.MSP,
-        //     //         quantity: item.quantity,
-        //     //         bids: item.biddings.length,
-        //     //         date: new Date().toDateString(),
-        //     //         _id: item._id
-        //     //     }
-        //     // })
-        //     // setMyListing(data);
-        //     // console.log(data);
-        // })
-        // .catch(err => {
-        //     // console.log(err);
-        //     errorCode(400);
-        // })
-        // .finally(() => {
-        //     setIsDone(true);
-        //     // setRefresh(false);
-        // })
-        // setMyListing(myListings);
-        // setLoadDone(true);
-        // setRefresh(false);
-        setTimeout(() => {
+        Axios.get(`/crops/${type}`, {
+            params: params
+        })
+        .then(res => {
+            console.log(res.data);
+            // const data = res.data.map(item => {
+            //     return {
+            //         name: item.name,
+            //         price: item.MSP,
+            //         quantity: item.quantity,
+            //         bids: item.biddings.length,
+            //         date: new Date().toDateString(),
+            //         _id: item._id
+            //     }
+            // })
+            // setMyListing(data);
+            // console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+            setErrorCode(404);
+        })
+        .finally(() => {
             setIsDone(true);
-            // setErrorCode(400);
-            setCropsData("data")
-        }, 3000)
+            // setRefresh(false);
+        })
+        // setMyListing(myListings);
+        // setIsDone(true);
+        // setRefresh(false);
+        // setTimeout(() => {
+        //     setIsDone(true);
+        //     // setErrorCode(400);
+        //     setCropsData("data")
+        // }, 3000)
     }
 
     useEffect(() => {

@@ -1,10 +1,11 @@
 import { Button, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { authLogout } from '../../store/actions/authAction';
 import SignIn from '../login';
 import CustomModal from '../modal';
 import SignUp from '../signup';
+import Router from 'next/router';
 
 const AuthComponent = (props) => {
     const [isLogin, setIsLogin] = useState(true);
@@ -46,7 +47,7 @@ const AuthComponent = (props) => {
                 Notifications
             </MenuItem>
             <div style={{overflow: "auto", }}>
-                <MenuItem
+                {/* <MenuItem
                 >
                     New bid on Rice crop
                 </MenuItem>
@@ -69,6 +70,9 @@ const AuthComponent = (props) => {
                 <MenuItem
                 >
                     New bid on Rice crop
+                </MenuItem> */}
+                <MenuItem>
+                    Notifications Coming Soon
                 </MenuItem>
             </div>
         </div>
@@ -85,7 +89,7 @@ const AuthComponent = (props) => {
                 open={Boolean(openProfile)}
                 anchorEl={openProfile}
                 transition
-                style={{ background: "white", marginTop: "11px", marginRight: "54px" }}
+                style={{ background: "white", marginTop: "11px", marginRight: "54px", zIndex: 100 }}
             >
                 {({ TransitionProps, placement }) => (
                     <Grow
@@ -106,6 +110,7 @@ const AuthComponent = (props) => {
                                             handleCloseProfile()
                                             props.dispatchLogout(props.userType, props.token);
                                         }}
+                                        style={{borderTop: "1px solid black"}}
                                     >
                                         Logout
                                     </MenuItem>
@@ -117,6 +122,12 @@ const AuthComponent = (props) => {
             </Popper>
         </div>
     );
+
+    useEffect(() => {
+        if(!props.token){
+            Router.push(props.redirectPath);
+        }
+    }, [props.token])
 
     return (
         <div>
@@ -130,7 +141,8 @@ const mapStateToProps = ({ authReducer }) => {
     return {
         loading: authReducer.loading,
         token: authReducer.token,
-        userType: authReducer.userType
+        userType: authReducer.userType,
+        redirectPath: authReducer.authRedirectPath
     }
 }
 

@@ -45,31 +45,32 @@ export const authLogin = (phone, password, isRemember) => {
             password: password
         };
         // console.log(authData)
+        
         let url = '/login'; 
-        // Axios.post(url, authData)
-        //     .then(response => {
-        //         if(isRemember){
-        //             localStorage.setItem('token', response.data.token);
-        //             localStorage.setItem('name', response.data.user.name);
-        //             localStorage.setItem('userType', response.data.userType);
-        //             localStorage.setItem('_id', response.data.user._id);
-        //         }
+        Axios.post(url, authData)
+            .then(response => {
+                if(isRemember){
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('name', response.data.user.name);
+                    localStorage.setItem('userType', response.data.userType);
+                    localStorage.setItem('_id', response.data.user._id);
+                }
 
-        //         console.log("login res: ", response);
-        //         dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, response.data.userType));
-        //     })
-        //     .catch(err => {
-        //         console.log("login err: ", err);
-        //         dispatch(authFail("Wrong Credentials"));
-        //     });
-
-        setTimeout(() => {
-            dispatch(authSuccess("sdghfjksdhfjkhsdklj",
-                "Nikhil",
-                "dfkshgdfjklgkjdh",
-                "farmer"
-            ))
-        }, 3000)
+                // console.log("login res: ", response);
+                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, response.data.userType));
+                dispatch(setAuthRedirectPath(`/${response.data.userType}s`));
+            })
+            .catch(err => {
+                console.log("login err: ", err);
+                dispatch(authFail("Wrong Credentials"));
+            });
+        // setTimeout(() => {
+        //     dispatch(authSuccess("sdghfjksdhfjkhsdklj",
+        //         "Nikhil",
+        //         "dfkshgdfjklgkjdh",
+        //         "farmer"
+        //     ))
+        // }, 3000)
         // setTimeout(() => {
         //     dispatch(authFail("wrong credentials"))
         // }, 3000)
@@ -77,6 +78,7 @@ export const authLogin = (phone, password, isRemember) => {
 };
 
 export const authSignUp = (userType, reqBody) => {
+    console.log(userType, reqBody);
     return dispatch => {
         dispatch(authStart());
         
@@ -91,6 +93,7 @@ export const authSignUp = (userType, reqBody) => {
                 // console.log(response);
 
                 dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, userType));
+                dispatch(setAuthRedirectPath(`/${userType}s`));
             })
             .catch(err => {
                 // console.log(err);
@@ -141,20 +144,21 @@ export const authUpdateProfile = (userType, reqBody, token) => {
 export const authLogout = (userType, token) => {
     return dispatch => {
         dispatch(authStart());
-        // Axios.post(`/${userType}/logout`, {}, {
-        //     headers: {
-        //         "Authorization": `Bearer ${token}`
-        //     }
-        // })
-        // .then(res => {
-        //     dispatch(logout());
-        // })
-        // .catch(err => {
-        //     dispatch(authFail("error signing out, try again"))
-        // })
-        setTimeout(() => {
+        Axios.post(`/${userType}/logout`, {}, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(res => {
             dispatch(logout());
-        }, 3000)
+            dispatch(setAuthRedirectPath("/"));
+        })
+        .catch(err => {
+            dispatch(authFail("error signing out, try again"))
+        })
+        // setTimeout(() => {
+        //     dispatch(logout());
+        // }, 3000)
     }
 }
 
