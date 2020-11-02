@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const instance = axios.create({
-    baseURL: 'http://localhost:5000';
+const Axios = axios.create({
+    baseURL: 'https://fathomless-tundra-87077.herokuapp.com'
 });
 
-export default instance;
+export default Axios;

@@ -6,14 +6,17 @@ import MenuIcon from '@material-ui/icons/Menu';
 import styles from '../../styles/Navbar.module.css';
 
 import useWindowSize from '../../helpers/getSize';
-import AuthComponent from './auth';
+import AuthComponent from '../Auth/auth';
+import AddCrop from '../addcrop';
 
 import { notAuthenticated, typeFarmer, typeDealer, typeExpert } from '../../helpers/navOpts';
+import { connect } from 'react-redux';
+import Router from 'next/router';
 
 interface props {
     isOpen: boolean,
     handleMenuClick: Function,
-    authenticated: string
+    userType: string
 }
 
 const drawerMakeStyles = makeStyles({
@@ -30,7 +33,7 @@ const MinimizedNavBar = (props: props) => {
     const [navOpts, setNavOpts] = useState(notAuthenticated);
 
     useEffect(() => {
-        switch(props.authenticated) {
+        switch(props.userType) {
             case "farmer":
                  setNavOpts(typeFarmer);
                 return;
@@ -43,7 +46,7 @@ const MinimizedNavBar = (props: props) => {
             default:
                  setNavOpts(notAuthenticated);
         }
-    }, [props.authenticated]);
+    }, [props.userType]);
 
     const screenSize = useWindowSize();
 
@@ -64,7 +67,11 @@ const MinimizedNavBar = (props: props) => {
                 >
                     <MenuIcon />
                 </div>
-                <div className={styles.brand}></div>
+                <div className={styles.brand}
+                    onClick={() => {
+                        Router.push("/");
+                    }}
+                ></div>
                 <AuthComponent />
             </div>
             <Drawer anchor="left" 
@@ -75,11 +82,28 @@ const MinimizedNavBar = (props: props) => {
                 <List classes={{root: drawerStyles.root}}>
                 
                     {
-                        navOpts.map(navOpt => (
-                            <ListItem button key={navOpt.name}>
-                                <ListItemText primary={navOpt.name} />
-                            </ListItem>
-                        ))
+                        navOpts.map(navOpt => {
+                            if(navOpt.path == "/sell-crop"){
+                                return (
+                                    <AddCrop modalBtn={
+                                        (<ListItem button>
+                                            <ListItemText primary={navOpt.name} />
+                                        </ListItem>)
+                                    } 
+                                        key={navOpt.name}
+                                    />
+                                )
+                            }
+                            return (
+                                <ListItem button key={navOpt.name}
+                                    onClick={() => {
+                                        Router.push(navOpt.path);
+                                    }}
+                                >
+                                    <ListItemText primary={navOpt.name} />
+                                </ListItem>
+                            )
+                        })
                     }
 
                 </List>
@@ -88,4 +112,10 @@ const MinimizedNavBar = (props: props) => {
     );
 };
 
-export default React.memo(MinimizedNavBar);
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        userType: authReducer.userType
+    }
+};
+
+export default React.memo(connect(mapStateToProps)(MinimizedNavBar));

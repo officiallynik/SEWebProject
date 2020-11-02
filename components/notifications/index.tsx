@@ -12,7 +12,7 @@ const Notify = (props) => {
             anchorOrigin={{horizontal: "left", vertical: "bottom"}}
         >
             <div style={{width: "100%"}}>
-                <Alert severity={props.notifyType||"info"} >
+                <Alert severity={props.notifyType || "info"} >
                     {props.msg}
                 </Alert>
             </div>

@@ -18,9 +18,9 @@
 }
 @media(max-width: 760px) {
     .applybtn {
-        position: fixed;
+        position: sticky;
         bottom: 10px;
-        width: calc(100% - 20px);
+        width: calc(100%);
     }
 }
 

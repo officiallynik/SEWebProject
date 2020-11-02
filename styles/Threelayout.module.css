@@ -1,7 +1,6 @@
 .threelayout {
     width: 100%;
-    height: 100vh;
-    padding-top: 45px;
+    height: calc(100vh - 45px);
     display: flex;
     flex-direction: column;
 }
@@ -18,6 +17,7 @@
 }
 
 .sidebar {
+    min-width: 372px;
     width: 372px;
 }
 @media (max-width: 760px) {
@@ -28,4 +28,6 @@
 
 .mainsection {
     flex-grow: 1;
+    overflow: auto;
+    background-color: #e7e7e7;
 }

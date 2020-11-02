@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import { useSpring, animated } from 'react-spring/web.cjs';
 import styles from '../../styles/Modal.module.css';
-import { Close, HighlightOff } from '@material-ui/icons';
+import { HighlightOff } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		modal: {
 			display: 'flex',
 			alignItems: 'center',
-			justifyContent: 'center',
+			justifyContent: 'center'
 		},
 		paper: {
 			backgroundColor: theme.palette.background.paper,
@@ -54,7 +54,7 @@ const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(props, re
 
 const CustomModal = (props) => {
 	const classes = useStyles();
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
 
 	const handleOpen = () => {
 		setOpen(true);
@@ -63,6 +63,16 @@ const CustomModal = (props) => {
 	const handleClose = () => {
 		setOpen(false);
 	};
+
+	const handleCloseModal = (exp) => {
+		setTimeout(() => {
+			handleClose();
+		}, exp);
+	}
+
+	if(!props.isLoading && !!props.token){
+		handleCloseModal(props.exp);
+	}
 
 	return (
 		<div>
@@ -85,6 +95,7 @@ const CustomModal = (props) => {
 						<div
 							className={styles.closebtn}
 							onClick={handleClose}
+							style={!props.isLoading? {}:{display: "none"}}
 						>
 							<HighlightOff style={{width: "30px", height: "30px"}} />
 						</div>

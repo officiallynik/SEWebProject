@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -9,15 +9,20 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import { createStyles, FormControl, InputBase, InputLabel, MenuItem, NativeSelect, Select, Theme, withStyles } from '@material-ui/core';
+import { CircularProgress, createStyles, FormControl, InputBase, InputLabel, MenuItem, NativeSelect, Select, Theme, withStyles } from '@material-ui/core';
+
+import { authSignUp, authClearErrors } from '../../store/actions/authAction';
+import { connect } from 'react-redux';
+import { Alert } from '@material-ui/lab';
+import Router from 'next/router';
 
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
+            <Link color="inherit" href="#">
                 Farmer Portal
-      </Link>{' '}
+            </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
         </Typography>
@@ -59,7 +64,7 @@ const SignUp = (props) => {
     const [fullName, setFullName] = useState<null|String>(null);
     const [age, setAge] = useState<null|Number>(null);
     const [landSize, setLandSize] = useState<null|Number>(null);
-    const [pincode, setPiincode] = useState<null|Number>(null);
+    const [pincode, setPincode] = useState<null|Number>(null);
     const [location, setLocation] = useState<null|string>(null);
     const [password, setPassword] = useState<null|string>(null);
     const [dealerType, setDealerType] = useState<null|string>(null);
@@ -68,11 +73,32 @@ const SignUp = (props) => {
         setUserType(event.target.value as string);
     };
 
+    const handleSignUp = (event) => {
+        event.preventDefault();
+        props.dispatchSignUp(userType, {
+            name: fullName,
+            phone: phoneNumber,
+            age: age,
+            land_acres: landSize,
+            pincode: pincode,
+            location: location,
+            password: password,
+            dealertype: dealerType
+        });
+    }
+
+    useEffect(() => {
+        return () => {
+            props.clearErrors();
+        }
+    }, []);
+
     let signUpForm = (
-        <form style={{ width: '100%', marginTop: "5px" }} noValidate>
+        <form style={{ width: '100%', marginTop: "5px" }}>
             <Grid container spacing={2}>
                 <Grid item xs={9} sm={8}>
                     <TextField
+                        disabled={props.loading}
                         autoComplete="fname"
                         name="fullName"
                         variant="outlined"
@@ -81,10 +107,15 @@ const SignUp = (props) => {
                         id="fullName"
                         label="Full Name"
                         autoFocus
+                        value={fullName === null? '': fullName}
+                        onChange={(e) => {
+                            setFullName(e.target.value === ''? null: e.target.value)
+                        }}
                     />
                 </Grid>
                 <Grid item xs={3} sm={4}>
                     <TextField
+                        disabled={props.loading}
                         variant="outlined"
                         required
                         fullWidth
@@ -93,10 +124,15 @@ const SignUp = (props) => {
                         name="age"
                         autoComplete="age"
                         type="number"
+                        value={age === null? '': age}
+                        onChange={(e) => {
+                            setAge(+e.target.value === 0? null: +e.target.value)
+                        }}
                     />
                 </Grid>
                 <Grid item xs={6} sm={6}>
                     <TextField
+                        disabled={props.loading}
                         variant="outlined"
                         required
                         fullWidth
@@ -105,10 +141,15 @@ const SignUp = (props) => {
                         name="pincode"
                         autoComplete="pincode"
                         type="number"
+                        value={pincode === null? '': pincode}
+                        onChange={(e) => {
+                            setPincode(+e.target.value === 0? null: +e.target.value)
+                        }}
                     />
                 </Grid>
                 <Grid item xs={6} sm={6}>
                     <TextField
+                        disabled={props.loading}
                         variant="outlined"
                         required
                         fullWidth
@@ -117,23 +158,32 @@ const SignUp = (props) => {
                         name="land"
                         autoComplete="land"
                         type="number"
+                        value={landSize === null? '': landSize}
+                        onChange={(e) => {
+                            setLandSize(+e.target.value === 0? null: +e.target.value)
+                        }}
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
+                        disabled={props.loading}
                         variant="outlined"
                         required
                         fullWidth
                         id="phone"
                         label="Phone Number"
                         name="phone"
-                        autoComplete="phone"
                         type="tel"
                         datatype="number"
+                        value={phoneNumber === null? '': phoneNumber}
+                        onChange={(e) => {
+                            setPhoneNumber(+e.target.value === 0? null: +e.target.value)
+                        }}
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
+                        disabled={props.loading}
                         variant="outlined"
                         required
                         fullWidth
@@ -141,10 +191,15 @@ const SignUp = (props) => {
                         label="Location"
                         name="location"
                         autoComplete="location"
+                        value={location === null? '': location}
+                        onChange={(e) => {
+                            setLocation(e.target.value === ''? null: e.target.value)
+                        }}
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
+                        disabled={props.loading}
                         variant="outlined"
                         required
                         fullWidth
@@ -153,69 +208,89 @@ const SignUp = (props) => {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        value={password === null? '': password}
+                        onChange={(e) => {
+                            setPassword(e.target.value === ''? null: e.target.value)
+                        }}
                     />
                 </Grid>
             </Grid>
             <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                style={{ margin: "15px 0 10px" }}
-            >
-                Sign Up
-                    </Button>
-            <Grid container justify="flex-end">
-                <Grid item>
-                    <Link href="#" variant="body2" onClick={props.handleSignInOpen}>
-                        Already have an account? Sign in
-                            </Link>
+                    disabled={props.loading}
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    style={{ margin: "15px 0 10px" }}
+                    onClick={handleSignUp}
+                >
+                    Sign Up
+                </Button>
+                <Grid container justify="flex-end">
+                    <Grid item style={!props.loading? {}:{display: "none"}}>
+                        <Link href="#" variant="body2" onClick={props.handleSignInOpen}>
+                            Already have an account? Sign in
+                        </Link>
+                    </Grid>
                 </Grid>
-            </Grid>
         </form>
     );
 
     if (userType === "dealer") {
         signUpForm = (
-            <form style={{ width: '100%', marginTop: "5px" }} noValidate>
-                <Grid container spacing={2}>
-                    <Grid item xs={9} sm={8}>
-                        <TextField
-                            autoComplete="fname"
-                            name="fullName"
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="fullName"
-                            label="Full Name"
-                            autoFocus
-                        />
-                    </Grid>
-                    <Grid item xs={3} sm={4}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="age"
-                            label="Age"
-                            name="age"
-                            autoComplete="age"
-                            type="number"
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={6}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="pincode"
-                            label="Pincode"
-                            name="pincode"
-                            autoComplete="pincode"
-                            type="number"
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={6}>
+            <form style={{ width: '100%', marginTop: "5px" }}>
+            <Grid container spacing={2}>
+                <Grid item xs={9} sm={8}>
+                    <TextField
+                        disabled={props.loading}
+                        autoComplete="fname"
+                        name="fullName"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="fullName"
+                        label="Full Name"
+                        autoFocus
+                        value={fullName === null? '': fullName}
+                        onChange={(e) => {
+                            setFullName(e.target.value === ''? null: e.target.value)
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={3} sm={4}>
+                    <TextField
+                        disabled={props.loading}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="age"
+                        label="Age"
+                        name="age"
+                        autoComplete="age"
+                        type="number"
+                        value={age === null? '': age}
+                        onChange={(e) => {
+                            setAge(+e.target.value === 0? null: +e.target.value)
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={6} sm={6}>
+                    <TextField
+                        disabled={props.loading}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="pincode"
+                        label="Pincode"
+                        name="pincode"
+                        autoComplete="pincode"
+                        type="number"
+                        value={pincode === null? '': pincode}
+                        onChange={(e) => {
+                            setPincode(+e.target.value === 0? null: +e.target.value)
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={6} sm={6}>
                         <FormControl required fullWidth>
                             <InputLabel variant="outlined" id="demo-simple-select-required-label">Dealer Type</InputLabel>
                             <Select
@@ -223,8 +298,24 @@ const SignUp = (props) => {
                                 id="demo-simple-select-required"
                                 variant="outlined"
                                 label="Dealer Type"
+                                onChange={(e) => {
+                                    switch(e.target.value){
+                                        case 10:
+                                            setDealerType("Private");
+                                            return;
+                                        case 20:
+                                            setDealerType("Govn. Mandis");
+                                            return;
+                                        case 30:
+                                            setDealerType("Agro Company");
+                                            return;
+                                        default:
+                                            setDealerType("null");
+                                    }
+                                }}
+                                value={dealerType === "Private"? 10: dealerType === "Govn. Mandis"? 20: dealerType === "Agro Company"? 30: ''}
                             >
-                                <MenuItem value="">
+                                <MenuItem value={``}>
                                     <em>None</em>
                                 </MenuItem>
                                 <MenuItem value={10}>Private</MenuItem>
@@ -233,61 +324,104 @@ const SignUp = (props) => {
                                 </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="phone"
-                            label="Phone Number"
-                            name="phone"
-                            autoComplete="phone"
-                            type="tel"
-                            datatype="number"
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="location"
-                            label="Location"
-                            name="location"
-                            autoComplete="location"
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
-                    </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        disabled={props.loading}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="phone"
+                        label="Phone Number"
+                        name="phone"
+                        type="tel"
+                        datatype="number"
+                        value={phoneNumber === null? '': phoneNumber}
+                        onChange={(e) => {
+                            setPhoneNumber(+e.target.value === 0? null: +e.target.value)
+                        }}
+                    />
                 </Grid>
-                <Button
-                    type="submit"
+                <Grid item xs={12}>
+                    <TextField
+                        disabled={props.loading}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="location"
+                        label="Location"
+                        name="location"
+                        autoComplete="location"
+                        value={location === null? '': location}
+                        onChange={(e) => {
+                            setLocation(e.target.value === ''? null: e.target.value)
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        disabled={props.loading}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+                        value={password === null? '': password}
+                        onChange={(e) => {
+                            setPassword(e.target.value === ''? null: e.target.value)
+                        }}
+                    />
+                </Grid>
+            </Grid>
+            <Button
+                    disabled={props.loading}
                     fullWidth
                     variant="contained"
                     color="primary"
                     style={{ margin: "15px 0 10px" }}
+                    onClick={handleSignUp}
                 >
                     Sign Up
-                    </Button>
+                </Button>
                 <Grid container justify="flex-end">
-                    <Grid item>
-                        <Link href="#" variant="body2">
+                    <Grid item style={!props.loading? {}:{display: "none"}}>
+                        <Link href="#" variant="body2" onClick={props.handleSignInOpen}>
                             Already have an account? Sign in
-                            </Link>
+                        </Link>
                     </Grid>
                 </Grid>
-            </form>
+        </form>
         )
+    }
+
+    let signUpIcon = (
+        <Avatar style={{ margin: "5px", color: "white", backgroundColor: "#3BB78F" }}>
+            <LockOutlinedIcon />
+        </Avatar>
+    );
+
+    if(props.loading){
+            signUpIcon = (
+                <Avatar style={{ margin: "5px" }}>
+                    <CircularProgress/>
+                </Avatar>
+            );
+    }
+    else if(!props.loading && props.token){
+        signUpIcon = <Alert severity="success" style={{margin: "10px 0"}}>SignUp Successfull</Alert>;
+        Router.push(props.redirectPath);
+    }
+    else if(!props.loading && props.error){
+        signUpIcon = <Alert severity="error" style={{margin: "10px 0"}}>{props.error}</Alert>
+    }
+    else{
+        signUpIcon = (
+            <Avatar style={{ margin: "5px", color: "white", backgroundColor: "#3BB78F" }}>
+                <LockOutlinedIcon />
+            </Avatar>
+        );
     }
 
 
@@ -299,14 +433,12 @@ const SignUp = (props) => {
                 flexDirection: 'column',
                 alignItems: 'center'
             }}>
-                <Avatar style={{ margin: "5px", color: "white", backgroundColor: "#3BB78F" }}>
-                    <LockOutlinedIcon />
-                </Avatar>
+                {signUpIcon}
                 <Typography component="h1" variant="h5" style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "10px" }}>
                     <div style={{ marginRight: "7px" }}>
                         Sign up as
                     </div>
-                    <FormControl>
+                    <FormControl disabled={props.loading}>
                         <NativeSelect
                             id="demo-customized-select-native"
                             value={userType.toLowerCase()}
@@ -328,4 +460,21 @@ const SignUp = (props) => {
     );
 }
 
-export default SignUp;
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        loading: authReducer.loading,
+        error: authReducer.error,
+        token: authReducer.token,
+        redirectPath: authReducer.authRedirectPath,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatchSignUp: (userType: string, reqBody:any) => dispatch(authSignUp(userType, reqBody)),
+        clearErrors: () => dispatch(authClearErrors())
+    }
+}
+
+
+export default React.memo(connect(mapStateToProps, mapDispatchToProps)(SignUp));

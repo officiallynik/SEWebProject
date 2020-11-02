@@ -8,16 +8,17 @@ import ChatWithExperts from '../components/chat_with_experts';
 import Notify from '../components/notifications';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const store = useStore(pageProps.initialReduxState);
+	const store = useStore(pageProps.initialReduxState);
 
-  return (
-    <Provider store={store} >
-      <NavBar />
-      <Component {...pageProps} />
-      <ChatWithExperts />
-      <Notify />
-    </Provider>
-  );
+	return (
+		<Provider store={store} >
+			<NavBar />
+			<Component {...pageProps} />
+			<ChatWithExperts />
+			<Notify />
+		</Provider>
+	);
 }
 
-export default MyApp
+
+export default (MyApp);

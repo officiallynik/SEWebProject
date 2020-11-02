@@ -8,6 +8,7 @@ const SideBar = (props) => {
             <div className={styles.sidebaroptions}>
                 <div 
                     className={styles.sidebaropt}
+                    onClick={props.handleSideBarOpt}
                 >
                     {props.sidebarOpt}
                 </div>

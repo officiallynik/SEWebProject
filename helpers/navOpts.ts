@@ -16,7 +16,11 @@ export const notAuthenticated = [
 export const typeFarmer = [
     {
         name: "Dashboard",
-        path: "/dashboard/farmers"
+        path: "/farmers"
+    },
+    {
+        name: "Sell Crops",
+        path: "/sell-crop"
     },
     {
         name: "Blogs / FAQs",
@@ -24,7 +28,7 @@ export const typeFarmer = [
     },
     {
         name: "Loan / Insurance",
-        path: "/loans-insurance"
+        path: "/insurance-loan"
     },
     {
         name: "E-Shop",
@@ -43,7 +47,7 @@ export const typeDealer = [
     },
     {
         name: "Dashboard",
-        path: "/dashboard/dealers"
+        path: "/dealers/dashboard"
     },
 ];
 
@@ -62,6 +66,6 @@ export const typeExpert = [
     },
     {
         name: "Dashboard",
-        path: "/dashboard/experts"
+        path: "/experts/dashboard"
     },
 ]

@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/Navbar.module.css';
 import Container from '@material-ui/core/Container';
-import AuthComponent from './auth';
+import AuthComponent from '../Auth/auth';
+import AddCrop from '../addcrop';
 
 import { notAuthenticated, typeFarmer, typeDealer, typeExpert } from '../../helpers/navOpts';
+import { connect } from 'react-redux';
+import Router from 'next/router';
 
 const MaximizedNavBar = (props) => {
     const [navOpts, setNavOpts] = useState(notAuthenticated);
 
     useEffect(() => {
-        switch(props.authenticated) {
+        switch(props.userType) {
             case "farmer":
                  setNavOpts(typeFarmer);
                 return;
@@ -22,18 +25,33 @@ const MaximizedNavBar = (props) => {
             default:
                  setNavOpts(notAuthenticated);
         }
-    }, [props.authenticated]);
+    }, [props.userType]);
 
     return (
         <div className={styles.maximizednav}>
             <Container maxWidth="md">
                         <div className={styles.navwrapper}>
-                            <div className={styles.brand} />
+                            <div className={styles.brand} 
+                                onClick={() => {
+                                    Router.push("/");
+                                }}
+                            />
                             
                             {
                                 navOpts.map((navOpt) => {
+                                    if(navOpt.path == "/sell-crop"){
+                                        return <AddCrop modalBtn={
+                                            (<div className={styles.navoption}>{navOpt.name}</div>)
+                                        } 
+                                            key={navOpt.name}    
+                                        />
+                                    }
                                     return (
-                                        <div className={styles.navoption} key={navOpt.name}>
+                                        <div className={styles.navoption} key={navOpt.name} 
+                                            onClick={() => {
+                                                Router.push(navOpt.path);
+                                            }}
+                                        >
                                             {navOpt.name}
                                         </div>
                                     );
@@ -51,4 +69,10 @@ const MaximizedNavBar = (props) => {
     );
 };
 
-export default React.memo(MaximizedNavBar);
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        userType: authReducer.userType
+    }
+};
+
+export default React.memo(connect(mapStateToProps)(MaximizedNavBar));
