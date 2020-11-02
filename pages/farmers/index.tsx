@@ -109,7 +109,7 @@ const Farmers = (props) => {
         <div>
             <Card profile>
                 <CardBody profile>
-                    <h4>{props.userType.toUpperCase()}</h4>
+                    <h4>{props.userType? props.userType.toUpperCase(): null}</h4>
                     <h3>{props.name}</h3>
                     <p>{props.pincode}</p>
                     <p>{props.location}</p>
