@@ -79,8 +79,8 @@ const FarmerView = (props) => {
             <CssBaseline />
             <main className={classes.layout}>
                 <Paper className={classes.paper}>
-                    <FixedBar />
-                    <BidInfo />
+                    <FixedBar data={props.data} />
+                    <BidInfo data={props.data} />
                 </Paper>
             </main>
         </React.Fragment>

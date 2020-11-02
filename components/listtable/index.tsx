@@ -29,7 +29,7 @@ function Row(props: { row }) {
                 <TableCell align="left">{row.name}</TableCell>
                 <TableCell align="left">{row.price}</TableCell>
                 <TableCell align="left">{row.quantity}</TableCell>
-                <TableCell align="left">{row.date}</TableCell>
+                <TableCell align="left">{row.type}</TableCell>
                 <TableCell align="left">{row.bids}</TableCell>
                 <TableCell>
                     <CustomModal 
@@ -42,7 +42,7 @@ function Row(props: { row }) {
                         }
                     >
                         <div style={{background: "white", borderRadius: "10px"}}>
-                            <FarmerView />
+                            <FarmerView data={row} />
                         </div>
                     </CustomModal>
                 </TableCell>

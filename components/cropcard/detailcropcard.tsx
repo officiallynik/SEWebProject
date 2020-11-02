@@ -44,13 +44,13 @@ const useStyles = makeStyles({
     }
   });
 
-const DetailCropCard = () => {
+const DetailCropCard = (props) => {
 
     const classes = useStyles();
 
     return(
         <Card className={classes.card} variant="outlined">
-            <CardHeader className={classes.cardHeader}
+            {/* <CardHeader className={classes.cardHeader}
                 avatar={
                 <Avatar aria-label="recipe" className={classes.avatar}>
                     
@@ -58,26 +58,29 @@ const DetailCropCard = () => {
                 }
                 title="Farmer's name"
                 subheader="September 14, 2016"
-            />
+            /> */}
             <CardMedia>
                 <img
                 className={classes.cropPhoto}
-                src="https://www.syngenta.co.in/sites/g/files/zhg496/f/2016/08/26/13_rice_800x507_640x406.jpg"
+                src={`https://fathomless-tundra-87077.herokuapp.com/images/${props.cropData.img}`}
                 alt="loading"
                 ></img>
             </CardMedia>
             <CardContent className={classes.cardContent}>
                 <Typography variant="h6" className={classes.textCropName}>
-                Crop Name 
+                    Crop Name: {props.cropData.name}
                 </Typography>
                 <Typography variant="h6" className={classes.textOther}>
-                Rs.1100/q | Estimated Qty: 30 q 
+                    Price (Per Q): {props.cropData.price}
                 </Typography>
                 <Typography variant="h6" className={classes.textOther}>
-                MSP = Rs. 1200/q
+                    Quantity (Q): {props.cropData.quantity}
                 </Typography>
                 <Typography variant="h6" className={classes.textOther}>
-                Croptype | CropVariety
+                    Croptype: {props.cropData.type}
+                </Typography>
+                <Typography variant="h6" className={classes.textOther}>
+                    Variety: {props.cropData.variety}
                 </Typography>
             </CardContent>
         </Card>

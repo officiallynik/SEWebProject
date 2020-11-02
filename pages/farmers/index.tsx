@@ -22,7 +22,7 @@ import Router from 'next/router';
 const Farmers = (props) => {
 
     let dashboard = <CustomLinearProgress />;
-    const farmerFields = ["Crop Name", "Price", "Quantity", "Date", "Total Bids"];
+    const farmerFields = ["Crop Name", "Price", "Quantity", "Type", "Total Bids"];
 
     
     const [loadDone, setLoadDone] = useState(false);
@@ -31,43 +31,53 @@ const Farmers = (props) => {
     const [isDone, setIsDone] = useState([false, false]);
     const [firstTime, setFirstTime] = useState(true);
     const [refresh, setRefresh] = useState(true);
+    const [reqTypeSold, setReqTypeSold] = useState("false");
 
     const handleDisplayProfileSidebar = () => {
         // console.log("Clicked");
         setUserProfileSidebar(true);
     }
 
-    const fetchMyListings = () => {
-        // Axios.get("/crops/view/all", {
-        //     headers: {
-        //         "Authorization": `Bearer ${props.token}`
-        //     }
-        // })
-        // .then(res => {
-        //     console.log(res.data);
-        //     const data = res.data.map(item => {
-        //         return {
-        //             name: item.name,
-        //             price: item.MSP,
-        //             quantity: item.quantity,
-        //             bids: item.biddings.length,
-        //             date: new Date().toDateString(),
-        //             _id: item._id
-        //         }
-        //     })
-        //     setMyListing(data);
-        //     console.log(data);
-        // })
-        // .catch(err => {
-        //     console.log(err);
-        // })
-        // .finally(() => {
-        //     setLoadDone(true);
-        //     setRefresh(false);
-        // })
-        setMyListing(myListings);
-        setLoadDone(true);
-        setRefresh(false);
+    const fetchMyListings = (type) => {
+        Axios.get("/crops/view", {
+            headers: {
+                "Authorization": `Bearer ${props.token}`
+            },
+            params: {
+                sold: type
+            }
+        })
+        .then(res => {
+            console.log(res.data);
+            const data = [] 
+            res.data.forEach(item => {
+                data.push({
+                    name: item.name,
+                    price: item.MSP,
+                    quantity: item.quantity,
+                    bids: item.biddings.length,
+                    type: item.type,
+                    _id: item._id,
+                    biddings: item.biddings,
+                    img: item.thumbnail,
+                    imgs: item.snapshots,
+                    variety: item.variety,
+                    pincode: item.pincode
+                })
+            })
+            setMyListing(data);
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        .finally(() => {
+            setLoadDone(true);
+            setRefresh(false);
+        })
+        // setMyListing(myListings);
+        // setLoadDone(true);
+        // setRefresh(false);
     }
 
     useEffect(() => {
@@ -78,9 +88,9 @@ const Farmers = (props) => {
         if(props.token && refresh){
             console.log("fetching ", props.token);
             setMyListing(null);
-            fetchMyListings();
+            fetchMyListings(reqTypeSold);
         }
-    }, [props.token, refresh, props.userType]);
+    }, [props.token, refresh, props.userType, reqTypeSold]);
 
     useEffect(() => {
         if(props.loading){
@@ -99,10 +109,10 @@ const Farmers = (props) => {
         <div>
             <Card profile>
                 <CardBody profile>
-                    <h4>Farmer</h4>
-                    <h3>Alec Thompson</h3>
-                    <p>560105</p>
-                    <p>Bangalore, Karnataka</p>
+                    <h4>{props.userType.toUpperCase()}</h4>
+                    <h3>{props.name}</h3>
+                    <p>{props.pincode}</p>
+                    <p>{props.location}</p>
                     <CustomModal modalBtn={(
                             <Button variant="outlined" color="primary" onClick={() => setIsDone([false, false])}>
                                 Edit Profile
@@ -126,7 +136,7 @@ const Farmers = (props) => {
                     <div style={{ float: "right", color: "black" }}>
                         <p>Rating</p>
                         <h3>
-                            35/50 <small>Stars</small>
+                            Coming Soon
                         </h3>
                     </div>
                 </CardHeader>
@@ -139,7 +149,7 @@ const Farmers = (props) => {
                     <div style={{ float: "right", color: "black" }}>
                         <p>Completed Orders</p>
                         <h3>
-                            40/43 <small></small>
+                            Coming Soon
                         </h3>
                     </div>
                 </CardHeader>
@@ -163,7 +173,10 @@ const Farmers = (props) => {
                                     <CollapsibleTable 
                                         headers={farmerFields}
                                         data={myListing}
-                                        refresh={() => setRefresh(true)}
+                                        refresh={() => {
+                                            setRefresh(true);
+                                            setReqTypeSold("false");
+                                        }}
                                         firstTime={firstTime}
                                         setFirstTime={() => setFirstTime(false)}
                                     />
@@ -178,7 +191,10 @@ const Farmers = (props) => {
                                     <CollapsibleTable 
                                         headers={farmerFields}
                                         data={myListing}
-                                        refresh={() => setRefresh(true)}
+                                        refresh={() => {
+                                            setRefresh(true);
+                                            setReqTypeSold("true");
+                                        }}
                                         firstTime={firstTime}
                                         setFirstTime={() => setFirstTime(false)}
                                     />
@@ -212,7 +228,9 @@ const mapStateToProps = ({ authReducer }) => {
         loading: authReducer.loading,
         error: authReducer.error,
         token: authReducer.token,
-        userType: authReducer.userType
+        userType: authReducer.userType,
+        pincode: authReducer.pincode,
+        location: authReducer.location,
     }
 }
 

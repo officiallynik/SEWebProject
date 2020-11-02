@@ -5,6 +5,8 @@ const initialState = {
     token: null,
     name: null,
     _id: null,
+    pincode: null,
+    location: null,
     error: null,
     loading: false,
     userType: null,
@@ -21,6 +23,8 @@ const authSuccess = (state, action) => {
         name: action.payload.name,
         _id: action.payload._id,
         userType: action.payload.userType,
+        pincode: action.payload.pincode,
+        location: action.payload.location,
         error: null,
         loading: false
      } );

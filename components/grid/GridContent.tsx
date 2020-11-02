@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import CropCard from '../cropcard';
-import items from './crop_items'
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -15,19 +14,20 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const GridContent = function NestedGrid() {
+const GridContent = function NestedGrid({ data }) {
 	const classes = useStyles();
 
-	const renderedItems = items.map((item) => {
+	const renderedItems = data.map((item) => {
 		return (
-			<Grid item xs={12} sm={6} md={4} lg={3}>
+			<Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
 				<CropCard cropData={item} />
-			</Grid>);
+			</Grid>
+		);
 	})
 
 	return (
 		<div className={classes.root}>
-			<Grid container spacing={2}>
+			<Grid container spacing={2} key={"nested-container"}>
 				{renderedItems}
 			</Grid>
 		</div>

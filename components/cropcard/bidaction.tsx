@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {TextField,Button} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { notifyAction } from '../../store/actions/notifyAction';
+import { connect } from 'react-redux';
+import Axios from '../../helpers/axios';
 
 const useStyles = makeStyles({
     bidActions:{
@@ -31,9 +34,11 @@ const useStyles = makeStyles({
   });
 
 
-const BidActions = () => {
+const BidActions = (props) => {
 
     const classes = useStyles();
+
+    const [bid, setBid] = useState(null);
 
     return(
         <div className={classes.bidActions}>
@@ -43,19 +48,24 @@ const BidActions = () => {
                         variant="contained"
                         color="secondary"
                         className={classes.btnPlaceBid}
+                        disabled
                     >
-                        Request Sample  
+                        Request Sample, Coming Soon   
                     </Button>
             </div>
 
             <div className={classes.btns}>
                 <div>
                     <TextField
-                        variant="filled"
+                        variant="outlined"
                         label="Enter your bid here..."
                         color="secondary"
-
                         className={classes.txtPlaceBid}
+                        type="number"
+                        onChange={(e) => {
+                            setBid(+e.target.value === 0? null: +e.target.value);
+                        }}
+                        value={bid === null? '': bid}
                     />
                 </div>
 
@@ -64,6 +74,31 @@ const BidActions = () => {
                         variant="contained"
                         color="secondary"
                         className={classes.btnPlaceBid}
+                        onClick={() => {
+                            if(bid){
+                                props.dispatchNotification("Processing your bid", 3, "info")
+                                Axios.post(`/crops/bid/${props._id}`, {
+                                    value: bid
+                                }, {
+                                    headers: {
+                                        "Authorization": `Bearer ${props.token}`
+                                    }
+                                })
+                                .then(res => {
+                                    console.log(res)
+                                    if(res.status === 200){
+                                        props.dispatchNotification("Bid successfull", 4, "success")
+                                    }
+                                    else{
+                                        props.dispatchNotification("Bid could not be processed, try again", 3, "error")
+                                    }
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                    props.dispatchNotification("Bid could not be processed, try again", 3, "error")
+                                })
+                            }
+                        }}
                     >
                         Place Bid
                     </Button>
@@ -75,4 +110,16 @@ const BidActions = () => {
     );
 }
 
-export default BidActions;
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        token: authReducer.token
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatchNotification: (msg, exp, type) => dispatch(notifyAction(msg, exp, type)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BidActions);

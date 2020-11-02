@@ -8,14 +8,16 @@ export const authStart = () => {
     };
 };
 
-export const authSuccess = (token, name, _id, userType) => {
+export const authSuccess = (token, name, _id, userType, pincode, location) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
         payload: {
             token,
             name,
             userType,
-            _id
+            _id,
+            pincode,
+            location
         }
     };
 };
@@ -32,6 +34,8 @@ export const logout = () => {
     localStorage.removeItem('name');
     localStorage.removeItem('userType');
     localStorage.removeItem('_id');
+    localStorage.removeItem('pincode');
+    localStorage.removeItem('location');
     return {
         type: actionTypes.AUTH_LOGOUT
     };
@@ -54,10 +58,12 @@ export const authLogin = (phone, password, isRemember) => {
                     localStorage.setItem('name', response.data.user.name);
                     localStorage.setItem('userType', response.data.userType);
                     localStorage.setItem('_id', response.data.user._id);
+                    localStorage.setItem('pincode', response.data.user.pincode);
+                    localStorage.setItem('location', response.data.user.location);
                 }
 
                 // console.log("login res: ", response);
-                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, response.data.userType));
+                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, response.data.userType, response.data.user.pincode, response.data.user.location));
                 dispatch(setAuthRedirectPath(`/${response.data.userType}s`));
             })
             .catch(err => {
@@ -89,10 +95,12 @@ export const authSignUp = (userType, reqBody) => {
                 localStorage.setItem('name', response.data.user.name);
                 localStorage.setItem('userType', userType);
                 localStorage.setItem('_id', response.data.user._id);
+                localStorage.setItem('pincode', response.data.user.pincode);
+                localStorage.setItem('location', response.data.user.location);
 
                 // console.log(response);
 
-                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, userType));
+                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, userType, response.data.user.pincode, response.data.user.location));
                 dispatch(setAuthRedirectPath(`/${userType}s`));
             })
             .catch(err => {
@@ -120,9 +128,11 @@ export const authUpdateProfile = (userType, reqBody, token) => {
                 console.log(response.data);
                 localStorage.setItem('name', response.data.name);
                 localStorage.setItem('_id', response.data._id);
+                localStorage.setItem('_id', response.data.pincode);
+                localStorage.setItem('_id', response.data.location);
 
 
-                dispatch(authSuccess(token, response.data.name, response.data._id, userType));
+                dispatch(authSuccess(token, response.data.name, response.data._id, userType, response.data.pincode, response.data.location));
             })
             .catch(err => {
                 console.log(err);
@@ -184,7 +194,9 @@ export const authCheckState = () => {
             const name = localStorage.getItem('name');
             const userType = localStorage.getItem('userType');
             const _id = localStorage.getItem('_id');
-            dispatch(authSuccess(token, name, _id, userType));
+            const pincode = localStorage.getItem('pincode');
+            const location = localStorage.getItem('location');
+            dispatch(authSuccess(token, name, _id, userType, pincode, location));
         }
     };
 };

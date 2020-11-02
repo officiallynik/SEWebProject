@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     },
   });
 
-const AllBids = () => {
+const AllBids = (props) => {
 
     const classes = useStyles();
 
@@ -34,17 +34,17 @@ const AllBids = () => {
             />
 
             <CardContent className={classes.cardContent}>
-                <SingleBid/>
-                <SingleBid/> 
-                <SingleBid/>
-                <SingleBid/>
-                <SingleBid/>
-                <SingleBid/>
-                <SingleBid/>
-                <SingleBid/>
-                <SingleBid/>
-                <SingleBid/>
-                <SingleBid/>
+                <div>Total Bids Currently: {props.data.length}</div>
+                {
+                    props.data.map((bid, i) => {
+                        // console.log(bid, i);
+                        return (
+                            <SingleBid 
+                                bidDetail={(<div>{i+1}. {bid.bid_val}</div>)}
+                            /> 
+                        )
+                    })
+                }
             </CardContent>
 
         </Card>
