@@ -4,7 +4,7 @@ const SingleBid = (props) => {
 
     return(
         <div>
-            <h4>Dealer1 -- Rs 1100/q</h4>
+            <h4>{props.bidDetail}</h4>
         </div>    
     );
 }

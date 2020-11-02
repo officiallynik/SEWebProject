@@ -103,10 +103,10 @@ const Dashboard = (props) => {
         <div>
             <Card profile>
                 <CardBody profile>
-                    <h4>Farmer</h4>
-                    <h3>Alec Thompson</h3>
-                    <p>560105</p>
-                    <p>Bangalore, Karnataka</p>
+                    <h4>{props.userType? props.userType.toUpperCase(): null}</h4>
+                    <h3>{props.name}</h3>
+                    <p>{props.pincode}</p>
+                    <p>{props.location}</p>
                     <CustomModal modalBtn={(
                             <Button variant="outlined" color="primary" onClick={() => setIsDone([false, false])}>
                                 Edit Profile
@@ -130,7 +130,8 @@ const Dashboard = (props) => {
                     <div style={{ float: "right", color: "black" }}>
                         <p>Rating</p>
                         <h3>
-                            35/50 <small>Stars</small>
+                            {/* 35/50 <small>Stars</small> */}
+                            Coming Soon
                         </h3>
                     </div>
                 </CardHeader>
@@ -143,7 +144,8 @@ const Dashboard = (props) => {
                     <div style={{ float: "right", color: "black" }}>
                         <p>Completed Orders</p>
                         <h3>
-                            40/43 <small></small>
+                            {/* 40/43 <small></small> */}
+                            Coming Soon
                         </h3>
                     </div>
                 </CardHeader>
@@ -216,7 +218,10 @@ const mapStateToProps = ({ authReducer }) => {
         loading: authReducer.loading,
         error: authReducer.error,
         token: authReducer.token,
-        userType: authReducer.userType
+        userType: authReducer.userType,
+        name: authReducer.name,
+        pincode: authReducer.pincode,
+        location: authReducer.location
     }
 }
 

@@ -17,9 +17,12 @@ const FixedBar = (props) => {
                 flexDirection: "column",
                 color: "white"
             }}>
-                <div>Rice</div>
-                <div>150</div>
-                <div>Bangalore, Karnataka</div>
+                <div>Name: {props.data.name}</div>
+                <div>Price(per Q): {props.data.price}</div>
+                <div>Quantity (Q): {props.data.quantity}</div>
+                <div>Pincode: {props.data.pincode}</div>
+                <div>Type: {props.data.type}</div>
+                <div>Variety: {props.data.variety}</div>
             </div>
             <div style={{
                 width: "50%",
@@ -27,7 +30,7 @@ const FixedBar = (props) => {
                 justifyContent: "center",
                 alignItems: "center"
             }}>
-                <img src="/dummy/ubuntu1.jpg" style={{width: "60%"}} />
+                <img src={`https://fathomless-tundra-87077.herokuapp.com/images/${props.data.img}`} alt="loading..." style={{width: "60%"}} />
             </div>
         </div>
     );

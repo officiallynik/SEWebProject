@@ -5,13 +5,9 @@ import ThreeLayout from '../../components/threelayout';
 import SearchIcon from '@material-ui/icons/Search';
 
 import styles from '../../styles/Dealer.module.css';
-import CustomModal from '../../components/modal';
 import Axios from '../../helpers/axios';
-import CropCard from '../../components/cropcard';
 import GridView from '../../components/grid/GridView';
 
-import Error from 'next/error';
-import { Https } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     search: {
@@ -94,27 +90,40 @@ const Dealers = () => {
     const fetchCrops = (type="filter") => {
         setErrorCode(null);
         setCropsData(null);
-        let params: any = { ...filters };
-        if(type === "search"){
-            params = { term: searchTerm }
+        let params: any = { term: searchTerm };
+        if(type === "filter"){
+            params = {}
+            for(let k in filters){
+                console.log(k)
+                if(filters[k]){
+                    params[k] = filters[k]
+                }
+            }
         }
+        console.log(params);
         Axios.get(`/crops/${type}`, {
             params: params
         })
         .then(res => {
             console.log(res.data);
-            // const data = res.data.map(item => {
-            //     return {
-            //         name: item.name,
-            //         price: item.MSP,
-            //         quantity: item.quantity,
-            //         bids: item.biddings.length,
-            //         date: new Date().toDateString(),
-            //         _id: item._id
-            //     }
-            // })
-            // setMyListing(data);
-            // console.log(data);
+            const data = [] 
+            res.data.forEach(item => {
+                data.push({
+                    name: item.name,
+                    price: item.MSP,
+                    quantity: item.quantity,
+                    bids: item.biddings.length,
+                    type: item.type,
+                    _id: item._id,
+                    biddings: item.biddings,
+                    img: item.thumbnail,
+                    imgs: item.snapshots,
+                    variety: item.variety,
+                    pincode: item.pincode
+                })
+            })
+            setCropsData(data);
+            console.log(data);
         })
         .catch(err => {
             console.log(err);
@@ -279,7 +288,7 @@ const Dealers = () => {
             <div className={styles.applybtn}>
                 <Button variant="contained" fullWidth style={{backgroundColor: "#5cb85c", color: "white"}}
                     onClick={() => {
-                        fetchCrops();
+                        fetchCrops("filter");
                     }}
                 >
                     Apply Changes
@@ -291,9 +300,11 @@ const Dealers = () => {
     const mainsection = (
         <>
             {
-                !cropsData? (!errorCode? <LinearProgress /> : <Error statusCode={errorCode} />) :
+                !cropsData? (!errorCode? <LinearProgress /> :  <div
+                    style={{display: "flex", justifyContent: "center"}}
+                ><img src="/search_error.png" /></div>) :
                 <div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                    <GridView /> 
+                    <GridView data={cropsData} /> 
                 </div>
             }
         </>
@@ -313,5 +324,6 @@ const Dealers = () => {
         // <GridView />
     );
 };
+
 
 export default Dealers;

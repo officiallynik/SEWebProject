@@ -2,21 +2,18 @@ import { IconButton, Table, TableBody, TableCell, TableContainer, TableRow } fro
 import { Done } from '@material-ui/icons';
 import React from 'react';
 
-const BidInfo = () => {
+const BidInfo = (props) => {
     return (
-        <div style={{ overflow: "auto", height: "400px" }}>
+        <div style={{ overflow: "auto", maxHeight: "400px", height: "auto" }}>
             <div style={{display: "flex", overflow: "auto", height: "150px"}}>
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%", paddingRight: "5px"}} />
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%", paddingRight: "5px"}} />
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%", paddingRight: "5px"}} />
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%", paddingRight: "5px"}} />
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%", paddingRight: "5px"}} />
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%", paddingRight: "5px"}} />
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%", paddingRight: "5px"}} />
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%", paddingRight: "5px"}} />
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%", paddingRight: "5px"}} />
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%", paddingRight: "5px"}} />
-                <img src="/dummy/ubuntu1.jpg" style={{width: "50%"}} />
+                {
+                    props.data.imgs.map(img => {
+                        <img src={`https://fathomless-tundra-87077.herokuapp.com/images/${img}`} 
+                            key={img}
+                            style={{width: "50%", paddingRight: "5px"}} 
+                        />
+                    })
+                }
             </div>
             <TableContainer>
             <Table aria-label="collapsible table">

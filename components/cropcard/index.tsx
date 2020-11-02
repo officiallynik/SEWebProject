@@ -4,7 +4,7 @@ import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import { Button } from "@material-ui/core";
+import { Button, CircularProgress } from "@material-ui/core";
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import { red } from '@material-ui/core/colors';
@@ -12,6 +12,9 @@ import Modal from 'react-modal';
 import DetailCropCard from '../cropcard/detailcropcard'
 import AllBids from '../cropcard/viewbidscard'
 import BidActions from '../cropcard/bidaction'
+
+import { connect } from 'react-redux';
+import { notifyAction } from '../../store/actions/notifyAction';
 
 const useStyles = makeStyles({
 	card: {
@@ -76,13 +79,17 @@ const useStyles = makeStyles({
 	},
 });
 
-export default function CropCard(props) {
+const CropCard = (props) => {
 	const classes = useStyles();
 
 	const [modalState, setModalState] = useState(false);
 
 	const openModal = () => {
-		setModalState(true);
+		if(props.userType !== "dealer"){
+			props.dispatchNotification("Only dealers can see all details", 3, "error");
+		}else{
+			setModalState(true);
+		}
 	};
 
 	const closeModal = () => {
@@ -95,7 +102,7 @@ export default function CropCard(props) {
 		<div>
 
 			<Card className={classes.card} variant="outlined">
-				<CardHeader className={classes.cardHead}
+				{/* <CardHeader className={classes.cardHead}
 					avatar={
 						<Avatar aria-label="recipe" className={classes.avatar}>
 
@@ -103,26 +110,26 @@ export default function CropCard(props) {
 					}
 					title="Farmer's name"
 					subheader="September 14, 2016"
-				/>
+				/> */}
 				<CardMedia>
 					<img
 						className={classes.cropPhoto}
-						src="https://www.syngenta.co.in/sites/g/files/zhg496/f/2016/08/26/13_rice_800x507_640x406.jpg"
-						alt="loading"
+						src={"https://fathomless-tundra-87077.herokuapp.com/images/" + props.cropData.img}
+						alt="loading..."
 					></img>
 				</CardMedia>
 				<CardContent className={classes.cardContent}>
 					<div style={{display: "flex", justifyContent:"space-between"}}>
 						<Typography variant="h6" className={classes.text}>
-							Crop Name
+							{props.cropData.name}
           				</Typography>
 						<Typography variant="h6" className={classes.text}>
-							Rs.1100/q
+							Rs. {props.cropData.price} /Q
           				</Typography>
 					</div>
 					<div style={{display: "flex", }}>
 						<Typography variant="h6" className={classes.text}>
-								Quantity: 5 Q
+								Quantity: {props.cropData.quantity} Q
 						</Typography>
 					</div>
 
@@ -142,12 +149,12 @@ export default function CropCard(props) {
 			<Modal isOpen={modalState} onRequestClose={closeModal} className={classes.modal}>
 
 				<div className={classes.test}>
-					<div className={classes.modalCards}><DetailCropCard /></div>
-					<div className={classes.modalCards}><AllBids /></div>
+					<div className={classes.modalCards}><DetailCropCard cropData={props.cropData} /></div>
+					<div className={classes.modalCards}><AllBids data={props.cropData.biddings} /></div>
 				</div>
 
 
-				<div ><BidActions /></div>
+				<div ><BidActions _id={props.cropData._id} /></div>
 
 			</Modal>
 
@@ -155,3 +162,18 @@ export default function CropCard(props) {
 		</div>
 	);
 }
+
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        token: authReducer.token,
+        userType: authReducer.userType
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatchNotification: (msg: string, exp: number, notifyType: string) => dispatch(notifyAction(msg, exp, notifyType)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CropCard);

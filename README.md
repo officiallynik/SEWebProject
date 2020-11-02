@@ -69,9 +69,9 @@ npm run export
 * The dealers' can bid-on and view all crops listing in 'find crops' page.
 * Only dealers' can view details and bid on crops. 
 
-<img src="./readmefiles/farmerdashboard.jpg" />
+<img src="./readmefiles/dealerhomepage.jpg" />
 
-* The dealers' can manage everything related to profile and bids in dealers' dashboard.
+* The dealers' can manage everything related to profile and bids in dealers' dashboard just as farmers.
 
 <img src="./readmefiles/farmerdashboard.jpg" />
 
