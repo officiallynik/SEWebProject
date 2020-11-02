@@ -20,10 +20,11 @@ const NavBar = (props) => {
     return (
         <React.Fragment>
             <nav className={styles.navbar}>
-                <MaximizedNavBar />
+                <MaximizedNavBar authenticated="farmer" />
                 <MinimizedNavBar 
                     isOpen={isOpen}
                     handleMenuClick={() => handleMenuClick()} 
+                    authenticated="farmer"
                 />
             </nav>
         </React.Fragment>

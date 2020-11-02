@@ -1,20 +1,33 @@
 import React from 'react';
-
 import Snackbar from '@material-ui/core/Snackbar';
+import { connect } from 'react-redux';
 
-interface props {
-    msg: string,
-    type: string
-}
+// import { notifyAction } from '../../store/actions/notifyAction';
+import { Alert } from '@material-ui/lab';
 
-const Notify = (props: props) => {
+const Notify = (props) => {
     return (
         <Snackbar
-            open={true}
+            open={props.isNotify}
             anchorOrigin={{horizontal: "left", vertical: "bottom"}}
-            message={props.msg}
-        />
+        >
+            <div style={{width: "100%"}}>
+                <Alert severity={props.notifyType||"info"} >
+                    {props.msg}
+                </Alert>
+            </div>
+        </Snackbar>
     )
 }
 
-export default Notify;
+const mapStateToProps = ({ notifyReducer }) => {
+    return { ...notifyReducer };
+};
+
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         notify: (msg: string, exp: number) => dispatch(notifyAction(msg, exp))
+//     }
+// }
+
+export default connect(mapStateToProps)(Notify);

@@ -1,0 +1,51 @@
+.croptypeopts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
+.priceopts {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 50% 50%;
+    padding-left: 16px;
+}
+
+.applybtn {
+    position: fixed;
+    bottom: 10px;
+    width: calc(372px - 20px);
+}
+@media(max-width: 760px) {
+    .applybtn {
+        position: fixed;
+        bottom: 10px;
+        width: calc(100% - 20px);
+    }
+}
+
+.topbar {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.topbar
+.title {
+    font-weight: 600;
+    font-size: 22px;
+    text-align: center;
+    color: #233329;
+}
+@media (max-width: 760px){
+    .topbar{
+        padding: 0 10px;
+    }
+    .topbar
+    .title {
+        position: absolute;
+        visibility: hidden;
+    }
+}

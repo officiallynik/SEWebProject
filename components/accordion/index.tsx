@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
+      alignItems: 'center'
     },
     heading: {
       fontSize: theme.typography.pxToRem(15),
@@ -34,7 +35,9 @@ const CustomAccordion = (props: props) => {
         >
           <Typography className={classes.heading}>{props.heading}</Typography>
         </AccordionSummary>
-        {props.children}
+        <div style={{marginBottom: "20px", display: "flex", justifyContent: "center"}}>
+          {props.children}
+        </div>
       </Accordion>
   );
 }
