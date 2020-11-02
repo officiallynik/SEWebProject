@@ -6,9 +6,11 @@ import SingleBid from './singlebid';
 
 const useStyles = makeStyles({
     card: {
-         backgroundColor: "#90B896",
-         maxWidth:250,
+         backgroundColor: "#ffffff",
+         maxWidth:280,
          width:'100%',
+         maxHeight:320,
+         overflowY: 'scroll',
     },
     cardHeader:{
         paddingBottom:0,
@@ -32,6 +34,11 @@ const AllBids = () => {
             />
 
             <CardContent className={classes.cardContent}>
+                <SingleBid/>
+                <SingleBid/> 
+                <SingleBid/>
+                <SingleBid/>
+                <SingleBid/>
                 <SingleBid/>
                 <SingleBid/>
                 <SingleBid/>
