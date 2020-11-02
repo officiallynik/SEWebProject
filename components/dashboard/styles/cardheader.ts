@@ -1,3 +1,5 @@
+import { Theme } from "@material-ui/core";
+import { Styles } from "@material-ui/core/styles/withStyles";
 import {
     warningCardHeader,
     successCardHeader,
@@ -14,7 +16,7 @@ const cardHeaderStyle: Styles<Theme, {}, string> = {
         marginBottom: "0",
         borderBottom: "none",
         background: "transparent",
-        zIndex: "3 !important",
+        zIndex: 3,
         "&$cardHeaderPlain,&$cardHeaderIcon,&$cardHeaderStats,&$warningCardHeader,&$successCardHeader,&$dangerCardHeader,&$infoCardHeader,&$primaryCardHeader,&$roseCardHeader": {
             margin: "0 15px",
             padding: "0",
