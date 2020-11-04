@@ -47,7 +47,7 @@ const featuredPosts = [
 const sidebar = {
   title: 'About',
   description:
-    `Highly entusiastic software developers practicing best software techniques. And backing the backbone of our country.
+    `Highly enthusiastic software developers practicing best software techniques. And backing the backbone of our country.
     An attempt to help farmers get what they actually deserve, eliminating crooked middlemen.
     `,
 };
