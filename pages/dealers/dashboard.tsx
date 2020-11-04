@@ -32,31 +32,41 @@ const Dashboard = (props) => {
     const [isDone, setIsDone] = useState([false, false]);
     const [firstTime, setFirstTime] = useState(true);
     const [refresh, setRefresh] = useState(true);
+    const [reqTypeSold, setReqTypeSold] = useState("false");
 
     const handleDisplayProfileSidebar = () => {
         // console.log("Clicked");
         setUserProfileSidebar(true);
     }
 
-    const fetchMyListings = () => {
-        // Axios.get("/crops/view/all", {
+    const fetchMyListings = (type) => {
+        // Axios.get("/crops/view", {
         //     headers: {
         //         "Authorization": `Bearer ${props.token}`
+        //     },
+        //     params: {
+        //         sold: type
         //     }
         // })
         // .then(res => {
         //     console.log(res.data);
-        //     const data = res.data.map(item => {
-        //         return {
+        //     const data = [] 
+        //     res.data.forEach(item => {
+        //         data.push({
         //             name: item.name,
         //             price: item.MSP,
         //             quantity: item.quantity,
         //             bids: item.biddings.length,
-        //             date: new Date().toDateString(),
-        //             _id: item._id
-        //         }
+        //             type: item.type,
+        //             _id: item._id,
+        //             biddings: item.biddings,
+        //             img: item.thumbnail,
+        //             imgs: item.snapshots,
+        //             variety: item.variety,
+        //             pincode: item.pincode
+        //         })
         //     })
-        //     setMyListing(data);
+        //     setMyBiddings(data);
         //     console.log(data);
         // })
         // .catch(err => {
@@ -66,11 +76,9 @@ const Dashboard = (props) => {
         //     setLoadDone(true);
         //     setRefresh(false);
         // })
-        setTimeout(() => {
-            setMyBiddings(myListings);
-            setLoadDone(true);
-            setRefresh(false);
-        }, 3000)
+        // setMyListing(myListings);
+        // setLoadDone(true);
+        // setRefresh(false);
     }
 
     useEffect(() => {
@@ -82,9 +90,9 @@ const Dashboard = (props) => {
         if(props.token && refresh){
             console.log("fetching ", props.token);
             setMyBiddings(null);
-            fetchMyListings();
+            fetchMyListings(reqTypeSold);
         }
-    }, [props.token, refresh, props.userType]);
+    }, [props.token, refresh, props.userType, reqTypeSold]);
 
     useEffect(() => {
         if(props.loading){
@@ -165,11 +173,14 @@ const Dashboard = (props) => {
                                 tabName: "My Biddings",
                                 tabIcon: List,
                                 tabContent: (
-                                    !myBiddings? <LinearProgress /> : 
+                                    !myBiddings? <div>Under Maintenance :(</div> : 
                                     <CollapsibleTable 
                                         headers={farmerFields}
                                         data={myBiddings}
-                                        refresh={() => setRefresh(true)}
+                                        refresh={() => {
+                                            setRefresh(true);
+                                            setReqTypeSold("false");
+                                        }}
                                         firstTime={firstTime}
                                         setFirstTime={() => setFirstTime(false)}
                                     />
@@ -180,11 +191,14 @@ const Dashboard = (props) => {
                                 tabName: "Completed Orders",
                                 tabIcon: DoneAll,
                                 tabContent: (
-                                    !myBiddings? <LinearProgress /> : 
+                                    !myBiddings? <div>Under Maintenance :(</div> : 
                                     <CollapsibleTable 
                                         headers={farmerFields}
                                         data={myBiddings}
-                                        refresh={() => setRefresh(true)}
+                                        refresh={() => {
+                                            setRefresh(true);
+                                            setReqTypeSold("true");
+                                        }}
                                         firstTime={firstTime}
                                         setFirstTime={() => setFirstTime(false)}
                                     />

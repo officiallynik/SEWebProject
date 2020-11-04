@@ -37,10 +37,10 @@ const AllBids = (props) => {
                 <div>Total Bids Currently: {props.data.length}</div>
                 {
                     props.data.map((bid, i) => {
-                        // console.log(bid, i);
+                        console.log(bid, i);
                         return (
                             <SingleBid 
-                                bidDetail={(<div>{i+1}. {bid.bid_val}</div>)}
+                                bidDetail={(<div>{i+1}. Rs. {bid.bid_val}</div>)}
                             /> 
                         )
                     })

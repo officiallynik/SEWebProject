@@ -18,6 +18,7 @@ import Axios from '../../helpers/axios';
 import { myListings } from '../../helpers/dummyData';
 import { notifyAction } from '../../store/actions/notifyAction';
 import Router from 'next/router';
+import { copyFileSync } from 'fs';
 
 const Farmers = (props) => {
 
@@ -231,6 +232,7 @@ const mapStateToProps = ({ authReducer }) => {
         userType: authReducer.userType,
         pincode: authReducer.pincode,
         location: authReducer.location,
+        name: authReducer.name
     }
 }
 

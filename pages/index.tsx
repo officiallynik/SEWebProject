@@ -17,10 +17,6 @@ const Home = (props) => {
 
 	return (
 		<div style={{width: "100%", height: "calc(100vh - 45px)", overflow: "auto"}}>
-			<Head>
-				<title>Kisan Seva </title>
-				<link rel="icon" href="/farmer.png" />
-			</Head>
 			{
 				isDone? <LanderPage />: <CustomLinearProgress />
 			}
