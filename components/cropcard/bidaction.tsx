@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {TextField,Button} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { notifyAction } from '../../store/actions/notifyAction';
@@ -39,6 +39,16 @@ const BidActions = (props) => {
     const classes = useStyles();
 
     const [bid, setBid] = useState(null);
+    const [bidded, setBidded] = useState(false);
+
+    useEffect(() => {
+        props.biddings.forEach(bid => {
+            if(bid.dealer === props.userId){
+                setBidded(true);
+                setBid(bid.bid_val);
+            }
+        })
+    }, []);
 
     return(
         <div className={classes.bidActions}>
@@ -65,7 +75,8 @@ const BidActions = (props) => {
                         onChange={(e) => {
                             setBid(+e.target.value === 0? null: +e.target.value);
                         }}
-                        value={bid === null? '': bid}
+                        value={bidded? bid: bid === null? '': bid}
+                        disabled={bidded}
                     />
                 </div>
 
@@ -76,7 +87,7 @@ const BidActions = (props) => {
                         className={classes.btnPlaceBid}
                         onClick={() => {
                             if(bid){
-                                props.dispatchNotification("Processing your bid", 3, "info")
+                                // props.dispatchNotification("Processing your bid", 3, "info")
                                 Axios.post(`/crops/bid/${props._id}`, {
                                     value: bid
                                 }, {
@@ -98,9 +109,13 @@ const BidActions = (props) => {
                                     props.dispatchNotification("Bid could not be processed, try again", 3, "error")
                                 })
                             }
+                        
                         }}
+                        disabled={bidded}
                     >
-                        Place Bid
+                        {
+                            bidded? "Already Bidded": "Place Bid"
+                        }
                     </Button>
                 </div>
                
@@ -112,7 +127,8 @@ const BidActions = (props) => {
 
 const mapStateToProps = ({ authReducer }) => {
     return {
-        token: authReducer.token
+        token: authReducer.token,
+        userId: authReducer._id
     }
 }
 

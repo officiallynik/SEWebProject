@@ -154,7 +154,7 @@ const CropCard = (props) => {
 				</div>
 
 
-				<div ><BidActions _id={props.cropData._id} /></div>
+				<div ><BidActions _id={props.cropData._id} biddings={props.cropData.biddings} /></div>
 
 			</Modal>
 
