@@ -46,16 +46,16 @@ const ChatWithExperts = () => {
 
     let chatScreen = isOpen? (
         <div className={`${styles.chatscreen} ${isOpen? styles.show: null}`}>
-            {/* <TitleBar />
+            <TitleBar />
             <MessageList />
-            <TextComposer /> */}
-            <div style={{background: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <TextComposer />
+            {/* <div style={{background: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
                 <Button variant="outlined"
                     onClick={handleSetup}
                 >
                     Connect
                 </Button>
-            </div>
+            </div> */}
         </div>
     ) : null;
 
