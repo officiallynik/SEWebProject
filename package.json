@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "next export"
+    "export": "next export",
+    "peer": "peerjs --port 3001"
   },
   "dependencies": {
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
@@ -19,6 +20,7 @@
     "axios": "^0.21.0",
     "jquery": "^3.5.1",
     "next": "^9.5.5",
+    "peerjs": "^1.3.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-modal": "^3.11.2",

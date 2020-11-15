@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import socketioSetup from '../../helpers/socketioSetup';
+import socketioSetup from './helpers/chat';
 
 import styles from '../../styles/ChatWithExperts.module.css';
 import MessageList from './messageList';
@@ -7,6 +7,7 @@ import TextComposer from './textComposer';
 import TitleBar from './titleBar';
 
 import useWindowSize from '../../helpers/getSize';
+import { Button } from '@material-ui/core';
 
 const ChatWithExperts = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,10 @@ const ChatWithExperts = () => {
     };
 
     const screenSize = useWindowSize();
+
+    const handleSetup = () => {
+        socketioSetup()
+    }
 
     // let io = socketioSetup({
     //     id: "12345",
@@ -45,7 +50,11 @@ const ChatWithExperts = () => {
             <MessageList />
             <TextComposer /> */}
             <div style={{background: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                Coming Soon
+                <Button variant="outlined"
+                    onClick={handleSetup}
+                >
+                    Connect
+                </Button>
             </div>
         </div>
     ) : null;
