@@ -83,9 +83,14 @@ const Farmers = (props) => {
 
     useEffect(() => {
         if(props.userType && props.userType !== "farmer"){
+            console.log("not farmer")
             Router.push("/");
-            props.dispatchRedirection("Access Denied", 3, "error")
+            props.dispatchRedirection("Access Denied, Login as Farmer", 3, "error")
         }
+        else {
+            props.dispatchRedirection("Login as Farmer Please", 3, "error")
+        }
+
         if(props.token && refresh){
             console.log("fetching ", props.token);
             setMyListing(null);

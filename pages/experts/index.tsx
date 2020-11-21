@@ -84,6 +84,9 @@ const Experts = (props) => {
             Router.push("/");
             props.dispatchRedirection("Access Denied, Login as Expert", 3, "error")
         }
+        else{
+            props.dispatchRedirection("Login as Expert Please", 3, "error")
+        }
         if(props.token && refresh){
             console.log("fetching ", props.token);
             // setMyListing(null);
