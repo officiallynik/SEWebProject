@@ -24,7 +24,7 @@ const AuthComponent = (props) => {
 
     const login = (
         <CustomModal
-            modalBtn={<div>Login</div>}
+            modalBtn={props.modalBtn||<div>Login</div>}
             isLoading={props.loading}
             token={props.token}
             exp={1000}

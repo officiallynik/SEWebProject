@@ -9,36 +9,33 @@ const ConnectionForm = (props) => {
     const [language, setLanguage] = useState("english");
     const [chatType, setChatType] = useState("text");
 
-    const [client, setClient] = useState(null);
+    const setConnection = async() => {
+        // console.log("[RTC] expert_id:", props.expertId);
 
-    const setChannel = async () => {
-        console.log("[RTC] expert_id:", props.expertId);
-
-        const peer = await RTC.initChannel(props.expertId);
-        console.log("[RTC] user_id:", peer.id);
+        // const peer = await RTC.initChannel(props.expertId);
+        // console.log("[RTC] user_id:", peer.id);
 
         const socket = io.connect("localhost:5000");
 
-        const expertSocket = io.connect("localhost:5000/experts", {
+        const clientSocket = io.connect("localhost:5000/clients", {
             query: {
-                expertId: props.expertId,
-                expertName: props.expertName,
+                clientId: props.clientId,
+                clientName: props.clientName,
+                clientType: props.clientType,
                 language: language,
                 chatType: chatType
             }
         });
 
-        expertSocket.on("userConnected", data => {
-            console.log("userdata", data);
-            setClient(data);
+        clientSocket.on("expertConnected", data => {
+            console.log(data);
+            props.setConnected();
         });
-
-        props.onConnection();
     }
 
     return (
         <form>
-            <Grid container spacing={3}>
+            <Grid container spacing={1} style={{padding: "10px"}}>
                 <Grid item xs={12} sm={6}>
                     <FormControl required fullWidth>
                         <InputLabel variant="outlined" id="demo-simple-select-required-label">Language</InputLabel>
@@ -91,9 +88,9 @@ const ConnectionForm = (props) => {
                 </Grid>
                 <Grid item>
                     <Button variant="outlined"
-                        onClick={() => setChannel()}
+                        onClick={() => setConnection()}
                     >
-                        Connect
+                        Connect with Expert
                     </Button>
                 </Grid>
             </Grid>

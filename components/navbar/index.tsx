@@ -40,7 +40,13 @@ const NavBar = (props) => {
                 props.loading? <CustomLinearProgress />: null
             }
             <div style={props.userType === "expert"? {display: "none"}: {}}>
-                <ChatWithExperts />
+                <ChatWithExperts  
+                    userDetail={{
+                        userType: props.userType,
+                        userName: props.name,
+                        userId: props._id
+                    }}
+                />
             </div>
         </React.Fragment>
     );
@@ -49,7 +55,9 @@ const NavBar = (props) => {
 const mapStateToProps = ({ authReducer }) => {
 	return {
         loading: authReducer.loading,
-        userType: authReducer.userType
+        userType: authReducer.userType,
+        name: authReducer.name,
+        _id: authReducer._id
 	};
 };
 

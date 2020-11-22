@@ -9,8 +9,13 @@ import TitleBar from './titleBar';
 import useWindowSize from '../../helpers/getSize';
 import { Button } from '@material-ui/core';
 
-const ChatWithExperts = () => {
+import AuthComponent from '../Auth/auth';
+import ConnectionForm from './clients/clientConnect';
+
+const ChatWithExperts = props => {
     const [isOpen, setIsOpen] = useState(false);
+
+    const [connected, setConnected] = useState(false);
 
     const handleChatButtonClick = () => {
         setIsOpen((prevState) => {
@@ -44,25 +49,50 @@ const ChatWithExperts = () => {
         </div>
     );
 
-    let chatScreen = isOpen? (
-        <div className={`${styles.chatscreen} ${isOpen? styles.show: null}`}>
+    let chatScreen = (
+        <div>
             <TitleBar />
             <MessageList />
             <TextComposer />
-            {/* <div style={{background: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                <Button variant="outlined"
-                    onClick={handleSetup}
-                >
-                    Connect
-                </Button>
-            </div> */}
+        </div>
+    );
+
+    if(!props.userDetail.userId){
+        console.log("fdjghfkjsh", props.userDetail.userId)
+        chatScreen = (
+            <div style={{background: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <AuthComponent 
+                    modalBtn={(
+                        <Button variant="outlined">Login to chat with experts</Button>
+                    )}
+                />
+            </div>
+        );
+    }
+
+    if(props.userDetail.userId && !connected){
+        chatScreen = (
+            <div style={{background: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <ConnectionForm 
+                    setConnected={() => setConnected(true)}
+                    clientId={props.userDetail.userId}
+                    clientName={props.userDetail.userName}
+                    clientType={props.userDetail.userType}
+                />
+            </div>
+        )
+    }
+
+    let chatWindow = isOpen? (
+        <div className={`${styles.chatscreen} ${isOpen? styles.show: null}`}>
+            {chatScreen}
         </div>
     ) : null;
 
     return(
         <>
             {(isOpen && screenSize.width < 460)? null: button}
-            {chatScreen}
+            {chatWindow}
         </>
     )
 };
