@@ -66,6 +66,6 @@ export const typeExpert = [
     },
     {
         name: "Dashboard",
-        path: "/experts/dashboard"
+        path: "/experts"
     },
 ]

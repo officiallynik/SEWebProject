@@ -1,5 +1,5 @@
 import { Button, Drawer, Icon, LinearProgress } from '@material-ui/core';
-import { List, DoneAll, Favorite, AccountCircle } from '@material-ui/icons';
+import { List, DoneAll, Favorite, AccountCircle, Chat, ChatBubble, ChatBubbleOutline, Create } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/dashboard/card';
 import CardBody from '../../components/dashboard/cardbody';
@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import Axios from '../../helpers/axios';
 import { notifyAction } from '../../store/actions/notifyAction';
 import Router from 'next/router';
+import ConnectionForm from '../../components/chat_with_experts/experts/expertConnect';
 
 const Experts = (props) => {
 
@@ -31,6 +32,9 @@ const Experts = (props) => {
     const [firstTime, setFirstTime] = useState(true);
     const [refresh, setRefresh] = useState(true);
     const [reqTypeSold, setReqTypeSold] = useState("false");
+
+    const [connected, setConnected] = useState(false);
+    const [history, setHistory] = useState(null);
 
     const handleDisplayProfileSidebar = () => {
         // console.log("Clicked");
@@ -84,11 +88,10 @@ const Experts = (props) => {
             Router.push("/");
             props.dispatchRedirection("Access Denied, Login as Expert", 3, "error")
         }
-        else{
-            props.dispatchRedirection("Login as Expert Please", 3, "error")
-        }
+
         if(props.token && refresh){
             console.log("fetching ", props.token);
+            setLoadDone(true);
             // setMyListing(null);
             // fetchMyListings(reqTypeSold);
         }
@@ -106,6 +109,18 @@ const Experts = (props) => {
     useEffect(() => {
         setUserProfileSidebar(false);
     }, [useWindowSize().width >= 860]);
+
+    let chatWindow = (
+        <ConnectionForm expertId={props._id} expertName={props.name} onConnection={() => setConnected(true)} />
+    );
+
+    if(connected){
+        chatWindow = (
+            <div>
+                
+            </div>
+        )
+    }
     
     const userProfile = (
         <div>
@@ -113,8 +128,8 @@ const Experts = (props) => {
                 <CardBody profile>
                     <h4>{props.userType? props.userType.toUpperCase(): null}</h4>
                     <h3>{props.name}</h3>
-                    <p>{props.pincode}</p>
-                    <p>{props.location}</p>
+                    {/* <p>{props.pincode}</p> */}
+                    {/* <p>{props.location}</p> */}
                     <CustomModal modalBtn={(
                             <Button variant="outlined" color="primary" onClick={() => setIsDone([false, false])}>
                                 Edit Profile
@@ -168,26 +183,14 @@ const Experts = (props) => {
                         headerColor="primary"
                         tabs={[
                             {
-                                tabName: "My listings",
-                                tabIcon: List,
-                                tabContent: (
-                                    <LinearProgress /> 
-                                    // <CollapsibleTable 
-                                    //     headers={farmerFields}
-                                    //     data={myListing}
-                                    //     refresh={() => {
-                                    //         setRefresh(true);
-                                    //         setReqTypeSold("false");
-                                    //     }}
-                                    //     firstTime={firstTime}
-                                    //     setFirstTime={() => setFirstTime(false)}
-                                    // />
-                                ),
+                                tabName: "Chat With Users",
+                                tabIcon: Chat,
+                                tabContent: chatWindow,
                                 onclick: (() => console.log("clicked"))
                             },
                             {
-                                tabName: "Completed Orders",
-                                tabIcon: DoneAll,
+                                tabName: "Blogs",
+                                tabIcon: Create,
                                 tabContent: (
                                     <LinearProgress />
                                     // <CollapsibleTable 
@@ -233,7 +236,8 @@ const mapStateToProps = ({ authReducer }) => {
         userType: authReducer.userType,
         pincode: authReducer.pincode,
         location: authReducer.location,
-        name: authReducer.name
+        name: authReducer.name,
+        _id: authReducer._id
     }
 }
 
