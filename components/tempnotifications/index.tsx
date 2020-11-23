@@ -34,7 +34,7 @@ class Notifications extends Component {
 
     handleClose = () => {
         this.setState({open:false});
-        this.state.messages.map( message => message.read = true)
+        
        
     };
 
