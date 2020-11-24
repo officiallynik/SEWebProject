@@ -52,128 +52,23 @@ const useStyles = makeStyles((theme) => ({
     },
     loadmore: {
         textAlign: "center",
-    }
+    },
 }));
 
 interface props {
-
+    comments: any,
 }
 
 function Comments(props: props) {
 
     const classes = useStyles();
 
-    const com = [
-        {
-            author: 'commenter',
-            date: '23 Nov 2020',
-            comment: 'this is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first comment',
-            children: [
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                },
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                },
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                }
-            ]
-        },
-        {
-            author: 'commenter',
-            date: '23 Nov 2020',
-            comment: 'this is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first comment',
-            children: [
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                },
-            ]
-        },
-        {
-            author: 'commenter',
-            date: '23 Nov 2020',
-            comment: 'this is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first comment',
-            children: [
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                },
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                },
-            ]
-        },
-        {
-            author: 'commenter',
-            date: '23 Nov 2020',
-            comment: 'this is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first comment',
-            children: [
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                },
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                },
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                }
-            ]
-        },
-        {
-            author: 'commenter',
-            date: '23 Nov 2020',
-            comment: 'this is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first comment',
-            children: [
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                },
-            ]
-        },
-        {
-            author: 'commenter',
-            date: '23 Nov 2020',
-            comment: 'this is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first commentthis is my first comment',
-            children: [
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                },
-                {
-                    author: 'subcommenter',
-                    date: '23 Nov 2020',
-                    comment: 'this is my first comment',
-                },
-            ]
-        },
-    ]
-
-    const [displayComments, setDisplayComments] = useState(com);
+    const [displayComments, setDisplayComments] = useState(props.comments);
     const [displayCommentsNum, setDisplayCommentsNum] = useState(2);
 
     const handleDisplayComments = () => {
         var index = -1;
-        setDisplayComments(com.filter((comment) => {
+        setDisplayComments(props.comments.filter((comment) => {
             index++;
             if (index < displayCommentsNum) {
                 return comment
@@ -186,8 +81,36 @@ function Comments(props: props) {
         handleDisplayComments();
     }, []);
 
+    const handlecomments = (e) => {
+        if (e !== undefined) {
+            return e.map((comment) => (
+                <Typography>
+                    <Typography>
+                        <Typography variant="caption" className={classes.commentauthor}>{comment.author}</Typography>
+                        <Typography variant="caption" className={classes.commentauthor}>{comment.date}</Typography>
+                        <Typography variant="subtitle2" className={classes.comment}>{comment.comment}</Typography>
+                        <Typography className={classes.subcomment}>
+                            <Paper component="form" className={classes.root}>
+                                <InputBase
+                                    className={classes.input}
+                                    placeholder="Reply to this comment..."
+                                    inputProps={{ 'aria-label': 'Reply to this comment...' }}
+                                />
+                                <IconButton color="primary" className={classes.iconButton} aria-label="directions">
+                                    <SendIcon />
+                                </IconButton>
+                            </Paper>
+                            {handlecomments(comment.children)}
+                        </Typography>
+                    </Typography>
+                    <Typography className={classes.space}></Typography>
+                </Typography>
+            ))
+        }
+    }
+
     const loadmoreButton = () => {
-        if (displayComments.length < com.length) {
+        if (displayComments.length < props.comments.length) {
             return <Typography className={classes.loadmore}>
                 <Button variant="contained" color="primary" onClick={handleDisplayComments}>load more</Button>
             </Typography>
@@ -206,44 +129,40 @@ function Comments(props: props) {
                 <InputBase
                     className={classes.input}
                     placeholder="Add a public Comment..."
-                    inputProps={{ 'aria-label': 'search google maps' }}
+                    inputProps={{ 'aria-label': 'Add a public Comment...' }}
                 />
                 <IconButton color="primary" className={classes.iconButton} aria-label="directions">
                     <SendIcon />
                 </IconButton>
             </Paper>
             <Typography className={classes.space}></Typography>
-            {displayComments.map((comment) => (
-                <Typography>
-                    <Paper>
-                        <Typography>
-                            <Typography variant="caption" className={classes.commentauthor}>{comment.author}</Typography>
-                            <Typography variant="caption" className={classes.commentauthor}>{comment.date}</Typography>
-                            <Typography variant="subtitle2" className={classes.comment}>{comment.comment}</Typography>
-                            <Typography className={classes.subcomment}>
-                                <Paper component="form" className={classes.root}>
-                                    <InputBase
-                                        className={classes.input}
-                                        placeholder="Reply to this comment..."
-                                        inputProps={{ 'aria-label': 'search google maps' }}
-                                    />
-                                    <IconButton color="primary" className={classes.iconButton} aria-label="directions">
-                                        <SendIcon />
-                                    </IconButton>
-                                </Paper>
-                                {comment.children.map((subcomment) => (
-                                    <Typography>
-                                        <Typography variant="caption" className={classes.subcommentauthor}>{subcomment.author}</Typography>
-                                        <Typography variant="caption" className={classes.subcommentauthor}>{subcomment.date}</Typography>
-                                        <Typography variant="subtitle2" className={classes.comment}>{subcomment.comment}</Typography>
-                                    </Typography>
-                                ))}
+            {displayComments.map((comment) => {
+                if (comment !== undefined) {
+                    return <Typography>
+                        <Paper>
+                            <Typography>
+                                <Typography variant="caption" className={classes.commentauthor}>{comment.author}</Typography>
+                                <Typography variant="caption" className={classes.commentauthor}>{comment.date}</Typography>
+                                <Typography variant="subtitle2" className={classes.comment}>{comment.comment}</Typography>
+                                <Typography className={classes.subcomment}>
+                                    <Paper component="form" className={classes.root}>
+                                        <InputBase
+                                            className={classes.input}
+                                            placeholder="Reply to this comment..."
+                                            inputProps={{ 'aria-label': 'search google maps' }}
+                                        />
+                                        <IconButton color="primary" className={classes.iconButton} aria-label="directions">
+                                            <SendIcon />
+                                        </IconButton>
+                                    </Paper>
+                                    {handlecomments(comment.children)}
+                                </Typography>
                             </Typography>
-                        </Typography>
-                    </Paper>
-                    <Typography className={classes.space}></Typography>
-                </Typography>
-            ))}
+                        </Paper>
+                        <Typography className={classes.space}></Typography>
+                    </Typography>
+                }
+            })}
             {loadmoreButton()}
         </div>
     );

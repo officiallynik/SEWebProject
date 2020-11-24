@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -21,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
   favIcon: {
     color: '#eb0029',
     float: 'right',
+    cursor: 'pointer',
   },
 }));
 
@@ -126,7 +126,7 @@ export default function Main(props: props) {
         {blog.content}
       </Typography>
       <Divider />
-      <Comments />
+      <Comments comments={blog.comments}/>
     </Grid>
   );
 }

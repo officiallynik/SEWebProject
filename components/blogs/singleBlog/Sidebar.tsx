@@ -18,13 +18,11 @@ const useStyles = makeStyles((theme) => ({
 
 interface props {
   tags:any,
-  fav:any,
-  setIsFav:any,
 }
 
 export default function Sidebar(props: props) {
   const classes = useStyles();
-  const { tags , fav, setIsFav} = props;
+  const { tags } = props;
 
   return (
     <Grid item xs={12} md={4}>
