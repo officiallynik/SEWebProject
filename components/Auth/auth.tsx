@@ -55,7 +55,7 @@ const AuthComponent = (props) => {
 
     useEffect(() => {
         let reqInt = null;
-        if(props.token){
+        if(props.token && ["farmer", "dealer"].includes(props.uerType)){
             Axios.get('/farmer/notifications/view', {
                 headers: {
                     "Authorization": `Bearer ${props.token}`

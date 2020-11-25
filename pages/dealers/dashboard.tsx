@@ -82,7 +82,7 @@ const Dashboard = (props) => {
     }
 
     useEffect(() => {
-        if(props.userType !== "dealer"){
+        if(props.token && props.userType !== "dealer"){
             Router.push("/");
             props.dispatchRedirection("Access Denied, Login as Dealer", 3, "error")
         }

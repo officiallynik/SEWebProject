@@ -83,7 +83,7 @@ const Farmers = (props) => {
     }
 
     useEffect(() => {
-        if(props.userType !== "farmer"){
+        if(props.token && props.userType !== "farmer"){
             console.log("not farmer")
             Router.push("/");
             props.dispatchRedirection("Access Denied, Login as Farmer", 3, "error")
