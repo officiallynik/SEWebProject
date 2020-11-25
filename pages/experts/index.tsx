@@ -84,7 +84,7 @@ const Experts = (props) => {
     // }
 
     useEffect(() => {
-        if(props.userType && props.userType !== "expert"){
+        if(props.userType !== "expert"){
             Router.push("/");
             props.dispatchRedirection("Access Denied, Login as Expert", 3, "error")
         }
