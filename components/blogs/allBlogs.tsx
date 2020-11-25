@@ -14,22 +14,13 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import StarIcon from '@material-ui/icons/Star';
-import { useWindowSize } from 'use-window-size-hook';
-import image from '../src/images/11.jpeg';
-import image1 from '../src/images/22.jpeg';
-import image3 from '../src/images/33.jpeg';
-import image4 from '../src/images/44.jpeg';
-import image5 from '../src/images/5.jpeg';
-import image2 from '../src/images/2.jpeg';
-import image6 from '../src/images/3.jpeg';
-import image7 from '../src/images/4.jpeg';
-import image8 from '../src/images/111.jpeg';
 import clsx from 'clsx';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import useWindowSize from '../../helpers/getSize';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -112,7 +103,7 @@ function AllBlogs() {
   const [blogs, setBlogs] = useState([
     {
       id: 1,
-      img: image,
+      img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
       title: 'For Moments like No Other',
       author: 'United Kingdom',
       subtitle: 'Sub Title of a longer featured blog post',
@@ -123,7 +114,7 @@ function AllBlogs() {
     },
     {
       id: 2,
-      img: image1,
+      img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
       title: 'Title of a longer featured blog post',
       author: 'Author of the Blog',
       subtitle: 'Sub Title of a longer featured blog post',
@@ -134,7 +125,7 @@ function AllBlogs() {
     },
     {
       id: 3,
-      img: image2,
+      img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
       title: 'Spotify Design',
       author: 'India',
       subtitle: 'Sub Title of a longer featured blog post',
@@ -145,7 +136,7 @@ function AllBlogs() {
     },
     {
       id: 4,
-      img: image3,
+      img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
       title: 'Flux Academy',
       author: 'Israel',
       subtitle: 'Sub Title of a longer featured blog post',
@@ -156,7 +147,7 @@ function AllBlogs() {
     },
     {
       id: 5,
-      img: image4,
+      img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
       title: 'Marina Beach',
       author: 'India',
       subtitle: 'Sub Title of a longer featured blog post',
@@ -167,7 +158,7 @@ function AllBlogs() {
     },
     {
       id: 6,
-      img: image5,
+      img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
       title: 'Marina Beach',
       author: 'India',
       subtitle: 'Sub Title of a longer featured blog post',
@@ -178,7 +169,7 @@ function AllBlogs() {
     },
     {
       id: 7,
-      img: image6,
+      img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
       title: 'Marina Beach',
       author: 'India',
       subtitle: 'Sub Title of a longer featured blog post',
@@ -189,7 +180,7 @@ function AllBlogs() {
     },
     {
       id: 8,
-      img: image7,
+      img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
       title: 'Crops',
       author: 'India',
       subtitle: 'Sub Title of a longer featured blog post',
@@ -200,7 +191,7 @@ function AllBlogs() {
     },
     {
       id: 9,
-      img: image8,
+      img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072823_1280.jpg",
       title: 'Marina Beach',
       author: 'India',
       subtitle: 'Sub Title of a longer featured blog post',
@@ -406,7 +397,7 @@ function AllBlogs() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed">
+      <AppBar position="relative" style={{background: "linear-gradient(314deg, #63a91f 0%, #1a512e 74%", position: "fixed", top: "45px"}}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             Blog Page
