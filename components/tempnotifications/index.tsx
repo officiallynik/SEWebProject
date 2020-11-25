@@ -104,7 +104,7 @@ const TempNotifications = props => {
                             :
                             props.messages.map((message, i) => {
 
-                                console.log(message);
+                                // console.log(message);
 
                                 let isRead = { backgroundColor: 'rgba(119, 119, 119, 0.15)', padding: '20px 50px' };
 
@@ -149,4 +149,4 @@ const TempNotifications = props => {
     )
 }
 
-export default TempNotifications;
+export default React.memo(TempNotifications);

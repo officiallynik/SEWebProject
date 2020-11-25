@@ -62,7 +62,7 @@ export const authLogin = (phone, password, isRemember) => {
                     localStorage.setItem('location', response.data.user.location);
                 }
 
-                // console.log("login res: ", response);
+                console.log("login res: ", response.data);
                 dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, response.data.userType, response.data.user.pincode, response.data.user.location));
                 dispatch(setAuthRedirectPath(`/${response.data.userType}s`));
             })

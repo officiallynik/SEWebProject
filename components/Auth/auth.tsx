@@ -59,6 +59,22 @@ const AuthComponent = (props) => {
     useEffect(() => {
         let reqInt = null;
         if(props.token){
+            Axios.get('/farmer/notifications/view', {
+                headers: {
+                    "Authorization": `Bearer ${props.token}`
+                }
+            })
+            .then(res => {
+                // console.log(res.data);
+                setNotificationsMsgs((prevState) => {
+                    const data = [...res.data, ...prevState];
+                    return data;
+                });
+            })
+            .catch(e => {
+                // console.log("excepttion", e);
+            });
+
             reqInt = setInterval(() => {
                 Axios.get('/farmer/notifications/view', {
                     headers: {
@@ -79,7 +95,14 @@ const AuthComponent = (props) => {
         }
 
         if(!props.token && reqInt){
+            console.log("clearing interval...", reqInt);
             clearInterval(reqInt);
+        }
+
+        return () => {
+            if(reqInt){
+                clearInterval(reqInt);
+            }
         }
 
     }, [props.token])
