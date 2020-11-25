@@ -19,6 +19,7 @@
     "axios": "^0.21.0",
     "eventemitter3": "^4.0.7",
     "isomorphic-fetch": "^3.0.0",
+    "ckeditor5": "^23.1.0",
     "jquery": "^3.5.1",
     "next": "^9.5.5",
     "peer": "^0.2.8",
