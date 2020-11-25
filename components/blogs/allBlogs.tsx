@@ -397,7 +397,7 @@ function AllBlogs() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="relative" style={{background: "linear-gradient(314deg, #63a91f 0%, #1a512e 74%", position: "fixed", top: "45px"}}>
+      <AppBar position="relative" style={{background: "linear-gradient(314deg, #63a91f 0%, #1a512e 74%", position: "fixed", top: "45px", zIndex: 1}}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             Blog Page
