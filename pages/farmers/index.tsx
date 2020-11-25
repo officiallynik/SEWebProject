@@ -71,6 +71,7 @@ const Farmers = (props) => {
         })
         .catch(err => {
             console.log(err);
+            setMyListing([]);
         })
         .finally(() => {
             setLoadDone(true);
@@ -182,6 +183,7 @@ const Farmers = (props) => {
                                         }}
                                         firstTime={firstTime}
                                         setFirstTime={() => setFirstTime(false)}
+                                        nodatamsg={"No crops listed, try selling something and rejoice!"}
                                     />
                                 ),
                                 onclick: (() => console.log("clicked"))
@@ -200,6 +202,7 @@ const Farmers = (props) => {
                                         }}
                                         firstTime={firstTime}
                                         setFirstTime={() => setFirstTime(false)}
+                                        nodatamsg={"No crops selled, we will notify any potential buyer!"}
                                     />
                                 )
                             }

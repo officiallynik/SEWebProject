@@ -63,23 +63,30 @@ const CollapsibleTable = (props) => {
     
     return (
         <TableContainer>
-            <Table aria-label="collapsible table">
-                <TableHead>
-                    <TableRow>
-                        {
-                            props.headers.map(header => {
-                                return <TableCell key={header}>{header}</TableCell>
-                            })
-                        }
-                        <TableCell key="empty" />
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {props.data.map((row) => (
-                        <Row key={row._id} row={row} />
-                    ))}
-                </TableBody>
-            </Table>
+            {
+                props.data.length === 0? 
+                <div style={{fontSize: "18px"}}>
+                    {props.nodatamsg}
+                </div>    
+                :
+                <Table aria-label="collapsible table">
+                    <TableHead>
+                        <TableRow>
+                            {
+                                props.headers.map(header => {
+                                    return <TableCell key={header}>{header}</TableCell>
+                                })
+                            }
+                            <TableCell key="empty" />
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {props.data.map((row) => (
+                            <Row key={row._id} row={row} />
+                        ))}
+                    </TableBody>
+                </Table>
+            }
         </TableContainer>
     );
 }
