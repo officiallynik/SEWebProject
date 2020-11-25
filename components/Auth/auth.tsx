@@ -7,6 +7,7 @@ import CustomModal from '../modal';
 import SignUp from '../signup';
 import Router from 'next/router';
 import TempNotifications from '../tempnotifications';
+import Axios from '../../helpers/axios';
 
 const AuthComponent = (props) => {
     const [isLogin, setIsLogin] = useState(true);
@@ -54,6 +55,34 @@ const AuthComponent = (props) => {
         //going to url pending
 
     };
+
+    useEffect(() => {
+        let reqInt = null;
+        if(props.token){
+            reqInt = setInterval(() => {
+                Axios.get('/farmer/notifications/view', {
+                    headers: {
+                        "Authorization": `Bearer ${props.token}`
+                    }
+                })
+                .then(res => {
+                    // console.log(res.data);
+                    setNotificationsMsgs((prevState) => {
+                        const data = [...res.data, ...prevState];
+                        return data;
+                    });
+                })
+                .catch(e => {
+                    // console.log("excepttion", e);
+                })
+            }, 1000*60);
+        }
+
+        if(!props.token && reqInt){
+            clearInterval(reqInt);
+        }
+
+    }, [props.token])
 
     const login = (
         <CustomModal
