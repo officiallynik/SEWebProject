@@ -12,12 +12,13 @@ import CustomModal from '../../components/modal';
 import useWindowSize from '../../helpers/getSize';
 import UpdateProfile from '../../components/signup/updateprofile';
 
-import styles from '../../styles/Farmer.module.css';
+import styles from '../../styles/Expert.module.css';
 import { connect } from 'react-redux';
 import Axios from '../../helpers/axios';
 import { notifyAction } from '../../store/actions/notifyAction';
 import Router from 'next/router';
 import ConnectionForm from '../../components/chat_with_experts/experts/expertConnect';
+import ComposeBlog from '../../components/composeblog';
 
 const Experts = (props) => {
 
@@ -192,7 +193,12 @@ const Experts = (props) => {
                                 tabName: "Blogs",
                                 tabIcon: Create,
                                 tabContent: (
-                                    <LinearProgress />
+                                    <div style={{
+                                        height: "70vh",
+                                        overflow: "auto"
+                                    }}>
+                                        <ComposeBlog />
+                                    </div>
                                     // <CollapsibleTable 
                                     //     headers={farmerFields}
                                     //     data={myListing}
