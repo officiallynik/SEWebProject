@@ -6,10 +6,18 @@ import SignIn from '../login';
 import CustomModal from '../modal';
 import SignUp from '../signup';
 import Router from 'next/router';
+import TempNotifications from '../tempnotifications';
 
 const AuthComponent = (props) => {
     const [isLogin, setIsLogin] = useState(true);
     const [openProfile, setOpenProfile] = React.useState(null);
+
+    const [notifications, setNotifications] = useState(2);
+    const [openNotifications, setOpenNotifications] = useState(false);
+    const [notificationMsgs, setNotificationsMsgs] = useState([
+        {type: 'bid_placed', msg: 'Lorem Ipsum Dolor Sit Amet'},
+        {type: 'bid_placed', msg: 'Lorem Ipsum Dolor Sit Amet'},
+    ]);
 
     const handleClickProfile = event => {
         if (openProfile && openProfile.contains(event.target)) {
@@ -18,13 +26,38 @@ const AuthComponent = (props) => {
             setOpenProfile(event.currentTarget);
         }
     };
+
     const handleCloseProfile = () => {
         setOpenProfile(null);
     };
 
+    const handleNotificationsOpen = () => {
+        handleCloseProfile();
+        setOpenNotifications(true);
+    };
+
+
+    const handleNotificationsClose = () => {
+        setOpenNotifications(false);
+    };
+
+    const handleNotificationOnClicked = (index) => {
+
+        // deleting it
+        const msgs = [...notificationMsgs];
+        msgs.splice(index, 1);
+        setNotificationsMsgs(msgs);
+        setNotifications((prevState) => {
+            return prevState - 1;
+        });
+
+        //going to url pending
+
+    };
+
     const login = (
         <CustomModal
-            modalBtn={props.modalBtn||<div>Login</div>}
+            modalBtn={props.modalBtn || <div>Login</div>}
             isLoading={props.loading}
             token={props.token}
             exp={1000}
@@ -39,42 +72,29 @@ const AuthComponent = (props) => {
     );
 
     const Notifications = (
-        <div style={{maxHeight: "200px", overflow: "auto", display: "flex", flexDirection: "column"}}>
+        <div style={{ maxHeight: "200px", overflow: "auto", display: "flex", flexDirection: "column" }}>
             <MenuItem
-                onClick={handleCloseProfile}
-                style={{borderBottom: "1px solid black"}}
+                onClick={handleNotificationsOpen}
+                style={{ borderBottom: "1px solid black" }}
             >
-                Notifications
+                Notifications 
+                <span 
+                    style={{
+                        marginLeft: "10px",
+                        backgroundColor: "black",
+                        color: "white",
+                        padding: "10px",
+                        borderRadius: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        height: "15px",
+                        width: "15px",
+                        fontSize: "12px",
+                        alignItems: "center"
+                    }}
+                
+                >{notifications}</span>
             </MenuItem>
-            <div style={{overflow: "auto", }}>
-                {/* <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem>
-                <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem>
-                <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem>
-                <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem>
-                <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem>
-                <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem> */}
-                <MenuItem>
-                    Notifications Coming Soon
-                </MenuItem>
-            </div>
         </div>
     )
 
@@ -110,7 +130,7 @@ const AuthComponent = (props) => {
                                             handleCloseProfile()
                                             props.dispatchLogout(props.userType, props.token);
                                         }}
-                                        style={{borderTop: "1px solid black"}}
+                                        style={{ borderTop: "1px solid black" }}
                                     >
                                         Logout
                                     </MenuItem>
@@ -124,7 +144,7 @@ const AuthComponent = (props) => {
     );
 
     useEffect(() => {
-        if(!props.token){
+        if (!props.token) {
             Router.push(props.redirectPath);
         }
     }, [props.token])
@@ -133,6 +153,13 @@ const AuthComponent = (props) => {
         <div>
             <div style={{ display: props.token ? "none" : "block" }}>{login}</div>
             <div style={{ display: !props.token ? "none" : "block" }}>{profile}</div>
+            <TempNotifications
+                open={openNotifications}
+                handleClose={handleNotificationsClose}
+                notifications={notifications}
+                messages={notificationMsgs}
+                notificationOnClicked={handleNotificationOnClicked}
+            />
         </div>
     );
 }

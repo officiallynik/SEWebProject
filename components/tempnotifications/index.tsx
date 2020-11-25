@@ -1,4 +1,4 @@
-import React,{Component} from "react";
+import React, { Component } from "react";
 import AppBar from '@material-ui/core/AppBar';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,24 +19,24 @@ import Avatar from '@material-ui/core/Avatar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
 
-class Notifications extends Component {
+const TempNotifications = props => {
 
-    state = {
-        notifications : 0, //for notification badge number
-        open : false,      //for dialog box
-        messages : [],  //  [{type:'',msg:'',url:''}]  
-    }
+    // state = {
+    //     notifications : 0, //for notification badge number
+    //     open : false,      //for dialog box
+    //     messages : [],  //  [{type:'',msg:'',url:''}]  
+    // }
 
-    handleOpen = () => {
-        this.setState({open:true});
-        
-    };
+    // handleOpen = () => {
+    //     this.setState({open:true});
 
-    handleClose = () => {
-        this.setState({open:false});
-        
-       
-    };
+    // };
+
+    // handleClose = () => {
+    //     this.setState({open:false});
+
+
+    // };
 
     // addNotification = () => {
     //     let m = this.state.messages;
@@ -48,22 +48,20 @@ class Notifications extends Component {
     //     console.log(m)
     // }
 
-    notificationOnClicked = (index) => {
+    // notificationOnClicked = (index) => {
 
-        // deleting it
-        const msgs = [...this.state.messages]
-        msgs.splice(index,1);
-        this.setState({messages: msgs})
-        this.state.notifications-=1
+    //     // deleting it
+    //     const msgs = [...this.state.messages]
+    //     msgs.splice(index,1);
+    //     this.setState({messages: msgs})
+    //     this.state.notifications-=1
 
-        //going to url pending
+    //     //going to url pending
 
-    }
-
-    render(){
-        return (
-            <div>
-                {/* <AppBar position="static">
+    // }
+    return (
+        <div>
+            {/* <AppBar position="static">
                     <Toolbar>
                         <IconButton edge="start" color="inherit" aria-label="menu">
                         <MenuIcon />
@@ -87,67 +85,68 @@ class Notifications extends Component {
                     </Button>
                 </div> */}
 
-                <Dialog
-                    title = "Notifications"
-                    open = {this.state.open}
-                    onClose = {this.handleClose}
-                    fullWidth  = {true}
-                    scroll = "body"
-                >
-                    <DialogTitle id="alert-dialog-title">{"Notifications"}</DialogTitle>
-                    <DialogContent>
-                        <List>
+            <Dialog
+                title="Notifications"
+                open={props.open}
+                onClose={props.handleClose}
+                fullWidth={true}
+                scroll="body"
+            >
+                <DialogTitle id="alert-dialog-title">{"Notifications"}</DialogTitle>
+                <DialogContent>
+                    <List>
                         <ListSubheader>
-                            {this.state.notifications} unread notifications
+                            {props.notifications} unread notifications
                         </ListSubheader>
-                        {this.state.messages.length === 0
-                        ? <ListItem>No new notifications</ListItem>
+                        {props.messages.length === 0
+                            ? <ListItem>No new notifications</ListItem>
 
-                        :
-                            this.state.messages.map((message,i) =>{
+                            :
+                            props.messages.map((message, i) => {
 
-                                let isRead = {backgroundColor: 'rgba(119, 119, 119, 0.15)', padding:'20px 50px'};
+                                console.log(message);
 
-                                if(message.type === 'Bid Placed') return <ListItem button onClick={() => this.notificationOnClicked(i)}>
-                                                                            <ListItemAvatar>
-                                                                                <Avatar><LocalMall/></Avatar>
-                                                                            </ListItemAvatar>
-                                                                            <ListItemText 
-                                                                                style={isRead}  
-                                                                                key={i} 
-                                                                                primary = {message.type}
-                                                                                secondary= {message.msg}
-                                                                            />
-                                                                        </ListItem>
-                                else if(message.type === 'Bid Accepted') return <ListItem button onClick={() => this.notificationOnClicked(i)}>
-                                                                                    <ListItemAvatar>
-                                                                                        <Avatar><CheckSharp /></Avatar>
-                                                                                    </ListItemAvatar>
-                                                                                    <ListItemText 
-                                                                                        style={isRead}  
-                                                                                        key={i} 
-                                                                                        primary = {message.type}
-                                                                                        secondary= {message.msg}
-                                                                                    />
-                                                                                </ListItem>
-                              
-                        
+                                let isRead = { backgroundColor: 'rgba(119, 119, 119, 0.15)', padding: '20px 50px' };
+
+                                if (message.type === 'bid_placed') return <ListItem key={i} button onClick={() => props.notificationOnClicked(i)}>
+                                    <ListItemAvatar>
+                                        <Avatar><LocalMall /></Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        style={isRead}
+                                        key={i}
+                                        primary={message.type}
+                                        secondary={message.msg}
+                                    />
+                                </ListItem>
+                                else if (message.type === 'bid_accepted') return <ListItem key={i} button onClick={() => props.notificationOnClicked(i)}>
+                                    <ListItemAvatar>
+                                        <Avatar><CheckSharp /></Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        style={isRead}
+                                        key={i}
+                                        primary={message.type}
+                                        secondary={message.msg}
+                                    />
+                                </ListItem>
+
+
                             }
-                            
+
                             )
-                    
+
                         }
 
-                       
-                        </List>
 
-                    </DialogContent>
-                   
+                    </List>
 
-                </Dialog>
-            </div>
-        )
-    }
-}       
+                </DialogContent>
 
-export default Notifications;
+
+            </Dialog>
+        </div>
+    )
+}
+
+export default TempNotifications;
