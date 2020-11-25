@@ -13,12 +13,9 @@ const AuthComponent = (props) => {
     const [isLogin, setIsLogin] = useState(true);
     const [openProfile, setOpenProfile] = React.useState(null);
 
-    const [notifications, setNotifications] = useState(2);
+    const [notifications, setNotifications] = useState(0);
     const [openNotifications, setOpenNotifications] = useState(false);
-    const [notificationMsgs, setNotificationsMsgs] = useState([
-        {type: 'bid_placed', msg: 'Lorem Ipsum Dolor Sit Amet'},
-        {type: 'bid_placed', msg: 'Lorem Ipsum Dolor Sit Amet'},
-    ]);
+    const [notificationMsgs, setNotificationsMsgs] = useState([]);
 
     const handleClickProfile = event => {
         if (openProfile && openProfile.contains(event.target)) {
@@ -95,14 +92,18 @@ const AuthComponent = (props) => {
         }
 
         if(!props.token && reqInt){
-            console.log("clearing interval...", reqInt);
+            // console.log("clearing interval...", reqInt);
             clearInterval(reqInt);
+            setNotifications(0);
+            setNotificationsMsgs([]);
         }
 
         return () => {
             if(reqInt){
                 clearInterval(reqInt);
             }
+            setNotifications(0);
+            setNotificationsMsgs([]);
         }
 
     }, [props.token])
