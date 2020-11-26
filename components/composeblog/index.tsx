@@ -1,35 +1,178 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { Create } from '@material-ui/icons';
+import { Button, Chip, TextField } from '@material-ui/core';
+import UploadThumbnail from '../utils/thumbnail';
+import { Autocomplete } from '@material-ui/lab';
 
-import styles from '../../styles/CKEditor.module.css';
+const ComposeBlog = (props) => {
 
-const ComposeBlog = () => {
-    return (
-        <div style={{minHeight: "100%", height: "100%"}}>
-            <CKEditor
-                editor={ClassicEditor}
-                data="<p>Compose your blog here!</p>"
-                onReady={editor => {
-                    // You can store the "editor" and use when it is needed.
-                    console.log('Editor is ready to use!', editor);
-                }}
-                onChange={(event, editor) => {
-                    const data = editor.getData();
-                    console.log({ event, editor, data });
-                }}
-                onBlur={(event, editor) => {
-                    console.log('Blur.', editor);
-                }}
-                onFocus={(event, editor) => {
-                    console.log('Focus.', editor);
-                }}
-                style={{
-                    height: "100%"
-                }}
-            />
-        </div>
+    const [blogContent, setBlogContent] = useState("<p>Compose your blog here!</p>");
+    const [thumbnail, setThumbnail] = useState<File | null>(null);
+    const [tags, setTags] = useState([]);
+    const [step, setStep] = useState(1);
+
+
+    const handleSubmitBlog = () => {
+        console.log(blogContent);
+        console.log(thumbnail);
+        console.log(tags);
+    }
+
+    let blogComposer = (
+        <Button variant="outlined"
+            onClick={() => props.setOpenEditor(true)}
+        >
+            <Create />
+            <span style={{display: "flex", marginLeft: "5px"}}>
+                Compose Blog
+            </span>
+        </Button>
     );
+
+    if(props.openEditor && step === 1) {
+        blogComposer = (
+            <div style={{ minHeight: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
+                <div>
+
+                    <Button variant="outlined"
+                        style={{
+                            marginBottom: "10px",
+                            width: "max-content",
+                            marginRight: "10px"
+                        }}
+                        onClick={() => props.setOpenEditor(false)}
+                    >
+                        Cancel
+                    </Button>
+                    <Button variant="outlined"
+                        style={{
+                            marginBottom: "10px",
+                            width: "max-content"
+                        }}
+                        onClick={() => setStep(2)}
+                        disabled={blogContent.length === 0}
+                    >
+                        Next
+                    </Button>
+                </div>
+                <div style={{ display: "flex", flexGrow: 1 }}>
+                    <CKEditor
+                        editor={ClassicEditor}
+                        data={blogContent}
+                        onReady={editor => {
+                            // You can store the "editor" and use when it is needed.
+                            // console.log('Editor is ready to use!', editor);
+                        }}
+                        onChange={(event, editor) => {
+                            const data = editor.getData();
+                            // console.log({ event, editor, data });
+                            setBlogContent(data);
+                        }}
+                        onBlur={(event, editor) => {
+                            // console.log('Blur.', editor);
+                        }}
+                        onFocus={(event, editor) => {
+                            // console.log('Focus.', editor);
+                        }}
+                        style={{
+                            height: "100%"
+                        }}
+                    />
+                </div>
+            </div>
+        );
+    } 
+
+    if(props.openEditor && step === 2) {
+        blogComposer = (
+            <div style={{ minHeight: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
+                <div>
+                    <Button variant="outlined"
+                        style={{
+                            marginBottom: "10px",
+                            width: "max-content",
+                            marginRight: "10px"
+                        }}
+                        onClick={() => setStep(1)}
+                    >
+                        Back
+                    </Button>
+                    <Button variant="outlined"
+                        style={{
+                            marginBottom: "10px",
+                            width: "max-content"
+                        }}
+                        onClick={() => setStep(3)}
+                        disabled={thumbnail === null}
+                    >
+                        Next
+                    </Button>
+                </div>
+                <div>
+                    <div
+                        style={{
+                            fontSize: "18px",
+                            marginBottom: "10px"
+                        }}
+                    >Add Thumbnail</div>
+                    <UploadThumbnail 
+                        setThumbnail = {setThumbnail}
+                        thumbnail={thumbnail}
+                    />
+                </div>
+            </div>
+        );
+    } 
+
+    if(props.openEditor && step === 3) {
+        blogComposer = (
+            <div style={{ minHeight: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
+                <div>
+                    <Button variant="outlined"
+                        style={{
+                            marginBottom: "10px",
+                            width: "max-content",
+                            marginRight: "10px"
+                        }}
+                        onClick={() => setStep(2)}
+                    >
+                        Back
+                    </Button>
+                    <Button variant="outlined"
+                        style={{
+                            marginBottom: "10px",
+                            width: "max-content"
+                        }}
+                        onClick={handleSubmitBlog}
+                    >
+                        Submit Blog
+                    </Button>
+                </div>
+                <div>
+                    <Autocomplete
+                        multiple
+                        id="tags-filled"
+                        options={[]}
+                        defaultValue={[]}
+                        freeSolo
+                        renderTags={(value, getTagProps) => {
+                            setTags(value);
+                            return value.map((option, index) => (
+                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                            ))
+                        }}
+                        renderInput={(params) => (
+                            <TextField {...params} variant="outlined" label="Add Tags" placeholder="Blog" />
+                        )}
+                    />
+                </div>
+            </div>
+        );
+    } 
+
+    return blogComposer;
 };
 
 export default ComposeBlog;

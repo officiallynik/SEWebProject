@@ -37,6 +37,9 @@ const Experts = (props) => {
     const [connected, setConnected] = useState(false);
     const [history, setHistory] = useState(null);
 
+
+    const [openEditor, setOpenEditor] = useState(false);
+
     const handleDisplayProfileSidebar = () => {
         // console.log("Clicked");
         setUserProfileSidebar(true);
@@ -197,7 +200,10 @@ const Experts = (props) => {
                                         height: "70vh",
                                         overflow: "auto"
                                     }}>
-                                        <ComposeBlog />
+                                        <ComposeBlog 
+                                            openEditor={openEditor}
+                                            setOpenEditor={setOpenEditor}
+                                        />
                                     </div>
                                     // <CollapsibleTable 
                                     //     headers={farmerFields}

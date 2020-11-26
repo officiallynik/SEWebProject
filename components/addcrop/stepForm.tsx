@@ -8,7 +8,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DetailsForm from './detailsform';
-import UploadThumbnail from './thumbnail';
+import UploadThumbnail from '../utils/thumbnail';
 import UploadImages from './gallery';
 import Axios from '../../helpers/axios';
 import { CircularProgress } from '@material-ui/core';
