@@ -203,6 +203,7 @@ const Experts = (props) => {
                                         <ComposeBlog 
                                             openEditor={openEditor}
                                             setOpenEditor={setOpenEditor}
+                                            token={props.token}
                                         />
                                     </div>
                                     // <CollapsibleTable 

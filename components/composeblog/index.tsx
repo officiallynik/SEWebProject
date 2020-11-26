@@ -5,6 +5,7 @@ import { Create } from '@material-ui/icons';
 import { Button, Chip, TextField } from '@material-ui/core';
 import UploadThumbnail from '../utils/thumbnail';
 import { Autocomplete } from '@material-ui/lab';
+import Axios from '../../helpers/axios';
 
 const ComposeBlog = (props) => {
 
@@ -16,12 +17,33 @@ const ComposeBlog = (props) => {
     const [step, setStep] = useState(1);
 
     const handleSubmitBlog = () => {
-        console.log(blogContent);
-        console.log(thumbnail);
-        console.log(tags);
-        console.log(subTitle);
-        console.log(title);
-        // const formData = new FormData();
+        // console.log(blogContent);
+        // console.log(thumbnail);
+        // console.log(tags);
+        // console.log(subTitle);
+        // console.log(title);
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("subtitle", subTitle);
+        formData.append("content", blogContent);
+        formData.append("thumbnail", thumbnail);
+
+        tags.forEach(tag => {
+            formData.append("custom_tags", tag);
+        })
+        
+        Axios.post("/blogs/create", formData, {
+            headers: {
+                'Authorization': `Bearer ${props.token}`,
+                "Content-Type": "multipart/form-data"
+            }
+        })
+        .then(res => {
+            console.log(res.data);
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     let blogComposer = (
