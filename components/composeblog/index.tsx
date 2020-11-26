@@ -8,16 +8,20 @@ import { Autocomplete } from '@material-ui/lab';
 
 const ComposeBlog = (props) => {
 
+    const [title, setTitle] = useState(null);
+    const [subTitle, setSubTitle] = useState(null);
     const [blogContent, setBlogContent] = useState("<p>Compose your blog here!</p>");
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const [tags, setTags] = useState([]);
     const [step, setStep] = useState(1);
 
-
     const handleSubmitBlog = () => {
         console.log(blogContent);
         console.log(thumbnail);
         console.log(tags);
+        console.log(subTitle);
+        console.log(title);
+        // const formData = new FormData();
     }
 
     let blogComposer = (
@@ -35,7 +39,6 @@ const ComposeBlog = (props) => {
         blogComposer = (
             <div style={{ minHeight: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
                 <div>
-
                     <Button variant="outlined"
                         style={{
                             marginBottom: "10px",
@@ -52,10 +55,32 @@ const ComposeBlog = (props) => {
                             width: "max-content"
                         }}
                         onClick={() => setStep(2)}
-                        disabled={blogContent.length === 0}
+                        disabled={blogContent.length === 0 || !subTitle || !title}
                     >
                         Next
                     </Button>
+                </div>
+                <div style={{
+                    marginBottom: "10px",
+                    width: "100%"
+                }}>
+                    <div style={{
+                        width: "50%",
+                        marginBottom: "7px"
+                    }}>
+                        <TextField 
+                            variant="outlined"
+                            label="Blog Title"
+                            fullWidth
+                            onChange={(e) => {setTitle(e.target.value)}}
+                        />
+                    </div>
+                    <TextField
+                        variant="outlined"
+                        label="Blog Subtitle"
+                        fullWidth
+                        onChange={(e) => {setSubTitle(e.target.value)}}
+                    />
                 </div>
                 <div style={{ display: "flex", flexGrow: 1 }}>
                     <CKEditor
