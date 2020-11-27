@@ -16,6 +16,8 @@ import BidActions from '../cropcard/bidaction'
 import { connect } from 'react-redux';
 import { notifyAction } from '../../store/actions/notifyAction';
 
+import FAQ from '../faq/index'
+
 const useStyles = makeStyles({
 	card: {
 		// maxWidth: 250,
@@ -76,6 +78,11 @@ const useStyles = makeStyles({
 		marginTop: '4%',
 		marginLeft: '3%',
 		marginRight: '3%',
+	},
+	faq : {
+		textAlign:'center',
+		overflowY: 'scroll',
+		maxHeight:300,
 	},
 });
 
@@ -146,7 +153,7 @@ const CropCard = (props) => {
 				</CardContent>
 			</Card>
 
-			<Modal isOpen={modalState} onRequestClose={closeModal} className={classes.modal}>
+			<Modal isOpen={modalState} onRequestClose={closeModal} className={classes.modal} >
 
 				<div className={classes.test}>
 					<div className={classes.modalCards}><DetailCropCard cropData={props.cropData} /></div>
@@ -155,6 +162,8 @@ const CropCard = (props) => {
 
 
 				<div ><BidActions _id={props.cropData._id} biddings={props.cropData.biddings} /></div>
+
+				<div className={classes.faq}><FAQ></FAQ></div>
 
 			</Modal>
 
