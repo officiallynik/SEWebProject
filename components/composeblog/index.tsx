@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Create } from '@material-ui/icons';
-import { Button, Chip, TextField } from '@material-ui/core';
+import { Button, Chip, CircularProgress, LinearProgress, TextField } from '@material-ui/core';
 import UploadThumbnail from '../utils/thumbnail';
 import { Autocomplete } from '@material-ui/lab';
 import Axios from '../../helpers/axios';
+import { notifyAction } from '../../store/actions/notifyAction';
+import { connect } from 'react-redux';
 
 const ComposeBlog = (props) => {
 
@@ -16,7 +18,29 @@ const ComposeBlog = (props) => {
     const [tags, setTags] = useState([]);
     const [step, setStep] = useState(1);
 
+    const [loading, setLoading] = useState(false);
+
+    const cleanComposeForm = (success) => {
+        setLoading(false);
+        props.setOpenEditor(false);
+
+        setTitle(null);
+        setSubTitle(null);
+        setBlogContent("<p>Compose your blog here!</p>");
+        setThumbnail(null);
+        setTags([]);
+        setStep(1);
+        
+        if(success){
+            props.dispatchCreation("Blog creation successfull", 3, "success");
+        }
+        else{
+            props.dispatchCreation("Blog creation failed, try again later", 3, "error");
+        }
+    }
+
     const handleSubmitBlog = () => {
+        setLoading(true);
         // console.log(blogContent);
         // console.log(thumbnail);
         // console.log(tags);
@@ -39,10 +63,13 @@ const ComposeBlog = (props) => {
             }
         })
         .then(res => {
-            console.log(res.data);
+            // console.log(res.data);
+            cleanComposeForm(true);
         })
         .catch(err => {
-            console.log(err);
+            
+            // console.log(err);
+            cleanComposeForm(false);
         })
     }
 
@@ -219,7 +246,15 @@ const ComposeBlog = (props) => {
         );
     } 
 
-    return blogComposer;
+    return (
+        loading? <div style={{display: "flex", justifyContent: "center"}}><CircularProgress /></div>:
+        blogComposer
+    );
 };
 
-export default ComposeBlog;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatchCreation: (msg: string, exp: number, notifyType: string) => dispatch(notifyAction(msg, exp, notifyType)),
+    }
+}
+export default connect(null, mapDispatchToProps)(ComposeBlog);
