@@ -152,6 +152,7 @@ export const authUpdateProfile = (userType, reqBody, token) => {
 };
 
 export const authLogout = (userType, token) => {
+    userType = userType === "expert"? "editor": userType;
     return dispatch => {
         dispatch(authStart());
         Axios.post(`/${userType}/logout`, {}, {

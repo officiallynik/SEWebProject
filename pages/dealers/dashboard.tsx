@@ -25,7 +25,7 @@ const Dashboard = (props) => {
     let dashboard = <CustomLinearProgress />;
     const farmerFields = ["Crop Name", "Price", "Quantity", "Date", "Total Bids"];
 
-    
+
     const [loadDone, setLoadDone] = useState(false);
     const [userProfileSidebar, setUserProfileSidebar] = useState(false);
     const [myBiddings, setMyBiddings] = useState(null);
@@ -34,60 +34,65 @@ const Dashboard = (props) => {
     const [refresh, setRefresh] = useState(true);
     const [reqTypeSold, setReqTypeSold] = useState("false");
 
+    const [noDataMsg, setNoDataMsg] = useState("");
+
     const handleDisplayProfileSidebar = () => {
         // console.log("Clicked");
         setUserProfileSidebar(true);
     }
 
     const fetchMyListings = (type) => {
-        // Axios.get("/crops/view", {
-        //     headers: {
-        //         "Authorization": `Bearer ${props.token}`
-        //     },
-        //     params: {
-        //         sold: type
-        //     }
-        // })
-        // .then(res => {
-        //     console.log(res.data);
-        //     const data = [] 
-        //     res.data.forEach(item => {
-        //         data.push({
-        //             name: item.name,
-        //             price: item.MSP,
-        //             quantity: item.quantity,
-        //             bids: item.biddings.length,
-        //             type: item.type,
-        //             _id: item._id,
-        //             biddings: item.biddings,
-        //             img: item.thumbnail,
-        //             imgs: item.snapshots,
-        //             variety: item.variety,
-        //             pincode: item.pincode
-        //         })
-        //     })
-        //     setMyBiddings(data);
-        //     console.log(data);
-        // })
-        // .catch(err => {
-        //     console.log(err);
-        // })
-        // .finally(() => {
-        //     setLoadDone(true);
-        //     setRefresh(false);
-        // })
+        Axios.get("/view/bids", {
+            headers: {
+                "Authorization": `Bearer ${props.token}`
+            }
+        })
+            .then(res => {
+                console.log(res.data);
+                const data = []
+                res.data.forEach(item => {
+                    data.push({
+                        name: item.name,
+                        price: item.MSP,
+                        quantity: item.quantity,
+                        bids: item.biddings.length,
+                        type: item.type,
+                        _id: item._id,
+                        biddings: item.biddings,
+                        img: item.thumbnail,
+                        imgs: item.snapshots,
+                        variety: item.variety,
+                        pincode: item.pincode
+                    })
+                })
+                setMyBiddings(data);
+                console.log(data);
+            })
+            .catch(err => {
+                setMyBiddings([]);
+                if(err.response.status === 404){
+                    setNoDataMsg("No bids on any crop, try bidding in find crops!")
+                }
+                else{
+                    setNoDataMsg("Something went wrong please try again later")
+                }
+            })
+            .finally(() => {
+                setLoadDone(true);
+                setRefresh(false);
+            })
         // setMyListing(myListings);
         // setLoadDone(true);
         // setRefresh(false);
     }
 
     useEffect(() => {
-        if(props.token && props.userType !== "dealer"){
+        if (props.token && props.userType !== "dealer") {
             Router.push("/");
             props.dispatchRedirection("Access Denied, Login as Dealer", 3, "error")
         }
 
-        if(props.token && refresh){
+        if (props.token && refresh) {
             console.log("fetching ", props.token);
             setMyBiddings(null);
             fetchMyListings(reqTypeSold);
@@ -95,10 +100,10 @@ const Dashboard = (props) => {
     }, [props.token, refresh, props.userType, reqTypeSold]);
 
     useEffect(() => {
-        if(props.loading){
+        if (props.loading) {
             setIsDone([true, false]);
         }
-        if(!props.loading && isDone[0]){
+        if (!props.loading && isDone[0]) {
             setIsDone([true, true]);
         }
     }, [props.loading])
@@ -106,25 +111,25 @@ const Dashboard = (props) => {
     useEffect(() => {
         setUserProfileSidebar(false);
     }, [useWindowSize().width >= 860]);
-    
+
     const userProfile = (
         <div>
             <Card profile>
                 <CardBody profile>
-                    <h4>{props.userType? props.userType.toUpperCase(): null}</h4>
+                    <h4>{props.userType ? props.userType.toUpperCase() : null}</h4>
                     <h3>{props.name}</h3>
                     <p>{props.pincode}</p>
                     <p>{props.location}</p>
                     <CustomModal modalBtn={(
-                            <Button variant="outlined" color="primary" onClick={() => setIsDone([false, false])}>
-                                Edit Profile
-                            </Button>
-                        )}
+                        <Button variant="outlined" color="primary" onClick={() => setIsDone([false, false])}>
+                            Edit Profile
+                        </Button>
+                    )}
                         isLoading={props.loading}
                         token={isDone[1] && !props.error}
                         exp={1000}
                     >
-                        <div style={{background: "white", borderRadius: "10px"}}>
+                        <div style={{ background: "white", borderRadius: "10px" }}>
                             <UpdateProfile />
                         </div>
                     </CustomModal>
@@ -173,17 +178,18 @@ const Dashboard = (props) => {
                                 tabName: "My Biddings",
                                 tabIcon: List,
                                 tabContent: (
-                                    !myBiddings? <div>Under Maintenance :(</div> : 
-                                    <CollapsibleTable 
-                                        headers={farmerFields}
-                                        data={myBiddings}
-                                        refresh={() => {
-                                            setRefresh(true);
-                                            setReqTypeSold("false");
-                                        }}
-                                        firstTime={firstTime}
-                                        setFirstTime={() => setFirstTime(false)}
-                                    />
+                                    !myBiddings ? <LinearProgress /> :
+                                        <CollapsibleTable
+                                            headers={farmerFields}
+                                            data={myBiddings}
+                                            refresh={() => {
+                                                setRefresh(true);
+                                                setReqTypeSold("false");
+                                            }}
+                                            firstTime={firstTime}
+                                            setFirstTime={() => setFirstTime(false)}
+                                            nodatamsg={noDataMsg}
+                                        />
                                 ),
                                 onclick: (() => console.log("clicked"))
                             },
@@ -191,17 +197,18 @@ const Dashboard = (props) => {
                                 tabName: "Completed Orders",
                                 tabIcon: DoneAll,
                                 tabContent: (
-                                    !myBiddings? <div>Under Maintenance :(</div> : 
-                                    <CollapsibleTable 
-                                        headers={farmerFields}
-                                        data={myBiddings}
-                                        refresh={() => {
-                                            setRefresh(true);
-                                            setReqTypeSold("true");
-                                        }}
-                                        firstTime={firstTime}
-                                        setFirstTime={() => setFirstTime(false)}
-                                    />
+                                    !myBiddings ? <LinearProgress /> :
+                                        <CollapsibleTable
+                                            headers={farmerFields}
+                                            data={myBiddings}
+                                            refresh={() => {
+                                                setRefresh(true);
+                                                setReqTypeSold("true");
+                                            }}
+                                            firstTime={firstTime}
+                                            setFirstTime={() => setFirstTime(false)}
+                                            nodatamsg={noDataMsg}
+                                        />
                                 )
                             }
                         ]}

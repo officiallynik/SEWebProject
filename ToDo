@@ -1,4 +1,7 @@
-1. SignUp and Login for Experts
-2. UI for Experts
-3. socket.io and peerjs setup for experts
-4. socket.io and peerjs setup for other users
+1. add editors blogs to dashboard
+2. add crops info to dealers
+3. chat system
+4. cards in the dashboard
+5. complete blogs and its internals
+6. notification popups
+7. faqs
