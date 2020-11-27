@@ -15,7 +15,10 @@ const AuthComponent = (props) => {
 
     const [notifications, setNotifications] = useState(0);
     const [openNotifications, setOpenNotifications] = useState(false);
-    const [notificationMsgs, setNotificationsMsgs] = useState([]);
+    const [notificationMsgs, setNotificationsMsgs] = useState([
+    ]);
+
+    const [currentNotification, setCurrentNotification] = useState(null);
 
     const handleClickProfile = event => {
         if (openProfile && openProfile.contains(event.target)) {
@@ -39,15 +42,47 @@ const AuthComponent = (props) => {
         setOpenNotifications(false);
     };
 
-    const handleNotificationOnClicked = (index) => {
-
-        // deleting it
+    const handleNotificationRemove = (index) => {
+        console.log(index, "closing");
         const msgs = [...notificationMsgs];
         msgs.splice(index, 1);
         setNotificationsMsgs(msgs);
         setNotifications((prevState) => {
             return prevState - 1;
         });
+    }
+
+    const handleNotificationOnClicked = (index) => {
+        setCurrentNotification("loading");
+
+        // deleting it
+        const msgs = [...notificationMsgs];
+        const notification = msgs[index];
+        
+        Axios.get(`/crops/view/${notification.url}`).then(res => {
+            // console.log(res.data);
+            const item = res.data;
+            const data = {
+                name: item.name,
+                price: item.MSP,
+                quantity: item.quantity,
+                bids: item.biddings.length,
+                type: item.type,
+                _id: item._id,
+                biddings: item.biddings,
+                img: item.thumbnail,
+                imgs: item.snapshots,
+                variety: item.variety,
+                pincode: item.pincode
+            }
+
+            console.log(data);
+
+            setCurrentNotification(data);
+        })
+        .catch(err => {
+            console.log(err);
+        })
 
         //going to url pending
 
@@ -212,6 +247,8 @@ const AuthComponent = (props) => {
                 notifications={notifications}
                 messages={notificationMsgs}
                 notificationOnClicked={handleNotificationOnClicked}
+                data={currentNotification}
+                handleNotificationRemove={(index) => handleNotificationRemove(index)}
             />
         </div>
     );

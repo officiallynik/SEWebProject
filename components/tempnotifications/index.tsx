@@ -8,7 +8,7 @@ import CheckSharp from '@material-ui/icons/CheckSharp'
 import LocalMall from '@material-ui/icons/LocalMall'
 import List from '@material-ui/core/List';
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
-import { DialogContent, Toolbar } from "@material-ui/core";
+import { CircularProgress, DialogContent, Toolbar } from "@material-ui/core";
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -17,6 +17,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import CustomModal from "../modal";
+import FarmerView from "../viewcrop/farmerView";
 
 
 const TempNotifications = props => {
@@ -108,30 +110,62 @@ const TempNotifications = props => {
 
                                 let isRead = { backgroundColor: 'rgba(119, 119, 119, 0.15)', padding: '20px 50px' };
 
-                                if (message.type === 'bid_placed') return <ListItem key={i} button onClick={() => props.notificationOnClicked(i)}>
-                                    <ListItemAvatar>
-                                        <Avatar><LocalMall /></Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        style={isRead}
+                                if (message.type === 'Bid Placed') return (
+                                    <CustomModal
                                         key={i}
-                                        primary={message.type}
-                                        secondary={message.msg}
-                                    />
-                                </ListItem>
-                                else if (message.type === 'bid_accepted') return <ListItem key={i} button onClick={() => props.notificationOnClicked(i)}>
-                                    <ListItemAvatar>
-                                        <Avatar><CheckSharp /></Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        style={isRead}
-                                        key={i}
-                                        primary={message.type}
-                                        secondary={message.msg}
-                                    />
-                                </ListItem>
-
-
+                                        modalBtn={
+                                            (
+                                                <ListItem key={i} button onClick={() => props.notificationOnClicked(i)}>
+                                                    <ListItemAvatar>
+                                                        <Avatar><LocalMall /></Avatar>
+                                                    </ListItemAvatar>
+                                                    <ListItemText
+                                                        style={isRead}
+                                                        key={i}
+                                                        primary={message.type}
+                                                        secondary={message.msg}
+                                                    />
+                                                </ListItem>
+                                            )
+                                        }
+                                        onCloseModal={() => props.handleNotificationRemove(i)}
+                                    >
+                                        <div style={{ background: "white", borderRadius: "10px" }}>
+                                            {props.data === "loading" ? <div
+                                                style={{ margin: '10px' }}
+                                            ><CircularProgress /></div> :
+                                                <FarmerView data={props.data} />
+                                            }
+                                        </div>
+                                    </CustomModal>
+                                )
+                                else if (message.type === 'Bid Accepted') return
+                                <CustomModal
+                                    modalBtn={
+                                        (
+                                            <ListItem key={i} button onClick={() => props.notificationOnClicked(i)}>
+                                                <ListItemAvatar>
+                                                    <Avatar><CheckSharp /></Avatar>
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    style={isRead}
+                                                    key={i}
+                                                    primary={message.type}
+                                                    secondary={message.msg}
+                                                />
+                                            </ListItem>
+                                        )
+                                    }
+                                    onCloseModal={() => props.handleNotificationRemove(i)}
+                                >
+                                    <div style={{ background: "white", borderRadius: "10px" }}>
+                                        {props.data === "loading" ? <div
+                                            style={{ margin: '10px' }}
+                                        ><CircularProgress /></div> :
+                                            <FarmerView data={props.data} />
+                                        }
+                                    </div>
+                                </CustomModal>
                             }
 
                             )

@@ -61,6 +61,9 @@ const CustomModal = (props) => {
 	};
 
 	const handleClose = () => {
+		if(props.onCloseModal){
+			props.onCloseModal();
+		}
 		setOpen(false);
 	};
 

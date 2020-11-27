@@ -192,24 +192,6 @@ const Dashboard = (props) => {
                                         />
                                 ),
                                 onclick: (() => console.log("clicked"))
-                            },
-                            {
-                                tabName: "Completed Orders",
-                                tabIcon: DoneAll,
-                                tabContent: (
-                                    !myBiddings ? <LinearProgress /> :
-                                        <CollapsibleTable
-                                            headers={farmerFields}
-                                            data={myBiddings}
-                                            refresh={() => {
-                                                setRefresh(true);
-                                                setReqTypeSold("true");
-                                            }}
-                                            firstTime={firstTime}
-                                            setFirstTime={() => setFirstTime(false)}
-                                            nodatamsg={noDataMsg}
-                                        />
-                                )
                             }
                         ]}
                     />
