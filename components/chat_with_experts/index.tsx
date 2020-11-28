@@ -58,7 +58,7 @@ const ChatWithExperts = props => {
     );
 
     if(!props.userDetail.userId){
-        console.log("fdjghfkjsh", props.userDetail.userId)
+        // console.log("fdjghfkjsh", props.userDetail.userId)
         chatScreen = (
             <div style={{background: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
                 <AuthComponent 
