@@ -57,9 +57,7 @@ const ComposeBlog = (props) => {
         formData.append("content", blogContent);
         formData.append("thumbnail", thumbnail);
 
-        tags.forEach(tag => {
-            formData.append("custom_tags", tag);
-        })
+        formData.append("custom_tags", JSON.stringify(tags));
         
         Axios.post("/blogs/create", formData, {
             headers: {
