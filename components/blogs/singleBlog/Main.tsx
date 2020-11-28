@@ -54,7 +54,7 @@ export default function Main(props: props) {
     else{
       return <FormControlLabel
       value="top"
-      control={<ThumbUpAltOutlinedIcon color="primary" onClick={() => {
+      control={<StarIcon color="primary" onClick={() => {
         if(vote === "down")
         {
           setDownvotes(downvotes - 1);
