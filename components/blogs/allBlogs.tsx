@@ -22,6 +22,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import useWindowSize from '../../helpers/getSize';
 
+import Router from 'next/router';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -393,6 +395,7 @@ function AllBlogs() {
 
   const openSingleBlog = (e) => {
     // navigate to single blog page { props are tile.id }
+    Router.push(`/blogs/${e.id}`);
   }
 
   return (

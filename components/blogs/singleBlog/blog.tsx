@@ -19,7 +19,8 @@ interface props {
 
 export default function Blog(props: props) {
 
-  const mainFeaturedPost = {    // get this post from backend using { props.blogId }
+  const mainFeaturedPost = {    
+    // get this post from backend using { props.blogId }
     title: 'Title of a longer featured blog post',
     image: 'https://source.unsplash.com/random',
     subtitle: 'Sub Title of a longer featured blog post',
