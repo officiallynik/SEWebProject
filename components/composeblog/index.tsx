@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import { CKEditor } from '@ckeditor/ckeditor5-react';
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Create } from '@material-ui/icons';
 import { Button, Chip, CircularProgress, LinearProgress, TextField } from '@material-ui/core';
 import UploadThumbnail from '../utils/thumbnail';
@@ -8,6 +8,11 @@ import { Autocomplete } from '@material-ui/lab';
 import Axios from '../../helpers/axios';
 import { notifyAction } from '../../store/actions/notifyAction';
 import { connect } from 'react-redux';
+import dynamic from 'next/dynamic';
+
+const CKEditor = dynamic(() => {
+    return import('./CKEditor');
+}, {ssr: false, loading:() => <LinearProgress />});
 
 const ComposeBlog = (props) => {
 
@@ -20,7 +25,7 @@ const ComposeBlog = (props) => {
 
     const [loading, setLoading] = useState(false);
 
-    const cleanComposeForm = (success) => {
+    const cleanComposeForm = (success=null) => {
         setLoading(false);
         props.setOpenEditor(false);
 
@@ -31,10 +36,10 @@ const ComposeBlog = (props) => {
         setTags([]);
         setStep(1);
         
-        if(success){
+        if(success === true){
             props.dispatchCreation("Blog creation successfull", 3, "success");
         }
-        else{
+        else if(success === false){
             props.dispatchCreation("Blog creation failed, try again later", 3, "error");
         }
     }
@@ -94,7 +99,10 @@ const ComposeBlog = (props) => {
                             width: "max-content",
                             marginRight: "10px"
                         }}
-                        onClick={() => props.setOpenEditor(false)}
+                        onClick={() => {
+                            props.setOpenEditor(false)
+                            cleanComposeForm();
+                        }}
                     >
                         Cancel
                     </Button>
@@ -122,6 +130,7 @@ const ComposeBlog = (props) => {
                             label="Blog Title"
                             fullWidth
                             onChange={(e) => {setTitle(e.target.value)}}
+                            value={title}
                         />
                     </div>
                     <TextField
@@ -129,30 +138,13 @@ const ComposeBlog = (props) => {
                         label="Blog Subtitle"
                         fullWidth
                         onChange={(e) => {setSubTitle(e.target.value)}}
+                        value={subTitle}
                     />
                 </div>
                 <div style={{ display: "flex", flexGrow: 1 }}>
                     <CKEditor
-                        editor={ClassicEditor}
-                        data={blogContent}
-                        onReady={editor => {
-                            // You can store the "editor" and use when it is needed.
-                            // console.log('Editor is ready to use!', editor);
-                        }}
-                        onChange={(event, editor) => {
-                            const data = editor.getData();
-                            // console.log({ event, editor, data });
-                            setBlogContent(data);
-                        }}
-                        onBlur={(event, editor) => {
-                            // console.log('Blur.', editor);
-                        }}
-                        onFocus={(event, editor) => {
-                            // console.log('Focus.', editor);
-                        }}
-                        style={{
-                            height: "100%"
-                        }}
+                        blogContent={blogContent}
+                        setBlogContent={setBlogContent}
                     />
                 </div>
             </div>
