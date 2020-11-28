@@ -128,7 +128,7 @@ const ComposeBlog = (props) => {
                             label="Blog Title"
                             fullWidth
                             onChange={(e) => {setTitle(e.target.value)}}
-                            value={title}
+                            value={title === null? "": title}
                         />
                     </div>
                     <TextField
@@ -136,7 +136,7 @@ const ComposeBlog = (props) => {
                         label="Blog Subtitle"
                         fullWidth
                         onChange={(e) => {setSubTitle(e.target.value)}}
-                        value={subTitle}
+                        value={subTitle === null? "": subTitle}
                     />
                 </div>
                 <div style={{ display: "flex", flexGrow: 1 }}>
