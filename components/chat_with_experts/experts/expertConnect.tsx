@@ -60,7 +60,7 @@ const ConnectionForm = (props) => {
                             value={language === "english"? 10: 20}
                         >
                             <MenuItem value={10}>Engilsh</MenuItem>
-                            <MenuItem value={20}>Hindi</MenuItem>
+                            <MenuItem disabled={chatType === "text"} value={20}>Hindi</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
@@ -76,6 +76,7 @@ const ConnectionForm = (props) => {
                                 switch (e.target.value) {
                                     case 10:
                                         setChatType("text");
+                                        setLanguage("english")
                                         return;
                                     case 20:
                                         setChatType("voice");
