@@ -46,20 +46,20 @@ const AuthComponent = (props) => {
         // console.log(index, "closing");
         const msg = [...notificationMsgs][index];
         Axios.post(`/${props.userType}/notifications/delete/${msg._id}`)
-        .then(res => {
-            const msgs = [...notificationMsgs];
-            msgs.splice(index, 1);
-            const ids = [...notificationMsgsIds];
-            ids.splice(index, 1);
-            setNotificationMsgsIds(ids);
-            setNotificationsMsgs(msgs);
-            setNotifications((prevState) => {
-                return prevState - 1;
-            });
-        })
-        .catch(err => {
-            console.log(err);
-        })
+            .then(res => {
+                const msgs = [...notificationMsgs];
+                msgs.splice(index, 1);
+                const ids = [...notificationMsgsIds];
+                ids.splice(index, 1);
+                setNotificationMsgsIds(ids);
+                setNotificationsMsgs(msgs);
+                setNotifications((prevState) => {
+                    return prevState - 1;
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
     const handleNotificationOnClicked = (index) => {
@@ -70,10 +70,16 @@ const AuthComponent = (props) => {
         const notification = msgs[index];
 
         // console.log(notification)
-        
+
         Axios.get(`/crops/view/${notification.url}`).then(res => {
-            console.log(res.data);
+            // console.log(res.data);
             const item = res.data;
+            let myPrice = null;
+            item.biddings.forEach(bid => {
+                if (bid.dealer === props._id) {
+                    myPrice = bid.bid_val
+                }
+            });
             const data = {
                 name: item.name,
                 price: item.MSP,
@@ -85,16 +91,19 @@ const AuthComponent = (props) => {
                 img: item.thumbnail,
                 imgs: item.snapshots,
                 variety: item.variety,
-                pincode: item.pincode
+                pincode: item.pincode,
+                owner: item.owner,
+                sold: item.sold,
+                myBid: myPrice
             }
 
             console.log(data);
 
             setCurrentNotification(data);
         })
-        .catch(err => {
-            console.log(err);
-        })
+            .catch(err => {
+                console.log(err);
+            })
 
         //going to url pending
 
@@ -107,38 +116,38 @@ const AuthComponent = (props) => {
                 "Authorization": `Bearer ${props.token}`
             }
         })
-        .then(res => {
-            // console.log(res.data);
-            let newData = res.data.filter(notification => {
-                return !notificationMsgsIds.includes(notification._id)
+            .then(res => {
+                // console.log(res.data);
+                let newData = res.data.filter(notification => {
+                    return !notificationMsgsIds.includes(notification._id)
+                });
+
+                newData = [...newData, ...notificationMsgs];
+                let newIds = newData.map(notification => notification._id);
+
+                // console.log("[new data, new ids]", newData, newIds);
+
+                setNotificationsMsgs(newData);
+                setNotificationMsgsIds(newIds);
+                setNotifications(newIds.length);
+            })
+            .catch(e => {
+                console.log("exception", e);
             });
-
-            newData = [...newData, ...notificationMsgs];
-            let newIds = newData.map(notification => notification._id);
-
-            // console.log("[new data, new ids]", newData, newIds);
-
-            setNotificationsMsgs(newData);
-            setNotificationMsgsIds(newIds);
-            setNotifications(newIds.length);
-        })
-        .catch(e => {
-            console.log("exception", e);
-        });
     }
 
     useEffect(() => {
         // console.log("auth useEffect")
         let reqInt = null;
         // console.log(props.token, props.userType)
-        if(props.token && ["farmer", "dealer"].includes(props.userType)){
+        if (props.token && ["farmer", "dealer"].includes(props.userType)) {
             fetchData();
             reqInt = setInterval(() => {
                 fetchData();
-            }, 1000*60);
+            }, 1000 * 60);
         }
 
-        if(!props.token && reqInt){
+        if (!props.token && reqInt) {
             // console.log("clearing interval...", reqInt);
             clearInterval(reqInt);
             setNotifications(0);
@@ -147,7 +156,7 @@ const AuthComponent = (props) => {
         }
 
         return () => {
-            if(reqInt){
+            if (reqInt) {
                 clearInterval(reqInt);
             }
             setNotifications(0);
@@ -179,8 +188,8 @@ const AuthComponent = (props) => {
                 onClick={handleNotificationsOpen}
                 style={{ borderBottom: "1px solid black" }}
             >
-                Notifications 
-                <span 
+                Notifications
+                <span
                     style={{
                         marginLeft: "10px",
                         backgroundColor: "black",
@@ -194,7 +203,7 @@ const AuthComponent = (props) => {
                         fontSize: "12px",
                         alignItems: "center"
                     }}
-                
+
                 >{notifications}</span>
             </MenuItem>
         </div>
@@ -273,7 +282,8 @@ const mapStateToProps = ({ authReducer }) => {
         loading: authReducer.loading,
         token: authReducer.token,
         userType: authReducer.userType,
-        redirectPath: authReducer.authRedirectPath
+        redirectPath: authReducer.authRedirectPath,
+        _id: authReducer._id
     }
 }
 

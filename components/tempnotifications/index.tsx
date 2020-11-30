@@ -19,9 +19,12 @@ import Avatar from '@material-ui/core/Avatar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import CustomModal from "../modal";
 import FarmerView from "../viewcrop/farmerView";
+import DealerView from "../viewcrop/dealerView";
 
 
 const TempNotifications = props => {
+
+    // console.log("[temp notifications]", props);
 
     // state = {
     //     notifications : 0, //for notification badge number
@@ -139,33 +142,35 @@ const TempNotifications = props => {
                                         </div>
                                     </CustomModal>
                                 )
-                                else if (message.type === 'Bid Accepted') return
-                                <CustomModal
-                                    modalBtn={
-                                        (
-                                            <ListItem key={i} button onClick={() => props.notificationOnClicked(i)}>
-                                                <ListItemAvatar>
-                                                    <Avatar><CheckSharp /></Avatar>
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    style={isRead}
-                                                    key={i}
-                                                    primary={message.type}
-                                                    secondary={message.msg}
-                                                />
-                                            </ListItem>
-                                        )
-                                    }
-                                    onCloseModal={() => props.handleNotificationRemove(i)}
-                                >
-                                    <div style={{ background: "white", borderRadius: "10px" }}>
-                                        {props.data === "loading" ? <div
-                                            style={{ margin: '10px' }}
-                                        ><CircularProgress /></div> :
-                                            <FarmerView data={props.data} />
+                                if (message.type === 'Bid Accepted') return (
+                                    <CustomModal
+                                        key={i}
+                                        modalBtn={
+                                            (
+                                                <ListItem key={i} button onClick={() => props.notificationOnClicked(i)}>
+                                                    <ListItemAvatar>
+                                                        <Avatar><LocalMall /></Avatar>
+                                                    </ListItemAvatar>
+                                                    <ListItemText
+                                                        style={isRead}
+                                                        key={i}
+                                                        primary={message.type}
+                                                        secondary={message.msg}
+                                                    />
+                                                </ListItem>
+                                            )
                                         }
-                                    </div>
-                                </CustomModal>
+                                        onCloseModal={() => props.handleNotificationRemove(i)}
+                                    >
+                                        <div style={{ background: "white", borderRadius: "10px" }}>
+                                            {props.data === "loading" ? <div
+                                                style={{ margin: '10px' }}
+                                            ><CircularProgress /></div> :
+                                                <DealerView data={props.data} />
+                                            }
+                                        </div>
+                                    </CustomModal>
+                                )
                             }
 
                             )
