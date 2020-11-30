@@ -1,5 +1,5 @@
 import { Button, Drawer, Icon, LinearProgress } from '@material-ui/core';
-import { List, DoneAll, Favorite, AccountCircle } from '@material-ui/icons';
+import { List, DoneAll, Favorite, AccountCircle, Star } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/dashboard/card';
 import CardBody from '../../components/dashboard/cardbody';
@@ -34,10 +34,31 @@ const Farmers = (props) => {
     const [refresh, setRefresh] = useState(true);
     const [reqTypeSold, setReqTypeSold] = useState("false");
 
+    const [completedOrders, setCompletedOrders] = useState<number|null>(null);
+    const [activeOrders, setActiveOrders] = useState<number|null>(null);
+
     const handleDisplayProfileSidebar = () => {
         // console.log("Clicked");
         setUserProfileSidebar(true);
     }
+
+    useEffect(() => {
+        Axios.get("/crops/view", {
+            headers: {
+                "Authorization": `Bearer ${props.token}`
+            },
+            params: {
+                sold: "true"
+            }
+        })
+        .then(res => {
+            setCompletedOrders(res.data.length);
+        })
+        .catch(err => {
+            console.log(err);
+            setCompletedOrders(0);
+        })
+    }, [])
 
     const fetchMyListings = (type) => {
         Axios.get("/crops/view", {
@@ -50,7 +71,13 @@ const Farmers = (props) => {
         })
         .then(res => {
             console.log(res.data);
-            const data = [] 
+            const data = []
+            if(type === "true"){
+                setCompletedOrders(res.data.length);
+            }
+            else{
+                setActiveOrders(res.data.length)
+            }
             res.data.forEach(item => {
                 data.push({
                     name: item.name,
@@ -73,6 +100,12 @@ const Farmers = (props) => {
         .catch(err => {
             console.log(err);
             setMyListing([]);
+            if(type === "true"){
+                setCompletedOrders(0);
+            }
+            else{
+                setActiveOrders(0);
+            }
         })
         .finally(() => {
             setLoadDone(true);
@@ -140,9 +173,36 @@ const Farmers = (props) => {
                     </CardIcon>
                     <div style={{ float: "right", color: "black" }}>
                         <p>Rating</p>
-                        <h3>
-                            Coming Soon
-                        </h3>
+                        {
+                            completedOrders === null || activeOrders === null? "loading...":
+                            <h3>
+                                {
+                                    completedOrders+activeOrders >= 30? 
+                                    <>
+                                    <Star /><Star /><Star /><Star /><Star />
+                                    </>
+                                    :
+                                    completedOrders+activeOrders >=20?
+                                    <>
+                                    <Star /><Star /><Star /><Star />
+                                    </>
+                                    :
+                                    completedOrders+activeOrders >= 10?
+                                    <>
+                                    <Star /><Star /><Star />
+                                    </>
+                                    :
+                                    completedOrders+activeOrders >= 5?
+                                    <>
+                                    <Star /><Star />
+                                    </>
+                                    :
+                                    <>
+                                    <Star />
+                                    </>
+                                }
+                            </h3>
+                        }
                     </div>
                 </CardHeader>
             </Card>
@@ -152,9 +212,19 @@ const Farmers = (props) => {
                         <Icon><DoneAll /></Icon>
                     </CardIcon>
                     <div style={{ float: "right", color: "black" }}>
+                        <p>Active Orders</p>
+                        <h3>
+                            {
+                                activeOrders === null? "loading...": 
+                                activeOrders
+                            }
+                        </h3>
                         <p>Completed Orders</p>
                         <h3>
-                            Coming Soon
+                            {
+                                completedOrders === null? "loading...": 
+                                completedOrders
+                            }
                         </h3>
                     </div>
                 </CardHeader>
