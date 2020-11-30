@@ -6,7 +6,7 @@ import { notifyAction } from '../../store/actions/notifyAction';
 
 const FixedBar = (props) => {
 
-    console.log("[fixed bar]", props);
+    // console.log("[fixed bar]", props);
 
     const [loadingCropSold, setLoadingCropSold] = useState(false);
 

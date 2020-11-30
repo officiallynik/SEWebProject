@@ -45,7 +45,11 @@ const AuthComponent = (props) => {
     const handleNotificationRemove = (index) => {
         // console.log(index, "closing");
         const msg = [...notificationMsgs][index];
-        Axios.post(`/${props.userType}/notifications/delete/${msg._id}`)
+        Axios.post(`/${props.userType}/notifications/delete/${msg._id}`, {}, {
+            headers: {
+                'Authorization': `Bearer ${props.token}`
+            }
+        })
             .then(res => {
                 const msgs = [...notificationMsgs];
                 msgs.splice(index, 1);
