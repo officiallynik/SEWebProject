@@ -14,7 +14,7 @@ const AuthComponent = (props) => {
     const [openProfile, setOpenProfile] = React.useState(null);
 
     const [notifications, setNotifications] = useState(0);
-    const [notifficationIds, setNotificationIds] = useState([]);
+    const [notificationIds, setNotificationIds] = useState([]);
     const [openNotifications, setOpenNotifications] = useState(false);
     const [notificationMsgs, setNotificationsMsgs] = useState([
     ]);
@@ -50,7 +50,7 @@ const AuthComponent = (props) => {
         .then(res => {
             const msgs = [...notificationMsgs];
             msgs.splice(index, 1);
-            const ids = [...notifficationIds];
+            const ids = [...notificationIds];
             ids.splice(index, 1);
             setNotificationIds(ids);
             setNotificationsMsgs(msgs);
@@ -114,14 +114,20 @@ const AuthComponent = (props) => {
             .then(res => {
                 // console.log(res.data);
                 setNotificationsMsgs((prevState) => {
-                    let newData = res.data.filter(notification => !notifficationIds.includes(notification._id));
+                    let newData = res.data.filter(notification => {
+                        console.log(notification._id, notificationIds);
+                        return !notificationIds.includes(notification._id)
+                    });
+                    console.log("newData", newData);
                     const data = [...newData, ...prevState];
                     return data;
                 });
 
                 setNotificationIds(prevState => {
-                    let newIds = res.data.map(notification => notification._id)
+                    let newIds = res.data.map(notification => notification._id);
+                    console.log(newIds);
                     newIds = newIds.filter(id => !prevState.includes(id));
+                    console.log(newIds);
                     return [...newIds, ...prevState]; 
                 }); 
 
@@ -140,7 +146,8 @@ const AuthComponent = (props) => {
                 .then(res => {
                     // console.log(res.data);
                     setNotificationsMsgs((prevState) => {
-                        let newData = res.data.filter(notification => !notifficationIds.includes(notification._id));
+                        let newData = res.data.filter(notification => !notificationIds.includes(notification._id));
+                        console.log("newData", newData);
                         const data = [...newData, ...prevState];
                         return data;
                     });
