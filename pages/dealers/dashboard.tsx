@@ -54,12 +54,13 @@ const Dashboard = (props) => {
             }
         })
         .then(res => {
-            setActiveOrders(res.data.length);
+            console.log(res.data)
+            setAcceptedOrders(res.data.length);
         })
         .catch(err => {
             console.log(err);
             if(err.response.status === 404){
-                setActiveOrders(0);
+                setAcceptedOrders(0);
             }
         })
     }, []);
