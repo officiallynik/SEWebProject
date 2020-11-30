@@ -1,5 +1,5 @@
 import { Button, Drawer, Icon, LinearProgress } from '@material-ui/core';
-import { List, DoneAll, Favorite, AccountCircle, Refresh } from '@material-ui/icons';
+import { List, DoneAll, Favorite, AccountCircle, Refresh, Star } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/dashboard/card';
 import CardBody from '../../components/dashboard/cardbody';
@@ -36,10 +36,33 @@ const Dashboard = (props) => {
 
     const [noDataMsg, setNoDataMsg] = useState("");
 
+    const [acceptedOrders, setAcceptedOrders] = useState<number|null>(null);
+    const [activeOrders, setActiveOrders] = useState<number|null>(null);
+
     const handleDisplayProfileSidebar = () => {
         // console.log("Clicked");
         setUserProfileSidebar(true);
     }
+
+    useEffect(() => {
+        Axios.get("/dealer/view/bids", {
+            params: {
+                "bid_status": "accepted"
+            },
+            headers: {
+                "Authorization": `Bearer ${props.token}`
+            }
+        })
+        .then(res => {
+            setActiveOrders(res.data.length);
+        })
+        .catch(err => {
+            console.log(err);
+            if(err.response.status === 404){
+                setActiveOrders(0);
+            }
+        })
+    }, []);
 
     const fetchMyListings = (type) => {
         Axios.get("/dealer/view/bids", {
@@ -52,6 +75,12 @@ const Dashboard = (props) => {
         })
             .then(res => {
                 console.log("[dealer]", res.data);
+                if(type === "active"){
+                    setActiveOrders(res.data.length);
+                }
+                else{
+                    setAcceptedOrders(res.data.length);
+                }
                 const data = []
                 res.data.forEach(item => {
                     let myPrice = null;
@@ -61,7 +90,9 @@ const Dashboard = (props) => {
                         }
                     });
 
-                    console.log("[my price]", myPrice);
+
+
+                    // console.log("[my price]", myPrice);
 
                     data.push({
                         name: item.name,
@@ -85,10 +116,17 @@ const Dashboard = (props) => {
                 setMyBiddings([]);
                 if(err.response.status === 404){
                     setNoDataMsg("No bids on any crop, try bidding in find crops!")
+                    if(type === "active"){
+                        setActiveOrders(0);
+                    }
+                    else{
+                        setAcceptedOrders(0);
+                    }
                 }
                 else{
                     setNoDataMsg("Something went wrong please try again later")
                 }
+
             })
             .finally(() => {
                 setLoadDone(true);
@@ -155,10 +193,36 @@ const Dashboard = (props) => {
                     </CardIcon>
                     <div style={{ float: "right", color: "black" }}>
                         <p>Rating</p>
-                        <h3>
-                            {/* 35/50 <small>Stars</small> */}
-                            Coming Soon
-                        </h3>
+                        {
+                            acceptedOrders === null? "loading...":
+                            <h3>
+                                {
+                                    acceptedOrders >= 20? 
+                                    <>
+                                    <Star /><Star /><Star /><Star /><Star />
+                                    </>
+                                    :
+                                    acceptedOrders >= 15?
+                                    <>
+                                    <Star /><Star /><Star /><Star />
+                                    </>
+                                    :
+                                    acceptedOrders >= 10?
+                                    <>
+                                    <Star /><Star /><Star />
+                                    </>
+                                    :
+                                    acceptedOrders >= 5?
+                                    <>
+                                    <Star /><Star />
+                                    </>
+                                    :
+                                    <>
+                                    <Star />
+                                    </>
+                                }
+                            </h3>
+                        }
                     </div>
                 </CardHeader>
             </Card>
@@ -168,11 +232,20 @@ const Dashboard = (props) => {
                         <Icon><DoneAll /></Icon>
                     </CardIcon>
                     <div style={{ float: "right", color: "black" }}>
-                        <p>Completed Orders</p>
-                        <h3>
-                            {/* 40/43 <small></small> */}
-                            Coming Soon
-                        </h3>
+                        <p>Active Bids</p>
+                        {
+                            activeOrders === null? "loading":
+                            <h3>
+                                {activeOrders}
+                            </h3>
+                        }
+                        <p>Accepted Bids</p>
+                        {
+                            acceptedOrders === null? "loading":
+                            <h3>
+                                {acceptedOrders}
+                            </h3>
+                        }
                     </div>
                 </CardHeader>
             </Card>
