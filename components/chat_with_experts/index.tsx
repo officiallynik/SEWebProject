@@ -73,12 +73,15 @@ const ChatWithExperts = props => {
     if(props.userDetail.userId && !connected){
         chatScreen = (
             <div style={{background: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                <ConnectionForm 
+                {/* <ConnectionForm 
                     setConnected={() => setConnected(true)}
                     clientId={props.userDetail.userId}
                     clientName={props.userDetail.userName}
                     clientType={props.userDetail.userType}
-                />
+                /> */}
+                <div style={{padding: "15px"}}>
+                    Taken down due to peerjs ssr error in nextjs in production, will be back soon 
+                </div>
             </div>
         )
     }
