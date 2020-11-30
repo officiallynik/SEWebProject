@@ -6,6 +6,12 @@ An app that serves the farmer community the purpose of fetching them right value
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
+## Please Note
+
+We have deployed our frontend application on Vercel platform, It serves all the html, css and js files. And browser takes care of handling these files, hence browser application will be fast.
+
+However, we have deployed our backend application on heroku free tier, which sleeps/deactivates frequently. Hence you may experience lag or long waiting time. Its totally normal and not in our hands. We might deploy this application on fast servers in future. Heroku takes time to wake up and serve, and free tier has less power of serving many users fast. Please bear with it, its totally normal.
+
 ### Prerequisites
 
 * NodeJS JavaScript Runtime.
@@ -46,42 +52,12 @@ npm run export
 2. All components and pages should be responsive, i.e., change according to screen size.
 3. Components and pages will have to be optimised for large (desktop), medium (tablets) and small (mobile) screens.  
 
-## Features of App
+## Documentations
 
-<img src="./readmefiles/lander.jpg" /> 
-
-* The app allows users to register themselves on app and then login to view the all functionalities of app as farmer or dealer
-* Then user will be taken to respective home pages to continue using the app.
-
-<img src="./readmefiles/login.jpg" />  
-<img src="./readmefiles/signup.jpg" />  
-
-* The farmers' can sell the their products by providing necessary details.
-* Add thumbnail, and add photos* to display for dealers
-    * *optional
-
-<img src="./readmefiles/sellcrops.jpg" />  
-
-* The farmers' can manage everything related to posting and their profile in farmers' dashboard.
-
-<img src="./readmefiles/farmerdashboard.jpg" />  
-
-* The dealers' can bid-on and view all crops listing in 'find crops' page.
-* Only dealers' can view details and bid on crops. 
-
-<img src="./readmefiles/dealerhomepage.jpg" />
-
-* The dealers' can manage everything related to profile and bids in dealers' dashboard just as farmers.
-
-<img src="./readmefiles/farmerdashboard.jpg" />
-
-* E-Shops are open to be shoped by farmers' though price comparison feature is coming soon.
-
-<img src="./readmefiles/eshops.jpg" />
-
-* More features coming soon, like blogs and faqs, loan / insurance, chat with experts and more.
-
-<img src="./readmefiles/comingsoon.jpg" />
+* ### [General Documentation](./readmefiles/docs/general.md)
+* ### [Farmer Documentation](./readmefiles/docs/farmer.md)
+* ### [Dealer Documentation](./readmefiles/docs/dealer.md)
+* ### [Expert Documentation](./readmefiles/docs/expert.md)
 
 ## Built With
 
