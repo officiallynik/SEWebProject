@@ -48,6 +48,7 @@ function Row(props: { row, refresh, userType }) {
                     <TableCell align="left">{row.price}</TableCell>
                     <TableCell align="left">{row.quantity}</TableCell>
                     <TableCell align="left">{row.type}</TableCell>
+                    <TableCell align="left">{row.bids}</TableCell>
                     <TableCell align="left">{row.myBid}</TableCell>
                     <TableCell>
                         <CustomModal 

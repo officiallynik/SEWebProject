@@ -255,6 +255,7 @@ const Farmers = (props) => {
                                         firstTime={firstTime}
                                         setFirstTime={() => setFirstTime(false)}
                                         nodatamsg={"No ongoing bids, try selling something!"}
+                                        userType="farmer"
                                     />
                                 ),
                                 onclick: (() => console.log("clicked"))
@@ -274,6 +275,7 @@ const Farmers = (props) => {
                                         firstTime={firstTime}
                                         setFirstTime={() => setFirstTime(false)}
                                         nodatamsg={"No crops selled, we will notify any potential buyer!"}
+                                        userType="farmer"
                                     />
                                 )
                             }
