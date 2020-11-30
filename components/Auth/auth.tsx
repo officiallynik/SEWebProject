@@ -51,6 +51,7 @@ const AuthComponent = (props) => {
             }
         })
             .then(res => {
+                console.log(res);
                 const msgs = [...notificationMsgs];
                 msgs.splice(index, 1);
                 const ids = [...notificationMsgsIds];
@@ -121,7 +122,7 @@ const AuthComponent = (props) => {
             }
         })
             .then(res => {
-                // console.log(res.data);
+                // console.log("[notifications]", res.data);
                 let newData = res.data.filter(notification => {
                     return !notificationMsgsIds.includes(notification._id)
                 });
