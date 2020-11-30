@@ -42,7 +42,7 @@ const Dashboard = (props) => {
     }
 
     const fetchMyListings = (type) => {
-        Axios.get("/view/bids", {
+        Axios.get("/dealer/view/bids", {
             headers: {
                 "Authorization": `Bearer ${props.token}`
             }
