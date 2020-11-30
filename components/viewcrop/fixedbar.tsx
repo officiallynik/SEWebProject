@@ -72,13 +72,25 @@ const FixedBar = (props) => {
                         </Button>
                     </div>
                 }
+
             </div>
             <div style={{
                 width: "50%",
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
+                flexDirection: "column-reverse"
             }}>
+                {
+                    props.userType === "dealer"? props.data.sold === "sold"?
+                    <div style={{width: "max-content", padding: "10px", color: "white"}}>
+                        Crop sold out
+                    </div>:
+                    <div style={{width: "max-content", padding: "10px", color: "white"}}>
+                        Crop in stock
+                    </div>:
+                    null
+                }
                 <img src={`https://fathomless-tundra-87077.herokuapp.com/images/${props.data.img}`} alt="loading..." style={{width: "60%"}} />
             </div>
         </div>

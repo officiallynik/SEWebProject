@@ -74,7 +74,8 @@ const Dashboard = (props) => {
                         variety: item.variety,
                         pincode: item.pincode,
                         owner: item.owner,
-                        myBid: myPrice
+                        myBid: myPrice,
+                        sold: item.sold
                     })
                 })
                 setMyBiddings(data);
