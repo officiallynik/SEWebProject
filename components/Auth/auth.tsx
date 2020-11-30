@@ -60,7 +60,7 @@ const AuthComponent = (props) => {
         const notification = msgs[index];
         
         Axios.get(`/crops/view/${notification.url}`).then(res => {
-            // console.log(res.data);
+            console.log(res.data);
             const item = res.data;
             const data = {
                 name: item.name,
@@ -89,8 +89,10 @@ const AuthComponent = (props) => {
     };
 
     useEffect(() => {
+        // console.log("auth useEffect")
         let reqInt = null;
-        if(props.token && ["farmer", "dealer"].includes(props.uerType)){
+        // console.log(props.token, props.userType)
+        if(props.token && ["farmer", "dealer"].includes(props.userType)){
             Axios.get('/farmer/notifications/view', {
                 headers: {
                     "Authorization": `Bearer ${props.token}`
@@ -102,9 +104,11 @@ const AuthComponent = (props) => {
                     const data = [...res.data, ...prevState];
                     return data;
                 });
+
+                setNotifications(prevState => prevState + res.data.length);
             })
             .catch(e => {
-                // console.log("excepttion", e);
+                console.log("excepttion", e);
             });
 
             reqInt = setInterval(() => {
@@ -119,6 +123,8 @@ const AuthComponent = (props) => {
                         const data = [...res.data, ...prevState];
                         return data;
                     });
+
+                    setNotifications(prevState => prevState + res.data.length);
                 })
                 .catch(e => {
                     // console.log("excepttion", e);
@@ -141,7 +147,7 @@ const AuthComponent = (props) => {
             setNotificationsMsgs([]);
         }
 
-    }, [props.token])
+    }, [props.token, props.userType])
 
     const login = (
         <CustomModal
