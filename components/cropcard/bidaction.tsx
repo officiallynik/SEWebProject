@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {TextField,Button} from "@material-ui/core";
+import {TextField,Button, CircularProgress} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { notifyAction } from '../../store/actions/notifyAction';
 import { connect } from 'react-redux';
@@ -41,6 +41,8 @@ const BidActions = (props) => {
     const [bid, setBid] = useState(null);
     const [bidded, setBidded] = useState(false);
 
+    const [placingBid, setPlacingBid] = useState(false);
+
     useEffect(() => {
         props.biddings.forEach(bid => {
             if(bid.dealer === props.userId){
@@ -64,6 +66,9 @@ const BidActions = (props) => {
                     </Button>
             </div>
 
+            {
+                placingBid? <CircularProgress />: 
+        
             <div className={classes.btns}>
                 <div>
                     <TextField
@@ -88,6 +93,7 @@ const BidActions = (props) => {
                         onClick={() => {
                             if(bid){
                                 // props.dispatchNotification("Processing your bid", 3, "info")
+                                setPlacingBid(true);
                                 Axios.post(`/crops/bid/${props._id}`, {
                                     value: bid
                                 }, {
@@ -99,6 +105,8 @@ const BidActions = (props) => {
                                     console.log(res)
                                     if(res.status === 200){
                                         props.dispatchNotification("Bid successfull", 4, "success")
+                                        setBidded(true);
+                                        setBid(bid);
                                     }
                                     else{
                                         props.dispatchNotification("Bid could not be processed, try again", 3, "error")
@@ -107,6 +115,9 @@ const BidActions = (props) => {
                                 .catch(err => {
                                     console.log(err)
                                     props.dispatchNotification("Bid could not be processed, try again", 3, "error")
+                                })
+                                .finally(() => {
+                                    setPlacingBid(false);
                                 })
                             }
                         
@@ -120,7 +131,7 @@ const BidActions = (props) => {
                 </div>
                
             </div>
-            
+            }
         </div>
     );
 }

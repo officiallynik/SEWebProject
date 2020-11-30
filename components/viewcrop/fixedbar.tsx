@@ -6,6 +6,8 @@ import { notifyAction } from '../../store/actions/notifyAction';
 
 const FixedBar = (props) => {
 
+    console.log("[fixed bar]", props);
+
     const [loadingCropSold, setLoadingCropSold] = useState(false);
 
     const handleCropSold = () => {
@@ -53,7 +55,15 @@ const FixedBar = (props) => {
                 <div>Variety: {props.data.variety}</div>
 
                 {
-                    props.data.sold? null:
+                    props.userType === "dealer"?
+                    <div style={{backgroundColor: "purple", width: "max-content", padding: "10px"}}>
+                        My Bid: {props.data.myBid} Rs/Q
+                    </div>:
+                    null 
+                }
+
+                {
+                    props.data.sold || props.userType !== "farmer"? null:
                     <div style={{marginTop: "3px"}}>
                         <Button variant="outlined" style={{backgroundColor: "purple", color: "white", fontSize: "12px"}}
                             onClick={handleCropSold}

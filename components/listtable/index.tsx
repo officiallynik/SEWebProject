@@ -11,6 +11,7 @@ import { Launch } from '@material-ui/icons';
 import CustomModal from '../modal';
 import FarmerView from '../viewcrop/farmerView';
 import Link from 'next/link';
+import DealerView from '../viewcrop/dealerView';
 
 const useRowStyles = makeStyles({
     root: {
@@ -20,9 +21,11 @@ const useRowStyles = makeStyles({
     },
 });
 
-function Row(props: { row, refresh }) {
-    const { row, refresh } = props;
+function Row(props: { row, refresh, userType }) {
+    const { row, refresh, userType } = props;
     const classes = useRowStyles();
+
+    console.log("[userType]", userType);
 
     return (
         <React.Fragment>
@@ -45,7 +48,7 @@ function Row(props: { row, refresh }) {
                     <TableCell align="left">{row.price}</TableCell>
                     <TableCell align="left">{row.quantity}</TableCell>
                     <TableCell align="left">{row.type}</TableCell>
-                    <TableCell align="left">{row.bids}</TableCell>
+                    <TableCell align="left">{row.myBid}</TableCell>
                     <TableCell>
                         <CustomModal 
                             modalBtn={
@@ -57,7 +60,10 @@ function Row(props: { row, refresh }) {
                             }
                         >
                             <div style={{background: "white", borderRadius: "10px"}}>
-                                <FarmerView data={row} refresh={refresh} />
+                                {userType === "farmer"?
+                                    <FarmerView data={row} refresh={refresh} userType="farmer" />:
+                                    <DealerView data={row} userType="dealer" />
+                                }
                             </div>
                         </CustomModal>
                     </TableCell>
@@ -96,7 +102,7 @@ const CollapsibleTable = (props) => {
                         </TableHead>
                         <TableBody>
                             {props.data.map((row) => (
-                                <Row key={row._id} row={row} refresh={props.refresh} />
+                                <Row key={row._id} row={row} refresh={props.refresh} userType={props.userType} />
                             ))}
                         </TableBody>
                     </Table>

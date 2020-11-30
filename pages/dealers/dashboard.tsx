@@ -23,7 +23,7 @@ import { notifyAction } from '../../store/actions/notifyAction';
 const Dashboard = (props) => {
 
     let dashboard = <CustomLinearProgress />;
-    const farmerFields = ["Crop Name", "Price", "Quantity", "Date", "Total Bids"];
+    const farmerFields = ["Crop Name", "Price(Q)", "Quantity(Q)", "Type", "My Bid(Rs/Q)"];
 
 
     const [loadDone, setLoadDone] = useState(false);
@@ -43,26 +43,38 @@ const Dashboard = (props) => {
 
     const fetchMyListings = (type) => {
         Axios.get("/dealer/view/bids", {
+            params: {
+                "bid_status": type
+            },
             headers: {
                 "Authorization": `Bearer ${props.token}`
             }
         })
             .then(res => {
-                console.log(res.data);
+                console.log("[dealer]", res.data);
                 const data = []
                 res.data.forEach(item => {
+                    let myPrice = null;
+                    item.biddings.forEach(bid => {
+                        if(bid.dealer === props._id){
+                            myPrice = bid.bid_val
+                        }
+                    });
+
+                    console.log("[my price]", myPrice);
+
                     data.push({
                         name: item.name,
                         price: item.MSP,
                         quantity: item.quantity,
-                        bids: item.biddings.length,
                         type: item.type,
                         _id: item._id,
-                        biddings: item.biddings,
                         img: item.thumbnail,
                         imgs: item.snapshots,
                         variety: item.variety,
-                        pincode: item.pincode
+                        pincode: item.pincode,
+                        owner: item.owner,
+                        myBid: myPrice
                     })
                 })
                 setMyBiddings(data);
@@ -175,7 +187,7 @@ const Dashboard = (props) => {
                         headerColor="primary"
                         tabs={[
                             {
-                                tabName: "My Biddings",
+                                tabName: "Active Bids",
                                 tabIcon: List,
                                 tabContent: (
                                     !myBiddings ? <LinearProgress /> :
@@ -184,11 +196,32 @@ const Dashboard = (props) => {
                                             data={myBiddings}
                                             refresh={() => {
                                                 setRefresh(true);
-                                                setReqTypeSold("false");
+                                                setReqTypeSold("active");
                                             }}
                                             firstTime={firstTime}
                                             setFirstTime={() => setFirstTime(false)}
                                             nodatamsg={noDataMsg}
+                                            userType="dealer"
+                                        />
+                                ),
+                                onclick: (() => console.log("clicked"))
+                            },
+                            {
+                                tabName: "Accepted Bids",
+                                tabIcon: List,
+                                tabContent: (
+                                    !myBiddings ? <LinearProgress /> :
+                                        <CollapsibleTable
+                                            headers={farmerFields}
+                                            data={myBiddings}
+                                            refresh={() => {
+                                                setRefresh(true);
+                                                setReqTypeSold("accepted");
+                                            }}
+                                            firstTime={firstTime}
+                                            setFirstTime={() => setFirstTime(false)}
+                                            nodatamsg={noDataMsg}
+                                            userType="dealer"
                                         />
                                 ),
                                 onclick: (() => console.log("clicked"))
@@ -224,7 +257,8 @@ const mapStateToProps = ({ authReducer }) => {
         userType: authReducer.userType,
         name: authReducer.name,
         pincode: authReducer.pincode,
-        location: authReducer.location
+        location: authReducer.location,
+        _id: authReducer._id
     }
 }
 

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import FixedBar from './fixedbar';
-import BidInfo from './bidinfo';
+import FarmerInfo from './farmerInfo';
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const FarmerView = (props) => {
+const DealerView = (props) => {
     const classes = useStyles();
     const handlePlaceSellOrder = () => {
         // props.setLoading(true);
@@ -74,19 +74,19 @@ const FarmerView = (props) => {
         // })
     }
 
-    console.log("[farmer view]", props.data);
+    console.log("[daeler view]", props.data);
 
     return (
         <React.Fragment>
             <CssBaseline />
             <main className={classes.layout}>
                 <Paper className={classes.paper}>
-                    <FixedBar data={props.data} refresh={props.refresh} userType="farmer" />
-                    <BidInfo data={props.data} refresh={props.refresh} />
+                    <FixedBar data={props.data} refresh={props.refresh} userType="dealer" />
+                    <FarmerInfo data={props.data} />
                 </Paper>
             </main>
         </React.Fragment>
     );
 }
 
-export default FarmerView;
+export default DealerView;

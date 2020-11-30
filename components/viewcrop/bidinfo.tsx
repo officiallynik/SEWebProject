@@ -88,6 +88,7 @@ const BidInfo = (props) => {
                         <TableContainer>
                         <Table aria-label="collapsible table">
                         <TableBody>
+                        {bidData.length === 0? <div style={{padding: "10px"}}>No bids yet, we will notify when someone bids!</div>:
                         <TableRow>
                             <TableCell align="left">Dealer</TableCell>
                             <TableCell align="left">Phone</TableCell>
@@ -96,6 +97,7 @@ const BidInfo = (props) => {
                             <TableCell align="left">Bid (Rs.)</TableCell>
                             <TableCell></TableCell>
                         </TableRow>
+                        }
                         {bidData.map((bid, idx) => {
                             console.log(bid);
                             console.log(props.data)
