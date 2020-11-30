@@ -14,10 +14,9 @@ const AuthComponent = (props) => {
     const [openProfile, setOpenProfile] = React.useState(null);
 
     const [notifications, setNotifications] = useState(0);
-    const [notificationIds, setNotificationIds] = useState([]);
     const [openNotifications, setOpenNotifications] = useState(false);
-    const [notificationMsgs, setNotificationsMsgs] = useState([
-    ]);
+    const [notificationMsgs, setNotificationsMsgs] = useState([]);
+    const [notificationMsgsIds, setNotificationMsgsIds] = useState([]);
 
     const [currentNotification, setCurrentNotification] = useState(null);
 
@@ -50,9 +49,9 @@ const AuthComponent = (props) => {
         .then(res => {
             const msgs = [...notificationMsgs];
             msgs.splice(index, 1);
-            const ids = [...notificationIds];
+            const ids = [...notificationMsgsIds];
             ids.splice(index, 1);
-            setNotificationIds(ids);
+            setNotificationMsgsIds(ids);
             setNotificationsMsgs(msgs);
             setNotifications((prevState) => {
                 return prevState - 1;
@@ -101,68 +100,41 @@ const AuthComponent = (props) => {
 
     };
 
+
+    const fetchData = () => {
+        Axios.get(`/${props.userType}/notifications/view`, {
+            headers: {
+                "Authorization": `Bearer ${props.token}`
+            }
+        })
+        .then(res => {
+            // console.log(res.data);
+            let newData = res.data.filter(notification => {
+                return !notificationMsgsIds.includes(notification._id)
+            });
+
+            newData = [...newData, ...notificationMsgs];
+            let newIds = newData.map(notification => notification._id);
+
+            // console.log("[new data, new ids]", newData, newIds);
+
+            setNotificationsMsgs(newData);
+            setNotificationMsgsIds(newIds);
+            setNotifications(newIds.length);
+        })
+        .catch(e => {
+            console.log("exception", e);
+        });
+    }
+
     useEffect(() => {
         // console.log("auth useEffect")
         let reqInt = null;
         // console.log(props.token, props.userType)
         if(props.token && ["farmer", "dealer"].includes(props.userType)){
-            Axios.get(`/${props.userType}/notifications/view`, {
-                headers: {
-                    "Authorization": `Bearer ${props.token}`
-                }
-            })
-            .then(res => {
-                // console.log(res.data);
-                setNotificationsMsgs((prevState) => {
-                    let newData = res.data.filter(notification => {
-                        console.log(notification._id, notificationIds);
-                        return !notificationIds.includes(notification._id)
-                    });
-                    console.log("newData", newData);
-                    const data = [...newData, ...prevState];
-                    return data;
-                });
-
-                setNotificationIds(prevState => {
-                    let newIds = res.data.map(notification => notification._id);
-                    console.log(newIds);
-                    newIds = newIds.filter(id => !prevState.includes(id));
-                    console.log(newIds);
-                    return [...newIds, ...prevState]; 
-                }); 
-
-                setNotifications(prevState => prevState + res.data.length);
-            })
-            .catch(e => {
-                console.log("excepttion", e);
-            });
-
+            fetchData();
             reqInt = setInterval(() => {
-                Axios.get('/farmer/notifications/view', {
-                    headers: {
-                        "Authorization": `Bearer ${props.token}`
-                    }
-                })
-                .then(res => {
-                    // console.log(res.data);
-                    setNotificationsMsgs((prevState) => {
-                        let newData = res.data.filter(notification => !notificationIds.includes(notification._id));
-                        console.log("newData", newData);
-                        const data = [...newData, ...prevState];
-                        return data;
-                    });
-    
-                    setNotificationIds(prevState => {
-                        let newIds = res.data.map(notification => notification._id)
-                        newIds = newIds.filter(id => !prevState.includes(id));
-                        return [...newIds, ...prevState]; 
-                    }); 
-
-                    setNotifications(prevState => prevState + res.data.length);
-                })
-                .catch(e => {
-                    // console.log("excepttion", e);
-                })
+                fetchData();
             }, 1000*60);
         }
 
@@ -171,6 +143,7 @@ const AuthComponent = (props) => {
             clearInterval(reqInt);
             setNotifications(0);
             setNotificationsMsgs([]);
+            setNotificationMsgsIds([]);
         }
 
         return () => {
@@ -179,6 +152,7 @@ const AuthComponent = (props) => {
             }
             setNotifications(0);
             setNotificationsMsgs([]);
+            setNotificationMsgsIds([]);
         }
 
     }, [props.token, props.userType])
