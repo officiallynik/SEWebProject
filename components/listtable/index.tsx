@@ -82,6 +82,8 @@ const CollapsibleTable = (props) => {
         console.log(props);
     }, []);
 
+    console.log(props.data);
+
     return (
         <TableContainer>
             {

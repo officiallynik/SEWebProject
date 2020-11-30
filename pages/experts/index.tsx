@@ -1,5 +1,5 @@
 import { Button, CircularProgress, Drawer, Icon, LinearProgress } from '@material-ui/core';
-import { List, DoneAll, Favorite, AccountCircle, Chat, ChatBubble, ChatBubbleOutline, Create } from '@material-ui/icons';
+import { List, DoneAll, Favorite, AccountCircle, Chat, ChatBubble, ChatBubbleOutline, Create, Star } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/dashboard/card';
 import CardBody from '../../components/dashboard/cardbody';
@@ -19,6 +19,7 @@ import { notifyAction } from '../../store/actions/notifyAction';
 import Router from 'next/router';
 import ConnectionForm from '../../components/chat_with_experts/experts/expertConnect';
 import ComposeBlog from '../../components/composeblog';
+import Blogs from '../blogs';
 
 const Experts = (props) => {
 
@@ -42,6 +43,8 @@ const Experts = (props) => {
 
     const [fetching, setFetching] = useState(false);
 
+    const [blogs, setBlogs] = useState(null);
+
     const handleDisplayProfileSidebar = () => {
         // console.log("Clicked");
         setUserProfileSidebar(true);
@@ -60,15 +63,19 @@ const Experts = (props) => {
                 return {
                     ...blog,
                     lastModified: new Date(blog.updatedAt).toDateString(),
+                    isExpert: true
                 }
             });
 
-            // console.log(data);
-
+            
+            console.log(data);
+            
             setBlogsList(data);
+            setBlogs(res.data.length);
         })
         .catch(err => {
             console.log(err);
+            setBlogs(0);
             setFetchError("Something went wrong... Please try again later!");
         })
         .finally(() => {
@@ -80,6 +87,10 @@ const Experts = (props) => {
         // setLoadDone(true);
         // setRefresh(false);
     }
+
+    useEffect(() => {
+        fetchMyListings();
+    }, [])
 
     useEffect(() => {
         if(props.token && props.userType !== "expert"){
@@ -152,9 +163,36 @@ const Experts = (props) => {
                     </CardIcon>
                     <div style={{ float: "right", color: "black" }}>
                         <p>Rating</p>
-                        <h3>
-                            Coming Soon
-                        </h3>
+                        {
+                            blogs === null? "loading...":
+                            <h3>
+                                {
+                                    blogs >= 10? 
+                                    <>
+                                    <Star /><Star /><Star /><Star /><Star />
+                                    </>
+                                    :
+                                    blogs >= 7?
+                                    <>
+                                    <Star /><Star /><Star /><Star />
+                                    </>
+                                    :
+                                    blogs >= 5?
+                                    <>
+                                    <Star /><Star /><Star />
+                                    </>
+                                    :
+                                    blogs >= 3?
+                                    <>
+                                    <Star /><Star />
+                                    </>
+                                    :
+                                    <>
+                                    <Star />
+                                    </>
+                                }
+                            </h3>
+                        }
                     </div>
                 </CardHeader>
             </Card>
@@ -164,10 +202,13 @@ const Experts = (props) => {
                         <Icon><DoneAll /></Icon>
                     </CardIcon>
                     <div style={{ float: "right", color: "black" }}>
-                        <p>Completed Orders</p>
-                        <h3>
-                            Coming Soon
-                        </h3>
+                        <p>Blogs written</p>
+                        {
+                            blogs === null? "loading...":
+                            <h3>
+                                {blogs}
+                            </h3>
+                        }
                     </div>
                 </CardHeader>
             </Card>
@@ -201,7 +242,8 @@ const Experts = (props) => {
                                             setOpenEditor={setOpenEditor}
                                             token={props.token}
                                         />
-                                        {fetching && blogsList.length === 0? 
+
+                                        {!openEditor? fetching && blogsList.length === 0? 
                                             <div style={{display: "flex", justifyContent: "center"}}>
                                                 <CircularProgress />
                                             </div>
@@ -212,7 +254,7 @@ const Experts = (props) => {
                                         :
                                             <CollapsibleTable 
                                                 headers={blogField}
-                                                data={{...blogsList, isExpert: true}}
+                                                data={blogsList}
                                                 refresh={() => {
                                                     setRefresh(true);
                                                 }}
@@ -220,6 +262,8 @@ const Experts = (props) => {
                                                 setFirstTime={() => setFirstTime(false)}
                                                 nodatamsg={"Write some blogs and help farmers and dealers!"}
                                             />
+                                        :
+                                            null
                                         }
                                     </div>
                                 )
