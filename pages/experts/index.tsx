@@ -212,7 +212,7 @@ const Experts = (props) => {
                                         :
                                             <CollapsibleTable 
                                                 headers={blogField}
-                                                data={blogsList}
+                                                data={{...blogsList, isExpert: true}}
                                                 refresh={() => {
                                                     setRefresh(true);
                                                 }}

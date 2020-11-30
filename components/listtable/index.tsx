@@ -27,15 +27,42 @@ function Row(props: { row }) {
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
-                <TableCell align="left">{row.title}</TableCell>
-                <TableCell align="left">{row.lastModified}</TableCell>
-                <TableCell>
-                    <Link href={`/blogs/${row._id}`}>
-                        <IconButton aria-label="expand row" size="small">
-                            <Launch />
-                        </IconButton>
-                    </Link>
-                </TableCell>
+                {row.isExpert?
+                <> 
+                    <TableCell align="left">{row.title}</TableCell>
+                    <TableCell align="left">{row.lastModified}</TableCell>
+                    <TableCell>
+                        <Link href={`/blogs/${row._id}`}>
+                            <IconButton aria-label="expand row" size="small">
+                                <Launch />
+                            </IconButton>
+                        </Link>
+                    </TableCell>
+                </>
+                :
+                <>
+                    <TableCell align="left">{row.name}</TableCell>
+                    <TableCell align="left">{row.price}</TableCell>
+                    <TableCell align="left">{row.quantity}</TableCell>
+                    <TableCell align="left">{row.type}</TableCell>
+                    <TableCell align="left">{row.bids}</TableCell>
+                    <TableCell>
+                        <CustomModal 
+                            modalBtn={
+                                (
+                                    <IconButton aria-label="expand row" size="small">
+                                        <Launch />
+                                    </IconButton>
+                                )
+                            }
+                        >
+                            <div style={{background: "white", borderRadius: "10px"}}>
+                                <FarmerView data={row} />
+                            </div>
+                        </CustomModal>
+                    </TableCell>
+                </>
+                }
             </TableRow>
         </React.Fragment >
     );
