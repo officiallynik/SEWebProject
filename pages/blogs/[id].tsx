@@ -45,9 +45,9 @@ const SingleBlog = ({ blog }) => {
 SingleBlog.getInitialProps = async ({ query }) => {
     const blogId = query.id
     console.log(blogId)
-    const res = await Axios.get("blogs/single/" + blogId)
+    const res = await Axios.get("/blogs/single/" + blogId)
     const { data } = res;
-    console.log(data)
+    console.log("[single blog page]", data)
     return {
         blog: {
             id: data.id,

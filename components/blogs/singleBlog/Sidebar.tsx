@@ -31,7 +31,7 @@ export default function Sidebar(props: props) {
       </Typography>
       {tags.map((tag) => (
         <Typography display="block" variant="body1" key={tag}>
-          {tag}
+          {tag.name}
         </Typography>
       ))}
     </Grid>

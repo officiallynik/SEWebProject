@@ -1,4 +1,4 @@
-import { Button, Drawer, Icon, LinearProgress } from '@material-ui/core';
+import { Button, CircularProgress, Drawer, Icon, LinearProgress } from '@material-ui/core';
 import { List, DoneAll, Favorite, AccountCircle, Chat, ChatBubble, ChatBubbleOutline, Create } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/dashboard/card';
@@ -23,69 +23,63 @@ import ComposeBlog from '../../components/composeblog';
 const Experts = (props) => {
 
     let dashboard = <CustomLinearProgress />;
-    const farmerFields = ["Crop Name", "Price", "Quantity", "Type", "Total Bids"];
+    const blogField = ["Title", "Last Modified"];
 
     
-    const [loadDone, setLoadDone] = useState(false);
+    const [loadDone, setLoadDone] = useState(true);
     const [userProfileSidebar, setUserProfileSidebar] = useState(false);
     // const [myListing, setMyListing] = useState(null);
     const [isDone, setIsDone] = useState([false, false]);
     const [firstTime, setFirstTime] = useState(true);
-    const [refresh, setRefresh] = useState(true);
-    const [reqTypeSold, setReqTypeSold] = useState("false");
+    const [refresh, setRefresh] = useState(false);
 
     const [connected, setConnected] = useState(false);
-    const [history, setHistory] = useState(null);
-
 
     const [openEditor, setOpenEditor] = useState(false);
+
+    const [blogsList, setBlogsList] = useState([]); 
+    const [fetchError, setFetchError] = useState(null);
+
+    const [fetching, setFetching] = useState(false);
 
     const handleDisplayProfileSidebar = () => {
         // console.log("Clicked");
         setUserProfileSidebar(true);
     }
 
-    // const fetchMyListings = (type) => {
-    //     Axios.get("/crops/view", {
-    //         headers: {
-    //             "Authorization": `Bearer ${props.token}`
-    //         },
-    //         params: {
-    //             sold: type
-    //         }
-    //     })
-    //     .then(res => {
-    //         console.log(res.data);
-    //         const data = [] 
-    //         res.data.forEach(item => {
-    //             data.push({
-    //                 name: item.name,
-    //                 price: item.MSP,
-    //                 quantity: item.quantity,
-    //                 bids: item.biddings.length,
-    //                 type: item.type,
-    //                 _id: item._id,
-    //                 biddings: item.biddings,
-    //                 img: item.thumbnail,
-    //                 imgs: item.snapshots,
-    //                 variety: item.variety,
-    //                 pincode: item.pincode
-    //             })
-    //         })
-    //         setMyListing(data);
-    //         console.log(data);
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //     })
-    //     .finally(() => {
-    //         setLoadDone(true);
-    //         setRefresh(false);
-    //     })
-    //     // setMyListing(myListings);
-    //     // setLoadDone(true);
-    //     // setRefresh(false);
-    // }
+    const fetchMyListings = () => {
+        setFetching(true);
+        Axios.get("/blogs/all", {
+            headers: {
+                "Authorization": `Bearer ${props.token}`
+            }
+        })
+        .then(res => {
+            console.log(res.data);
+            const data = res.data.map(blog => {
+                return {
+                    ...blog,
+                    lastModified: new Date(blog.updatedAt).toDateString(),
+                }
+            });
+
+            // console.log(data);
+
+            setBlogsList(data);
+        })
+        .catch(err => {
+            console.log(err);
+            setFetchError("Something went wrong... Please try again later!");
+        })
+        .finally(() => {
+            setFetching(false);
+            setLoadDone(true);
+            setRefresh(false);
+        })
+        // setMyListing(myListings);
+        // setLoadDone(true);
+        // setRefresh(false);
+    }
 
     useEffect(() => {
         if(props.token && props.userType !== "expert"){
@@ -97,9 +91,11 @@ const Experts = (props) => {
             console.log("fetching ", props.token);
             setLoadDone(true);
             // setMyListing(null);
-            // fetchMyListings(reqTypeSold);
+            setFetchError(null);
+            setBlogsList([]);
+            fetchMyListings();
         }
-    }, [props.token, refresh, props.userType, reqTypeSold]);
+    }, [props.token, refresh, props.userType]);
 
     useEffect(() => {
         if(props.loading){
@@ -205,17 +201,27 @@ const Experts = (props) => {
                                             setOpenEditor={setOpenEditor}
                                             token={props.token}
                                         />
+                                        {fetching && blogsList.length === 0? 
+                                            <div style={{display: "flex", justifyContent: "center"}}>
+                                                <CircularProgress />
+                                            </div>
+                                        : fetchError?
+                                            <div>
+                                                Something went wrong please try again later!
+                                            </div>  
+                                        :
+                                            <CollapsibleTable 
+                                                headers={blogField}
+                                                data={blogsList}
+                                                refresh={() => {
+                                                    setRefresh(true);
+                                                }}
+                                                firstTime={firstTime}
+                                                setFirstTime={() => setFirstTime(false)}
+                                                nodatamsg={"Write some blogs and help farmers and dealers!"}
+                                            />
+                                        }
                                     </div>
-                                    // <CollapsibleTable 
-                                    //     headers={farmerFields}
-                                    //     data={myListing}
-                                    //     refresh={() => {
-                                    //         setRefresh(true);
-                                    //         setReqTypeSold("true");
-                                    //     }}
-                                    //     firstTime={firstTime}
-                                    //     setFirstTime={() => setFirstTime(false)}
-                                    // />
                                 )
                             }
                         ]}
