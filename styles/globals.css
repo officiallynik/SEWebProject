@@ -35,5 +35,29 @@ a {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #888; 
+}
 
+
+.ck-editor {
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.ck-sticky-panel__content {
+  height: 38px !important;
+}
+
+.ck-editor__main {
+  display: flex;
+  width: 100% !important;
+  flex-grow: 1 !important;
+  overflow: auto !important;
+}
+
+.ck-editor__editable {
+  width: 100%;
 }

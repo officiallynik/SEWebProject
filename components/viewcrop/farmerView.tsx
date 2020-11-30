@@ -74,13 +74,15 @@ const FarmerView = (props) => {
         // })
     }
 
+    console.log("[farmer view]", props.data);
+
     return (
         <React.Fragment>
             <CssBaseline />
             <main className={classes.layout}>
                 <Paper className={classes.paper}>
-                    <FixedBar data={props.data} />
-                    <BidInfo data={props.data} />
+                    <FixedBar data={props.data} refresh={props.refresh} userType="farmer" />
+                    <BidInfo data={props.data} refresh={props.refresh} />
                 </Paper>
             </main>
         </React.Fragment>

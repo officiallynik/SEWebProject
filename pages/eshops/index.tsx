@@ -41,7 +41,8 @@ const EShops = () => {
                 </div>
             </div>
             <h4 style={{textAlign: "center"}}>
-                Price Comparison Coming Soon
+                Building a api to scrap data from eshops on search request, and comparing between products of different types on different
+                websites takes time and effort, we will add this feature if this project is continued. Thanks for your patience!!!
             </h4>
         </div>
     );

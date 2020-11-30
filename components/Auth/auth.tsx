@@ -6,10 +6,19 @@ import SignIn from '../login';
 import CustomModal from '../modal';
 import SignUp from '../signup';
 import Router from 'next/router';
+import TempNotifications from '../tempnotifications';
+import Axios from '../../helpers/axios';
 
 const AuthComponent = (props) => {
     const [isLogin, setIsLogin] = useState(true);
     const [openProfile, setOpenProfile] = React.useState(null);
+
+    const [notifications, setNotifications] = useState(0);
+    const [openNotifications, setOpenNotifications] = useState(false);
+    const [notificationMsgs, setNotificationsMsgs] = useState([]);
+    const [notificationMsgsIds, setNotificationMsgsIds] = useState([]);
+
+    const [currentNotification, setCurrentNotification] = useState(null);
 
     const handleClickProfile = event => {
         if (openProfile && openProfile.contains(event.target)) {
@@ -18,13 +27,152 @@ const AuthComponent = (props) => {
             setOpenProfile(event.currentTarget);
         }
     };
+
     const handleCloseProfile = () => {
         setOpenProfile(null);
     };
 
+    const handleNotificationsOpen = () => {
+        handleCloseProfile();
+        setOpenNotifications(true);
+    };
+
+
+    const handleNotificationsClose = () => {
+        setOpenNotifications(false);
+    };
+
+    const handleNotificationRemove = (index) => {
+        // console.log(index, "closing");
+        const msg = [...notificationMsgs][index];
+        Axios.post(`/${props.userType}/notifications/delete/${msg._id}`, {}, {
+            headers: {
+                'Authorization': `Bearer ${props.token}`
+            }
+        })
+            .then(res => {
+                const msgs = [...notificationMsgs];
+                msgs.splice(index, 1);
+                const ids = [...notificationMsgsIds];
+                ids.splice(index, 1);
+                setNotificationMsgsIds(ids);
+                setNotificationsMsgs(msgs);
+                setNotifications((prevState) => {
+                    return prevState - 1;
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    const handleNotificationOnClicked = (index) => {
+        setCurrentNotification("loading");
+
+        // deleting it
+        const msgs = [...notificationMsgs];
+        const notification = msgs[index];
+
+        // console.log(notification)
+
+        Axios.get(`/crops/view/${notification.url}`).then(res => {
+            // console.log(res.data);
+            const item = res.data;
+            let myPrice = null;
+            item.biddings.forEach(bid => {
+                if (bid.dealer === props._id) {
+                    myPrice = bid.bid_val
+                }
+            });
+            const data = {
+                name: item.name,
+                price: item.MSP,
+                quantity: item.quantity,
+                bids: item.biddings.length,
+                type: item.type,
+                _id: item._id,
+                biddings: item.biddings,
+                img: item.thumbnail,
+                imgs: item.snapshots,
+                variety: item.variety,
+                pincode: item.pincode,
+                owner: item.owner,
+                sold: item.sold,
+                myBid: myPrice
+            }
+
+            console.log(data);
+
+            setCurrentNotification(data);
+        })
+            .catch(err => {
+                console.log(err);
+            })
+
+        //going to url pending
+
+    };
+
+
+    const fetchData = () => {
+        Axios.get(`/${props.userType}/notifications/view`, {
+            headers: {
+                "Authorization": `Bearer ${props.token}`
+            }
+        })
+            .then(res => {
+                // console.log(res.data);
+                let newData = res.data.filter(notification => {
+                    return !notificationMsgsIds.includes(notification._id)
+                });
+
+                newData = [...newData, ...notificationMsgs];
+                let newIds = newData.map(notification => notification._id);
+
+                // console.log("[new data, new ids]", newData, newIds);
+
+                setNotificationsMsgs(newData);
+                setNotificationMsgsIds(newIds);
+                setNotifications(newIds.length);
+            })
+            .catch(e => {
+                console.log("exception", e);
+            });
+    }
+
+    useEffect(() => {
+        // console.log("auth useEffect")
+        let reqInt = null;
+        // console.log(props.token, props.userType)
+        if (props.token && ["farmer", "dealer"].includes(props.userType)) {
+            fetchData();
+            reqInt = setInterval(() => {
+                fetchData();
+            }, 1000 * 60);
+        }
+
+        if (!props.token && reqInt) {
+            // console.log("clearing interval...", reqInt);
+            clearInterval(reqInt);
+            setNotifications(0);
+            setNotificationsMsgs([]);
+            setNotificationMsgsIds([]);
+        }
+
+        return () => {
+            if (reqInt) {
+                clearInterval(reqInt);
+            }
+            setNotifications(0);
+            setNotificationsMsgs([]);
+            setNotificationMsgsIds([]);
+        }
+
+    }, [props.token, props.userType])
+
     const login = (
         <CustomModal
-            modalBtn={<div>Login</div>}
+            modalBtn={props.modalBtn || <div>Login</div>}
             isLoading={props.loading}
             token={props.token}
             exp={1000}
@@ -39,42 +187,29 @@ const AuthComponent = (props) => {
     );
 
     const Notifications = (
-        <div style={{maxHeight: "200px", overflow: "auto", display: "flex", flexDirection: "column"}}>
+        <div style={{ maxHeight: "200px", overflow: "auto", display: "flex", flexDirection: "column" }}>
             <MenuItem
-                onClick={handleCloseProfile}
-                style={{borderBottom: "1px solid black"}}
+                onClick={handleNotificationsOpen}
+                style={{ borderBottom: "1px solid black" }}
             >
                 Notifications
+                <span
+                    style={{
+                        marginLeft: "10px",
+                        backgroundColor: "black",
+                        color: "white",
+                        padding: "10px",
+                        borderRadius: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        height: "15px",
+                        width: "15px",
+                        fontSize: "12px",
+                        alignItems: "center"
+                    }}
+
+                >{notifications}</span>
             </MenuItem>
-            <div style={{overflow: "auto", }}>
-                {/* <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem>
-                <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem>
-                <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem>
-                <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem>
-                <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem>
-                <MenuItem
-                >
-                    New bid on Rice crop
-                </MenuItem> */}
-                <MenuItem>
-                    Notifications Coming Soon
-                </MenuItem>
-            </div>
         </div>
     )
 
@@ -110,7 +245,7 @@ const AuthComponent = (props) => {
                                             handleCloseProfile()
                                             props.dispatchLogout(props.userType, props.token);
                                         }}
-                                        style={{borderTop: "1px solid black"}}
+                                        style={{ borderTop: "1px solid black" }}
                                     >
                                         Logout
                                     </MenuItem>
@@ -124,7 +259,7 @@ const AuthComponent = (props) => {
     );
 
     useEffect(() => {
-        if(!props.token){
+        if (!props.token) {
             Router.push(props.redirectPath);
         }
     }, [props.token])
@@ -133,6 +268,15 @@ const AuthComponent = (props) => {
         <div>
             <div style={{ display: props.token ? "none" : "block" }}>{login}</div>
             <div style={{ display: !props.token ? "none" : "block" }}>{profile}</div>
+            <TempNotifications
+                open={openNotifications}
+                handleClose={handleNotificationsClose}
+                notifications={notifications}
+                messages={notificationMsgs}
+                notificationOnClicked={handleNotificationOnClicked}
+                data={currentNotification}
+                handleNotificationRemove={(index) => handleNotificationRemove(index)}
+            />
         </div>
     );
 }
@@ -142,7 +286,8 @@ const mapStateToProps = ({ authReducer }) => {
         loading: authReducer.loading,
         token: authReducer.token,
         userType: authReducer.userType,
-        redirectPath: authReducer.authRedirectPath
+        redirectPath: authReducer.authRedirectPath,
+        _id: authReducer._id
     }
 }
 

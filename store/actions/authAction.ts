@@ -62,7 +62,7 @@ export const authLogin = (phone, password, isRemember) => {
                     localStorage.setItem('location', response.data.user.location);
                 }
 
-                // console.log("login res: ", response);
+                console.log("login res: ", response.data);
                 dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, response.data.userType, response.data.user.pincode, response.data.user.location));
                 dispatch(setAuthRedirectPath(`/${response.data.userType}s`));
             })
@@ -93,18 +93,18 @@ export const authSignUp = (userType, reqBody) => {
             .then(response => {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('name', response.data.user.name);
-                localStorage.setItem('userType', userType);
+                localStorage.setItem('userType', userType === "editor"? "expert": userType);
                 localStorage.setItem('_id', response.data.user._id);
                 localStorage.setItem('pincode', response.data.user.pincode);
                 localStorage.setItem('location', response.data.user.location);
 
-                // console.log(response);
+                console.log(response);
 
-                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, userType, response.data.user.pincode, response.data.user.location));
+                dispatch(authSuccess(response.data.token, response.data.user.name, response.data.user._id, userType === "editor"? "expert": userType, response.data.user.pincode, response.data.user.location));
                 dispatch(setAuthRedirectPath(`/${userType}s`));
             })
             .catch(err => {
-                // console.log(err);
+                console.log(err);
                 dispatch(authFail("failed signing up"));
             });
         // setTimeout(() => {
@@ -152,6 +152,7 @@ export const authUpdateProfile = (userType, reqBody, token) => {
 };
 
 export const authLogout = (userType, token) => {
+    userType = userType === "expert"? "editor": userType;
     return dispatch => {
         dispatch(authStart());
         Axios.post(`/${userType}/logout`, {}, {

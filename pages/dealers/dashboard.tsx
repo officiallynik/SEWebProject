@@ -1,5 +1,5 @@
 import { Button, Drawer, Icon, LinearProgress } from '@material-ui/core';
-import { List, DoneAll, Favorite, AccountCircle, Refresh } from '@material-ui/icons';
+import { List, DoneAll, Favorite, AccountCircle, Refresh, Star } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import Card from '../../components/dashboard/card';
 import CardBody from '../../components/dashboard/cardbody';
@@ -23,9 +23,9 @@ import { notifyAction } from '../../store/actions/notifyAction';
 const Dashboard = (props) => {
 
     let dashboard = <CustomLinearProgress />;
-    const farmerFields = ["Crop Name", "Price", "Quantity", "Date", "Total Bids"];
+    const farmerFields = ["Crop Name", "Price(Q)", "Quantity(Q)", "Type", "My Bid(Rs/Q)"];
 
-    
+
     const [loadDone, setLoadDone] = useState(false);
     const [userProfileSidebar, setUserProfileSidebar] = useState(false);
     const [myBiddings, setMyBiddings] = useState(null);
@@ -34,60 +34,116 @@ const Dashboard = (props) => {
     const [refresh, setRefresh] = useState(true);
     const [reqTypeSold, setReqTypeSold] = useState("false");
 
+    const [noDataMsg, setNoDataMsg] = useState("");
+
+    const [acceptedOrders, setAcceptedOrders] = useState<number|null>(null);
+    const [activeOrders, setActiveOrders] = useState<number|null>(null);
+
     const handleDisplayProfileSidebar = () => {
         // console.log("Clicked");
         setUserProfileSidebar(true);
     }
 
+    useEffect(() => {
+        Axios.get("/dealer/view/bids", {
+            params: {
+                "bid_status": "accepted"
+            },
+            headers: {
+                "Authorization": `Bearer ${props.token}`
+            }
+        })
+        .then(res => {
+            setActiveOrders(res.data.length);
+        })
+        .catch(err => {
+            console.log(err);
+            if(err.response.status === 404){
+                setActiveOrders(0);
+            }
+        })
+    }, []);
+
     const fetchMyListings = (type) => {
-        // Axios.get("/crops/view", {
-        //     headers: {
-        //         "Authorization": `Bearer ${props.token}`
-        //     },
-        //     params: {
-        //         sold: type
-        //     }
-        // })
-        // .then(res => {
-        //     console.log(res.data);
-        //     const data = [] 
-        //     res.data.forEach(item => {
-        //         data.push({
-        //             name: item.name,
-        //             price: item.MSP,
-        //             quantity: item.quantity,
-        //             bids: item.biddings.length,
-        //             type: item.type,
-        //             _id: item._id,
-        //             biddings: item.biddings,
-        //             img: item.thumbnail,
-        //             imgs: item.snapshots,
-        //             variety: item.variety,
-        //             pincode: item.pincode
-        //         })
-        //     })
-        //     setMyBiddings(data);
-        //     console.log(data);
-        // })
-        // .catch(err => {
-        //     console.log(err);
-        // })
-        // .finally(() => {
-        //     setLoadDone(true);
-        //     setRefresh(false);
-        // })
+        Axios.get("/dealer/view/bids", {
+            params: {
+                "bid_status": type
+            },
+            headers: {
+                "Authorization": `Bearer ${props.token}`
+            }
+        })
+            .then(res => {
+                console.log("[dealer]", res.data);
+                if(type === "active"){
+                    setActiveOrders(res.data.length);
+                }
+                else{
+                    setAcceptedOrders(res.data.length);
+                }
+                const data = []
+                res.data.forEach(item => {
+                    let myPrice = null;
+                    item.biddings.forEach(bid => {
+                        if(bid.dealer === props._id){
+                            myPrice = bid.bid_val
+                        }
+                    });
+
+
+
+                    // console.log("[my price]", myPrice);
+
+                    data.push({
+                        name: item.name,
+                        price: item.MSP,
+                        quantity: item.quantity,
+                        type: item.type,
+                        _id: item._id,
+                        img: item.thumbnail,
+                        imgs: item.snapshots,
+                        variety: item.variety,
+                        pincode: item.pincode,
+                        owner: item.owner,
+                        myBid: myPrice,
+                        sold: item.sold
+                    })
+                })
+                setMyBiddings(data);
+                console.log(data);
+            })
+            .catch(err => {
+                setMyBiddings([]);
+                if(err.response.status === 404){
+                    setNoDataMsg("No bids on any crop, try bidding in find crops!")
+                    if(type === "active"){
+                        setActiveOrders(0);
+                    }
+                    else{
+                        setAcceptedOrders(0);
+                    }
+                }
+                else{
+                    setNoDataMsg("Something went wrong please try again later")
+                }
+
+            })
+            .finally(() => {
+                setLoadDone(true);
+                setRefresh(false);
+            })
         // setMyListing(myListings);
         // setLoadDone(true);
         // setRefresh(false);
     }
 
     useEffect(() => {
-        if(props.userType !== "dealer"){
+        if (props.token && props.userType !== "dealer") {
             Router.push("/");
-            props.dispatchRedirection("Access Denied", 3, "error")
+            props.dispatchRedirection("Access Denied, Login as Dealer", 3, "error")
         }
 
-        if(props.token && refresh){
+        if (props.token && refresh) {
             console.log("fetching ", props.token);
             setMyBiddings(null);
             fetchMyListings(reqTypeSold);
@@ -95,10 +151,10 @@ const Dashboard = (props) => {
     }, [props.token, refresh, props.userType, reqTypeSold]);
 
     useEffect(() => {
-        if(props.loading){
+        if (props.loading) {
             setIsDone([true, false]);
         }
-        if(!props.loading && isDone[0]){
+        if (!props.loading && isDone[0]) {
             setIsDone([true, true]);
         }
     }, [props.loading])
@@ -106,25 +162,25 @@ const Dashboard = (props) => {
     useEffect(() => {
         setUserProfileSidebar(false);
     }, [useWindowSize().width >= 860]);
-    
+
     const userProfile = (
         <div>
             <Card profile>
                 <CardBody profile>
-                    <h4>{props.userType? props.userType.toUpperCase(): null}</h4>
+                    <h4>{props.userType ? props.userType.toUpperCase() : null}</h4>
                     <h3>{props.name}</h3>
                     <p>{props.pincode}</p>
                     <p>{props.location}</p>
                     <CustomModal modalBtn={(
-                            <Button variant="outlined" color="primary" onClick={() => setIsDone([false, false])}>
-                                Edit Profile
-                            </Button>
-                        )}
+                        <Button variant="outlined" color="primary" onClick={() => setIsDone([false, false])}>
+                            Edit Profile
+                        </Button>
+                    )}
                         isLoading={props.loading}
                         token={isDone[1] && !props.error}
                         exp={1000}
                     >
-                        <div style={{background: "white", borderRadius: "10px"}}>
+                        <div style={{ background: "white", borderRadius: "10px" }}>
                             <UpdateProfile />
                         </div>
                     </CustomModal>
@@ -137,10 +193,36 @@ const Dashboard = (props) => {
                     </CardIcon>
                     <div style={{ float: "right", color: "black" }}>
                         <p>Rating</p>
-                        <h3>
-                            {/* 35/50 <small>Stars</small> */}
-                            Coming Soon
-                        </h3>
+                        {
+                            acceptedOrders === null? "loading...":
+                            <h3>
+                                {
+                                    acceptedOrders >= 20? 
+                                    <>
+                                    <Star /><Star /><Star /><Star /><Star />
+                                    </>
+                                    :
+                                    acceptedOrders >= 15?
+                                    <>
+                                    <Star /><Star /><Star /><Star />
+                                    </>
+                                    :
+                                    acceptedOrders >= 10?
+                                    <>
+                                    <Star /><Star /><Star />
+                                    </>
+                                    :
+                                    acceptedOrders >= 5?
+                                    <>
+                                    <Star /><Star />
+                                    </>
+                                    :
+                                    <>
+                                    <Star />
+                                    </>
+                                }
+                            </h3>
+                        }
                     </div>
                 </CardHeader>
             </Card>
@@ -150,11 +232,20 @@ const Dashboard = (props) => {
                         <Icon><DoneAll /></Icon>
                     </CardIcon>
                     <div style={{ float: "right", color: "black" }}>
-                        <p>Completed Orders</p>
-                        <h3>
-                            {/* 40/43 <small></small> */}
-                            Coming Soon
-                        </h3>
+                        <p>Active Bids</p>
+                        {
+                            activeOrders === null? "loading":
+                            <h3>
+                                {activeOrders}
+                            </h3>
+                        }
+                        <p>Accepted Bids</p>
+                        {
+                            acceptedOrders === null? "loading":
+                            <h3>
+                                {acceptedOrders}
+                            </h3>
+                        }
                     </div>
                 </CardHeader>
             </Card>
@@ -170,39 +261,44 @@ const Dashboard = (props) => {
                         headerColor="primary"
                         tabs={[
                             {
-                                tabName: "My Biddings",
+                                tabName: "Active Bids",
                                 tabIcon: List,
                                 tabContent: (
-                                    !myBiddings? <div>Under Maintenance :(</div> : 
-                                    <CollapsibleTable 
-                                        headers={farmerFields}
-                                        data={myBiddings}
-                                        refresh={() => {
-                                            setRefresh(true);
-                                            setReqTypeSold("false");
-                                        }}
-                                        firstTime={firstTime}
-                                        setFirstTime={() => setFirstTime(false)}
-                                    />
+                                    !myBiddings ? <LinearProgress /> :
+                                        <CollapsibleTable
+                                            headers={farmerFields}
+                                            data={myBiddings}
+                                            refresh={() => {
+                                                setRefresh(true);
+                                                setReqTypeSold("active");
+                                            }}
+                                            firstTime={firstTime}
+                                            setFirstTime={() => setFirstTime(false)}
+                                            nodatamsg={noDataMsg}
+                                            userType="dealer"
+                                        />
                                 ),
                                 onclick: (() => console.log("clicked"))
                             },
                             {
-                                tabName: "Completed Orders",
-                                tabIcon: DoneAll,
+                                tabName: "Accepted Bids",
+                                tabIcon: List,
                                 tabContent: (
-                                    !myBiddings? <div>Under Maintenance :(</div> : 
-                                    <CollapsibleTable 
-                                        headers={farmerFields}
-                                        data={myBiddings}
-                                        refresh={() => {
-                                            setRefresh(true);
-                                            setReqTypeSold("true");
-                                        }}
-                                        firstTime={firstTime}
-                                        setFirstTime={() => setFirstTime(false)}
-                                    />
-                                )
+                                    !myBiddings ? <LinearProgress /> :
+                                        <CollapsibleTable
+                                            headers={farmerFields}
+                                            data={myBiddings}
+                                            refresh={() => {
+                                                setRefresh(true);
+                                                setReqTypeSold("accepted");
+                                            }}
+                                            firstTime={firstTime}
+                                            setFirstTime={() => setFirstTime(false)}
+                                            nodatamsg={noDataMsg}
+                                            userType="dealer"
+                                        />
+                                ),
+                                onclick: (() => console.log("clicked"))
                             }
                         ]}
                     />
@@ -235,7 +331,8 @@ const mapStateToProps = ({ authReducer }) => {
         userType: authReducer.userType,
         name: authReducer.name,
         pincode: authReducer.pincode,
-        location: authReducer.location
+        location: authReducer.location,
+        _id: authReducer._id
     }
 }
 

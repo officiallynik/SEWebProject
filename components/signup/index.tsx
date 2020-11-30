@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
@@ -9,12 +8,14 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import { CircularProgress, createStyles, FormControl, InputBase, InputLabel, MenuItem, NativeSelect, Select, Theme, withStyles } from '@material-ui/core';
+import { Button, CircularProgress, createStyles, FormControl, Input, InputBase, InputLabel, MenuItem, NativeSelect, Select, Theme, withStyles } from '@material-ui/core';
 
 import { authSignUp, authClearErrors } from '../../store/actions/authAction';
 import { connect } from 'react-redux';
 import { Alert } from '@material-ui/lab';
 import Router from 'next/router';
+import { CloudUploadOutlined } from '@material-ui/icons';
+import { message, Upload } from 'antd';
 
 function Copyright() {
     return (
@@ -68,6 +69,7 @@ const SignUp = (props) => {
     const [location, setLocation] = useState<null|string>(null);
     const [password, setPassword] = useState<null|string>(null);
     const [dealerType, setDealerType] = useState<null|string>(null);
+    const [verifyDoc, setVerifyDoc] = useState<File|null>(null);
 
     const handleUserTypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setUserType(event.target.value as string);
@@ -75,7 +77,9 @@ const SignUp = (props) => {
 
     const handleSignUp = (event) => {
         event.preventDefault();
-        props.dispatchSignUp(userType, {
+        let userUrl = userType === "expert"? "editor": userType;
+
+        var reqBody: any = {
             name: fullName,
             phone: phoneNumber,
             age: age,
@@ -84,7 +88,18 @@ const SignUp = (props) => {
             location: location,
             password: password,
             dealertype: dealerType
-        });
+        }
+
+        if(userUrl === "editor"){
+            reqBody = new FormData();
+            reqBody.append("name", fullName);
+            reqBody.append("phone", phoneNumber);
+            reqBody.append("age", age);
+            reqBody.append("password", password);
+            reqBody.append("verification", verifyDoc);
+        }
+
+        props.dispatchSignUp(userUrl, reqBody);
     }
 
     useEffect(() => {
@@ -373,6 +388,115 @@ const SignUp = (props) => {
                             setPassword(e.target.value === ''? null: e.target.value)
                         }}
                     />
+                </Grid>
+            </Grid>
+            <Button
+                    disabled={props.loading}
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    style={{ margin: "15px 0 10px" }}
+                    onClick={handleSignUp}
+                >
+                    Sign Up
+                </Button>
+                <Grid container justify="flex-end">
+                    <Grid item style={!props.loading? {}:{display: "none"}}>
+                        <Link href="#" variant="body2" onClick={props.handleSignInOpen}>
+                            Already have an account? Sign in
+                        </Link>
+                    </Grid>
+                </Grid>
+        </form>
+        )
+    }
+
+    if (userType === "expert") {
+        signUpForm = (
+            <form style={{ width: '100%', marginTop: "5px" }}>
+            <Grid container spacing={2}>
+                <Grid item xs={9} sm={8}>
+                    <TextField
+                        disabled={props.loading}
+                        autoComplete="fname"
+                        name="fullName"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="fullName"
+                        label="Full Name"
+                        autoFocus
+                        value={fullName === null? '': fullName}
+                        onChange={(e) => {
+                            setFullName(e.target.value === ''? null: e.target.value)
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={3} sm={4}>
+                    <TextField
+                        disabled={props.loading}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="age"
+                        label="Age"
+                        name="age"
+                        autoComplete="age"
+                        type="number"
+                        value={age === null? '': age}
+                        onChange={(e) => {
+                            setAge(+e.target.value === 0? null: +e.target.value)
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        disabled={props.loading}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="phone"
+                        label="Phone Number"
+                        name="phone"
+                        type="tel"
+                        datatype="number"
+                        value={phoneNumber === null? '': phoneNumber}
+                        onChange={(e) => {
+                            setPhoneNumber(+e.target.value === 0? null: +e.target.value)
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        disabled={props.loading}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+                        value={password === null? '': password}
+                        onChange={(e) => {
+                            setPassword(e.target.value === ''? null: e.target.value)
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                <input
+                    style={{ display: 'none' }}
+                    id="raised-button-file"
+                    type="file"
+                    onChange={(e) => {
+                        setVerifyDoc(e.target.files[0]);
+                    }}
+                />
+                <label htmlFor="raised-button-file">
+                    <Button variant="outlined" component="span">
+                        Upload Verification Document
+                    </Button>
+                </label> 
                 </Grid>
             </Grid>
             <Button

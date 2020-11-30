@@ -7,6 +7,8 @@ import { authCheckState } from '../../store/actions/authAction';
 import { connect } from 'react-redux';
 import CustomLinearProgress from '../linearprogress';
 
+import ChatWithExperts from '../chat_with_experts';
+
 const NavBar = (props) => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -37,13 +39,25 @@ const NavBar = (props) => {
             {
                 props.loading? <CustomLinearProgress />: null
             }
+            <div style={props.userType === "expert"? {display: "none"}: {}}>
+                <ChatWithExperts  
+                    userDetail={{
+                        userType: props.userType,
+                        userName: props.name,
+                        userId: props._id
+                    }}
+                />
+            </div>
         </React.Fragment>
     );
 };
 
 const mapStateToProps = ({ authReducer }) => {
 	return {
-		loading: authReducer.loading,
+        loading: authReducer.loading,
+        userType: authReducer.userType,
+        name: authReducer.name,
+        _id: authReducer._id
 	};
 };
 
