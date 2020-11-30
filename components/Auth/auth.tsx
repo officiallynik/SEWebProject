@@ -44,12 +44,19 @@ const AuthComponent = (props) => {
 
     const handleNotificationRemove = (index) => {
         console.log(index, "closing");
-        const msgs = [...notificationMsgs];
-        msgs.splice(index, 1);
-        setNotificationsMsgs(msgs);
-        setNotifications((prevState) => {
-            return prevState - 1;
-        });
+        const msg = [...notificationMsgs][index];
+        Axios.post(`/${props.userType}/notifications/delete/${msg._id}`)
+        .then(res => {
+            const msgs = [...notificationMsgs];
+            msgs.splice(index, 1);
+            setNotificationsMsgs(msgs);
+            setNotifications((prevState) => {
+                return prevState - 1;
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     const handleNotificationOnClicked = (index) => {
@@ -58,6 +65,8 @@ const AuthComponent = (props) => {
         // deleting it
         const msgs = [...notificationMsgs];
         const notification = msgs[index];
+
+        // console.log(notification)
         
         Axios.get(`/crops/view/${notification.url}`).then(res => {
             console.log(res.data);
@@ -93,7 +102,7 @@ const AuthComponent = (props) => {
         let reqInt = null;
         // console.log(props.token, props.userType)
         if(props.token && ["farmer", "dealer"].includes(props.userType)){
-            Axios.get('/farmer/notifications/view', {
+            Axios.get(`/${props.userType}/notifications/view`, {
                 headers: {
                     "Authorization": `Bearer ${props.token}`
                 }
