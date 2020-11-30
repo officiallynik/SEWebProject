@@ -81,7 +81,7 @@ const FarmerView = (props) => {
             <CssBaseline />
             <main className={classes.layout}>
                 <Paper className={classes.paper}>
-                    <FixedBar data={props.data} />
+                    <FixedBar data={props.data} refresh={props.refresh} />
                     <BidInfo data={props.data} refresh={props.refresh} />
                 </Paper>
             </main>

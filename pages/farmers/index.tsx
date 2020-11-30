@@ -63,7 +63,8 @@ const Farmers = (props) => {
                     img: item.thumbnail,
                     imgs: item.snapshots,
                     variety: item.variety,
-                    pincode: item.pincode
+                    pincode: item.pincode,
+                    sold: item.sold
                 })
             })
             setMyListing(data);
@@ -183,7 +184,7 @@ const Farmers = (props) => {
                                         }}
                                         firstTime={firstTime}
                                         setFirstTime={() => setFirstTime(false)}
-                                        nodatamsg={"No crops listed, try selling something and rejoice!"}
+                                        nodatamsg={"No ongoing bids, try selling something!"}
                                     />
                                 ),
                                 onclick: (() => console.log("clicked"))

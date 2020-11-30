@@ -108,13 +108,16 @@ const BidInfo = (props) => {
                                         <TableCell align="left">{bid.location}</TableCell>
                                         <TableCell align="left">{bid.bid}</TableCell>
                                         <TableCell>
-                                            <Button variant="outlined" style={props.data.biddings[idx].status === "active"? {backgroundColor: "lightblue", fontSize: "12px"}:
-                                                {backgroundColor: "lightgreen", fontSize: "12px"}}
-                                                onClick={() => handleBidAccept(props.data._id, props.data.biddings[idx]._id)}
-                                                disabled={props.data.biddings[idx].status === "accepted"}
-                                            >
-                                                {props.data.biddings[idx].status === "accepted"? "Accepted": "Accept"}
-                                            </Button>
+                                            {
+                                                props.data.sold? null:
+                                                <Button variant="outlined" style={props.data.biddings[idx].status === "active"? {backgroundColor: "lightblue", fontSize: "12px"}:
+                                                    {backgroundColor: "lightgreen", fontSize: "12px"}}
+                                                    onClick={() => handleBidAccept(props.data._id, props.data.biddings[idx]._id)}
+                                                    disabled={props.data.biddings[idx].status === "accepted"}
+                                                >
+                                                    {props.data.biddings[idx].status === "accepted"? "Accepted": "Accept"}
+                                                </Button>
+                                            }
                                         </TableCell>
                                     </TableRow>
                             )
