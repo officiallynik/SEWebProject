@@ -14,6 +14,7 @@ const AuthComponent = (props) => {
     const [openProfile, setOpenProfile] = React.useState(null);
 
     const [notifications, setNotifications] = useState(0);
+    const [notifficationIds, setNotificationIds] = useState([]);
     const [openNotifications, setOpenNotifications] = useState(false);
     const [notificationMsgs, setNotificationsMsgs] = useState([
     ]);
@@ -43,12 +44,15 @@ const AuthComponent = (props) => {
     };
 
     const handleNotificationRemove = (index) => {
-        console.log(index, "closing");
+        // console.log(index, "closing");
         const msg = [...notificationMsgs][index];
         Axios.post(`/${props.userType}/notifications/delete/${msg._id}`)
         .then(res => {
             const msgs = [...notificationMsgs];
             msgs.splice(index, 1);
+            const ids = [...notifficationIds];
+            ids.splice(index, 1);
+            setNotificationIds(ids);
             setNotificationsMsgs(msgs);
             setNotifications((prevState) => {
                 return prevState - 1;
@@ -110,9 +114,16 @@ const AuthComponent = (props) => {
             .then(res => {
                 // console.log(res.data);
                 setNotificationsMsgs((prevState) => {
-                    const data = [...res.data, ...prevState];
+                    let newData = res.data.filter(notification => !notifficationIds.includes(notification._id));
+                    const data = [...newData, ...prevState];
                     return data;
                 });
+
+                setNotificationIds(prevState => {
+                    let newIds = res.data.map(notification => notification._id)
+                    newIds = newIds.filter(id => !prevState.includes(id));
+                    return [...newIds, ...prevState]; 
+                }); 
 
                 setNotifications(prevState => prevState + res.data.length);
             })
@@ -129,9 +140,16 @@ const AuthComponent = (props) => {
                 .then(res => {
                     // console.log(res.data);
                     setNotificationsMsgs((prevState) => {
-                        const data = [...res.data, ...prevState];
+                        let newData = res.data.filter(notification => !notifficationIds.includes(notification._id));
+                        const data = [...newData, ...prevState];
                         return data;
                     });
+    
+                    setNotificationIds(prevState => {
+                        let newIds = res.data.map(notification => notification._id)
+                        newIds = newIds.filter(id => !prevState.includes(id));
+                        return [...newIds, ...prevState]; 
+                    }); 
 
                     setNotifications(prevState => prevState + res.data.length);
                 })
