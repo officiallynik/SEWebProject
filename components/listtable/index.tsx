@@ -20,8 +20,8 @@ const useRowStyles = makeStyles({
     },
 });
 
-function Row(props: { row }) {
-    const { row } = props;
+function Row(props: { row, refresh }) {
+    const { row, refresh } = props;
     const classes = useRowStyles();
 
     return (
@@ -57,7 +57,7 @@ function Row(props: { row }) {
                             }
                         >
                             <div style={{background: "white", borderRadius: "10px"}}>
-                                <FarmerView data={row} />
+                                <FarmerView data={row} refresh={refresh} />
                             </div>
                         </CustomModal>
                     </TableCell>
@@ -96,7 +96,7 @@ const CollapsibleTable = (props) => {
                         </TableHead>
                         <TableBody>
                             {props.data.map((row) => (
-                                <Row key={row._id} row={row} />
+                                <Row key={row._id} row={row} refresh={props.refresh} />
                             ))}
                         </TableBody>
                     </Table>

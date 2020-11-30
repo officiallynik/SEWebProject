@@ -1,13 +1,16 @@
-import { CircularProgress, IconButton, Table, TableBody, TableCell, TableContainer, TableRow } from '@material-ui/core';
-import { Done } from '@material-ui/icons';
+import { Button, CircularProgress, IconButton, Table, TableBody, TableCell, TableContainer, TableRow } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import Axios from '../../helpers/axios';
+import { notifyAction } from '../../store/actions/notifyAction';
 import CustomLinearProgress from '../linearprogress';
 
 const BidInfo = (props) => {
 
     const [bidData, setBidData] = useState(null);
     const [error, setError] = useState(null);
+
+    const [loadingBidAccept, setLoadingBidAccept] = useState(false);
 
     const handleBiddings = async () => {
         const promises = props.data.biddings.map(async bid => {
@@ -41,21 +44,46 @@ const BidInfo = (props) => {
         handleBiddings();
     }, []);
 
+    const handleBidAccept = (cropId, bidId) => {
+        setLoadingBidAccept(true);
+        Axios.post(`/crops/bid/accept/${cropId}/${bidId}`, {}, {
+            headers: {
+                'Authorization': `Bearer ${props.token}`
+            }
+        })
+        .then(res => {
+            console.log(res);
+            props.dispatchNotify("Bid accepted successfully!", 3, "success");
+            props.refresh();
+        })
+        .catch(err => {
+            console.log(err);
+            props.dispatchNotify("Bid was not accepted, try again later!", 3, "error");
+        })
+        .finally(() => {
+            setLoadingBidAccept(false);
+        })
+    } 
+
 
     return (
         <div style={{ overflow: "auto", maxHeight: "400px", height: "auto" }}>
-            <div style={{display: "flex", overflow: "auto", height: "150px"}}>
-                {
-                    props.data.imgs.map(img => {
-                        <img src={`https://fathomless-tundra-87077.herokuapp.com/images/${img}`} 
-                            key={img}
-                            style={{width: "50%", paddingRight: "5px"}} 
-                        />
-                    })
-                }
-            </div>
+            {
+                props.data.imgs.length === 0? null:
+                <div style={{display: "flex", overflow: "auto", height: "150px"}}>
+                    {
+                        props.data.imgs.map(img => {
+                            <img src={`https://fathomless-tundra-87077.herokuapp.com/images/${img}`} 
+                                key={img}
+                                style={{width: "50%", paddingRight: "5px"}} 
+                            />
+                        })
+                    }
+                </div>
+            }
             
                     {
+                        loadingBidAccept? <CustomLinearProgress />:
                         !bidData? (error? <div style={{textAlign: "center"}}>{error}</div>: <CustomLinearProgress />):
                         <TableContainer>
                         <Table aria-label="collapsible table">
@@ -66,17 +94,28 @@ const BidInfo = (props) => {
                             <TableCell align="left">Pincode</TableCell>
                             <TableCell align="left">Location</TableCell>
                             <TableCell align="left">Bid (Rs.)</TableCell>
+                            <TableCell></TableCell>
                         </TableRow>
-                        {bidData.map(bid => {
+                        {bidData.map((bid, idx) => {
                             console.log(bid);
+                            console.log(props.data)
                             return (
-                                
+                                    // "/bid/accept/:crop_id/:bid_id"
                                     <TableRow>
                                         <TableCell align="left">{bid.name}</TableCell>
                                         <TableCell align="left">{bid.phone}</TableCell>
                                         <TableCell align="left">{bid.pincode}</TableCell>
                                         <TableCell align="left">{bid.location}</TableCell>
                                         <TableCell align="left">{bid.bid}</TableCell>
+                                        <TableCell>
+                                            <Button variant="outlined" style={props.data.biddings[idx].status === "active"? {backgroundColor: "lightblue", fontSize: "12px"}:
+                                                {backgroundColor: "lightgreen", fontSize: "12px"}}
+                                                onClick={() => handleBidAccept(props.data._id, props.data.biddings[idx]._id)}
+                                                disabled={props.data.biddings[idx].status === "accepted"}
+                                            >
+                                                {props.data.biddings[idx].status === "accepted"? "Accepted": "Accept"}
+                                            </Button>
+                                        </TableCell>
                                     </TableRow>
                             )
                         })}
@@ -88,4 +127,16 @@ const BidInfo = (props) => {
     );
 };
 
-export default BidInfo;
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        token: authReducer.token
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatchNotify: (msg: string, exp: number, notifyType: string) => dispatch(notifyAction(msg, exp, notifyType)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BidInfo);

@@ -130,7 +130,7 @@ const Experts = (props) => {
                     <h3>{props.name}</h3>
                     {/* <p>{props.pincode}</p> */}
                     {/* <p>{props.location}</p> */}
-                    <CustomModal modalBtn={(
+                    {/* <CustomModal modalBtn={(
                             <Button variant="outlined" color="primary" onClick={() => setIsDone([false, false])}>
                                 Edit Profile
                             </Button>
@@ -142,7 +142,7 @@ const Experts = (props) => {
                         <div style={{background: "white", borderRadius: "10px"}}>
                             <UpdateProfile />
                         </div>
-                    </CustomModal>
+                    </CustomModal> */}
                 </CardBody>
             </Card>
             <Card>

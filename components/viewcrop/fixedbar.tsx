@@ -1,3 +1,4 @@
+import { Button } from '@material-ui/core';
 import React from 'react';
 
 const FixedBar = (props) => {
@@ -23,6 +24,12 @@ const FixedBar = (props) => {
                 <div>Pincode: {props.data.pincode}</div>
                 <div>Type: {props.data.type}</div>
                 <div>Variety: {props.data.variety}</div>
+
+                <div style={{marginTop: "3px"}}>
+                    <Button variant="outlined" style={{backgroundColor: "purple", color: "white", fontSize: "12px"}}>
+                        Crop Sold
+                    </Button>
+                </div>
             </div>
             <div style={{
                 width: "50%",
