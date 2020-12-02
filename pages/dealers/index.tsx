@@ -7,6 +7,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import styles from '../../styles/Dealer.module.css';
 import Axios from '../../helpers/axios';
 import GridView from '../../components/grid/GridView';
+import { connect } from 'react-redux';
 
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   }),
 );
 
-const Dealers = () => {
+const Dealers = props => {
 
     const initialFilters = {
         pincode: null,
@@ -105,7 +106,7 @@ const Dealers = () => {
             params: params
         })
         .then(res => {
-            console.log(res.data);
+            // console.log(res.data);
             const data = [] 
             res.data.forEach(item => {
                 data.push({
@@ -119,7 +120,8 @@ const Dealers = () => {
                     img: item.thumbnail,
                     imgs: item.snapshots,
                     variety: item.variety,
-                    pincode: item.pincode
+                    pincode: item.pincode,
+                    faqs: item.faqs
                 })
             })
             setCropsData(data);
@@ -324,6 +326,5 @@ const Dealers = () => {
         // <GridView />
     );
 };
-
 
 export default Dealers;

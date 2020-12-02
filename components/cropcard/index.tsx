@@ -63,6 +63,7 @@ const useStyles = makeStyles({
 		backgroundColor: "#E6FBE9",
 		maxWidth: 600,
 		width: '95%',
+		height: "80vh",
 		borderRadius: 20,
 		//height:'60%',
 		margin: 'auto',
@@ -87,6 +88,8 @@ const useStyles = makeStyles({
 });
 
 const CropCard = (props) => {
+	// console.log("[crop props]", props);
+
 	const classes = useStyles();
 
 	const [modalState, setModalState] = useState(false);
@@ -103,10 +106,11 @@ const CropCard = (props) => {
 		setModalState(false);
 	};
 
+	const [openFaqs, setOpenFaqs] = useState(false);
 
 
 	return (
-		<div>
+		<div style={{overflow: "auto"}}>
 
 			<Card className={classes.card} variant="outlined">
 				{/* <CardHeader className={classes.cardHead}
@@ -155,16 +159,24 @@ const CropCard = (props) => {
 
 			<Modal isOpen={modalState} onRequestClose={closeModal} className={classes.modal} >
 
-				<div className={classes.test}>
+			{!openFaqs?
+
+			<div>
+				<div className={classes.test} style={{overflow: "auto"}}>
 					<div className={classes.modalCards}><DetailCropCard cropData={props.cropData} /></div>
 					<div className={classes.modalCards}><AllBids data={props.cropData.biddings} /></div>
 				</div>
 
+				<div style={{overflow: "auto"}} ><BidActions _id={props.cropData._id} biddings={props.cropData.biddings} /></div>
 
-				<div ><BidActions _id={props.cropData._id} biddings={props.cropData.biddings} /></div>
-
-				<div className={classes.faq}><FAQ></FAQ></div>
-
+				<div className={classes.faq}><Button variant="outlined" onClick={() => setOpenFaqs(true)}
+					style={{backgroundColor: "lightblue"}}
+				>Open FAQs</Button></div>
+			</div>:
+			<div className={classes.faq}><FAQ cropId={props.cropData._id} faqs={props.cropData.faqs}
+				closeFaqs={() => setOpenFaqs(false)}
+			></FAQ></div>
+			}
 			</Modal>
 
 
