@@ -91,7 +91,8 @@ const Farmers = (props) => {
                     imgs: item.snapshots,
                     variety: item.variety,
                     pincode: item.pincode,
-                    sold: item.sold
+                    sold: item.sold,
+                    faqs: item.faqs
                 })
             })
             setMyListing(data);

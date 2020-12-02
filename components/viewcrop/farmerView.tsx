@@ -4,6 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import FixedBar from './fixedbar';
 import BidInfo from './bidinfo';
+import Faqs from './faqs';
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -74,15 +75,29 @@ const FarmerView = (props) => {
         // })
     }
 
-    console.log("[farmer view]", props.data);
+    const [openFaqs, setOpenFaqs] = useState(false);
+
+    let faqBtn = "Answer Questions";
+    if(openFaqs){
+        faqBtn = "Close FAQs";
+    }
+
+    // console.log("[farmer view]", props.data);
 
     return (
         <React.Fragment>
             <CssBaseline />
             <main className={classes.layout}>
                 <Paper className={classes.paper}>
-                    <FixedBar data={props.data} refresh={props.refresh} userType="farmer" />
-                    <BidInfo data={props.data} refresh={props.refresh} />
+                    <FixedBar data={props.data} refresh={props.refresh} userType="farmer" setOpenFaqs={() => setOpenFaqs(prevState => !prevState)} 
+                        faqBtn={faqBtn}
+                    />
+                    {!openFaqs?
+                    <BidInfo data={props.data} refresh={props.refresh} />:
+                    <Faqs faqs={props.data.faqs} refresh={props.refresh} closeFaqs={() => setOpenFaqs(false)} 
+                        cropId={props.data._id}
+                    />
+                    }
                 </Paper>
             </main>
         </React.Fragment>

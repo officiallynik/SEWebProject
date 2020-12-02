@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -7,10 +7,14 @@ import List from '@material-ui/core/List';
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemText from '@material-ui/core/ListItemText';
+import Axios from '../../helpers/axios';
+import { connect } from 'react-redux';
+import { notifyAction } from '../../store/actions/notifyAction';
+import { CircularProgress } from '@material-ui/core';
 
 
 
-export default function Faqs () {
+const Faqs = (props) => {
 
     
 
@@ -20,6 +24,16 @@ export default function Faqs () {
     const [showAnswer,setShowAnswer] = useState(false)
     const [tempState,setTempState] = useState(true)
     const [ansNumber,setAnsNumber] = useState(-1)
+
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const data = props.faqs.map((faq) => {
+            return {question: 'Q. '+ faq.question, answer: (!faq.answer? "A: Pending...": faq.answer)}
+        });
+
+        setFaqs(data);
+    }, []);
     
 
     const currentQuestion = (event) => {
@@ -27,41 +41,38 @@ export default function Faqs () {
     }
 
     const addQuestion = () => {
+        setLoading(true);
         let faqarr = faqs;
-        let messageArray = {question: 'Q. '+newQuestion, answer: ''}
-        let messageState = faqarr.unshift(messageArray);
-        setFaqs(faqarr)
-        console.log(faqarr)
-        setTempState(!tempState)
-      
-    }
+        let messageArray = {question: 'Q. '+newQuestion, answer: 'A: Pending...'}
 
-    const addAnswer = (event,props) => {
-        setAnswer(event.target.value)
-        setAnsNumber(props.i)
-    }
-    const emptyTextField = (event) =>{
-        event.target.value=''
-        setAnswer('')
-    }
-
-    const showAnswerHandler = (props) => {
-
-        if(props.i === ansNumber){
-            
-            setShowAnswer(true)
-            faqs[props.i].answer = 'A. '+ answer
-            console.log(faqs)
+        Axios.post(`crops/ask/${props.cropId}`, {
+            question: newQuestion
+        }, {
+            headers: {
+                'Authorization': `Bearer ${props.token}`
+            }
+        })
+        .then(res => {
+            console.log(res.data);
+            faqarr.unshift(messageArray);
+            setFaqs(faqarr)
+            console.log(faqarr)
             setTempState(!tempState)
-            setAnswer('')
-        }
-        
-     
-    }
 
+            props.dispatchNotification("Successfully added your question", 3, "success");
+            props.refresh();
+        })
+        .catch(err => {
+            console.log(err);
+            props.dispatchNotification("Something went wrong, please try again later", 3, "error");
+        })
+        .finally(() => {
+            setLoading(false);
+        })
+    }
 
     let faqarray = (
-        <List style={{textAlign:'center'}}>
+        <List style={{textAlign:'center', overflow: "auto"}}>
             
             {faqs.length === 0
             ? <ListItem>No FAQs</ListItem>
@@ -77,48 +88,7 @@ export default function Faqs () {
                                     secondary = {faq.answer}
                                 >
                                 </ListItemText>
-
-
-                                {faq.answer === ''
-                                
-                                ? 
-                                <div >
-                                    <div>
-                                        <TextField
-                                            variant = "outlined"
-                                            color="primary"
-                                            onChange = {(event)=>addAnswer(event,{i})}
-                                            onFocus = {(event)=>emptyTextField(event)}
-                                            style={{marginTop:'5'}}
-                                        >
-                                        </TextField>
-                                    </div>
-                                    
-                                    <div >
-                                        <Button
-                                        variant = "contained"
-                                        color = "secondary"
-                                        onClick = {() => showAnswerHandler({i})}
-                                      
-                                        >
-                                            Add answer
-                                        </Button>
-                                    </div>
-                                   
-                                    
-                                </div>
-
-                                :null
-
-                                }   
-
-                              
-
-                              
                             </ListItem>
-
-             
-                
 
                 }
                 
@@ -132,27 +102,55 @@ export default function Faqs () {
    
 
     return (
-        <div>
+        <div style={{overflow: "auto"}}>
+            {!loading?
             <div >
-                <TextField variant="filled" onChange ={(event) => currentQuestion(event)} onFocus = {(event)=>emptyTextField(event)}
-                            style={{margin: "5px"}}
+                <div style={{display: "flex", justifyContent: "center"}}>
+                <TextField variant="outlined" onChange ={(event) => currentQuestion(event)}
+                            style={{margin: "5px", backgroundColor: "white"}}
+                    label="Question"
                 />
                 <Button
-                    variant="contained"
+                    variant="outlined"
                     color="secondary"
                     onClick = {addQuestion}
-                    style={{margin: "10px"}}
+                    style={{margin: "10px", backgroundColor: "lightgreen"}}
                 >
                     Ask Question
                 </Button>
-                <div>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick = {props.closeFaqs}
+                    style={{margin: "10px", backgroundColor: "coral", color: "white"}}
+                >
+                    Close FAQs
+                </Button>
+                </div>
+                <div style={{overflow: "auto"}}>
                     {faqarray}
                 </div>
                
-            </div>   
+            </div>:
+            <div style={{display: "flex", justifyContent: "center"}}>
+                <CircularProgress />
+            </div>
+            }  
     </div>
     );
 
 }
 
+const mapStateToProps = ({ authReducer }) => {
+    return {
+        token: authReducer.token,
+    }
+}
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        dispatchNotification: (msg: string, exp: number, notifyType: string) => dispatch(notifyAction(msg, exp, notifyType)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Faqs);
