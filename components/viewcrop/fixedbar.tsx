@@ -9,6 +9,7 @@ const FixedBar = (props) => {
     // console.log("[fixed bar]", props);
 
     const [loadingCropSold, setLoadingCropSold] = useState(false);
+    
 
     const handleCropSold = () => {
         setLoadingCropSold(true);
@@ -69,6 +70,11 @@ const FixedBar = (props) => {
                             onClick={handleCropSold}
                         >
                             Crop Sold
+                        </Button>
+                        <Button variant="outlined" style={{backgroundColor: "purple", color: "white", fontSize: "12px", marginLeft: "3px"}}
+                            onClick={props.setOpenFaqs}
+                        >
+                            {props.faqBtn}
                         </Button>
                     </div>
                 }
