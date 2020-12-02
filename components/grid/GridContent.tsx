@@ -14,13 +14,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const GridContent = function NestedGrid({ data }) {
+const GridContent = function NestedGrid({ data, refresh }) {
 	const classes = useStyles();
 
 	const renderedItems = data.map((item) => {
 		return (
 			<Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
-				<CropCard cropData={item} />
+				<CropCard cropData={item} refresh={refresh} />
 			</Grid>
 		);
 	})

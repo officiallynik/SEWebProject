@@ -72,6 +72,8 @@ const Dealers = props => {
     const [searchTerm, setSearchTerm] = useState('');
     const [errorCode, setErrorCode] = useState(null);
 
+    const [refresh, setRefresh] = useState(true);
+
     // useEffect(() => {
     //     setTimeout(() => {
     //         setIsDone(true);
@@ -121,7 +123,7 @@ const Dealers = props => {
                     imgs: item.snapshots,
                     variety: item.variety,
                     pincode: item.pincode,
-                    faqs: item.faqs
+                    faqs: item.faqs,
                 })
             })
             setCropsData(data);
@@ -133,6 +135,7 @@ const Dealers = props => {
         })
         .finally(() => {
             setIsDone(true);
+            setRefresh(false);
             // setRefresh(false);
         })
         // setMyListing(myListings);
@@ -146,8 +149,10 @@ const Dealers = props => {
     }
 
     useEffect(() => {
-        fetchCrops();
-    }, []);
+        if(refresh){
+            fetchCrops();
+        }
+    }, [refresh]);
     
     const topbar = (
         <div className={styles.topbar}>
@@ -306,7 +311,7 @@ const Dealers = props => {
                     style={{display: "flex", justifyContent: "center"}}
                 ><img src="/search_error.png" /></div>) :
                 <div style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                    <GridView data={cropsData} /> 
+                    <GridView data={cropsData} refresh={() => setRefresh(true)} /> 
                 </div>
             }
         </>

@@ -73,7 +73,7 @@ const BidActions = (props) => {
                 <div>
                     <TextField
                         variant="outlined"
-                        label="Enter your bid here..."
+                        label="Enter your bid here (Rs/Q)..."
                         color="secondary"
                         className={classes.txtPlaceBid}
                         type="number"
@@ -107,6 +107,7 @@ const BidActions = (props) => {
                                         props.dispatchNotification("Bid successfull", 4, "success")
                                         setBidded(true);
                                         setBid(bid);
+                                        props.refresh();
                                     }
                                     else{
                                         props.dispatchNotification("Bid could not be processed, try again", 3, "error")

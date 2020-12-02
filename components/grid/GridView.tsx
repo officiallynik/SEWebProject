@@ -8,7 +8,7 @@ const GridView = (props) => {
             container
             key={"top-grid"}
         >
-            <GridContent data={props.data} key={"grid-content"} />
+            <GridContent data={props.data} key={"grid-content"} refresh={props.refresh} />
         </Grid>
     );
 }

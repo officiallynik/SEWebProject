@@ -60,6 +60,7 @@ const Faqs = (props) => {
             setTempState(!tempState)
 
             props.dispatchNotification("Successfully added your question", 3, "success");
+            props.refresh();
         })
         .catch(err => {
             console.log(err);

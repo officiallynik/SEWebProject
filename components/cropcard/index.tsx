@@ -167,7 +167,9 @@ const CropCard = (props) => {
 					<div className={classes.modalCards}><AllBids data={props.cropData.biddings} /></div>
 				</div>
 
-				<div style={{overflow: "auto"}} ><BidActions _id={props.cropData._id} biddings={props.cropData.biddings} /></div>
+				<div style={{overflow: "auto"}} ><BidActions _id={props.cropData._id} biddings={props.cropData.biddings} 
+					refresh={props.refresh}
+				/></div>
 
 				<div className={classes.faq}><Button variant="outlined" onClick={() => setOpenFaqs(true)}
 					style={{backgroundColor: "lightblue"}}
@@ -175,6 +177,7 @@ const CropCard = (props) => {
 			</div>:
 			<div className={classes.faq}><FAQ cropId={props.cropData._id} faqs={props.cropData.faqs}
 				closeFaqs={() => setOpenFaqs(false)}
+				refresh={props.refresh}
 			></FAQ></div>
 			}
 			</Modal>
